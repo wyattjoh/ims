@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"image"
 	"image/jpeg"
@@ -171,6 +172,11 @@ func (irh imageResizingHandler) ServeHTTP(w http.ResponseWriter, r *http.Request
 }
 
 func main() {
+
+	var listenAddr = flag.String("listen-addr", "0.0.0.0:8080", "the address to listen for new connections on")
+
+	flag.Parse()
+
 	imagick.Initialize()
 	defer imagick.Terminate()
 
@@ -186,6 +192,6 @@ func main() {
 
 	http.Handle("/resize/", handler)
 
-	log.Println("Now serving on http://127.0.0.1:8080/")
-	log.Fatal(http.ListenAndServe("127.0.0.1:8080", nil))
+	log.Printf("Now serving on %s\n", *listenAddr)
+	log.Fatal(http.ListenAndServe(*listenAddr, nil))
 }
