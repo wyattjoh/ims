@@ -10,7 +10,12 @@ imagemagick library is available.
 
 Any images served out of the `images/` directory will be available under a
 `resize/` prefix, which will allow you to attach different image manipulations
-via the query string.
+via the query string. The following query parameters are available:
+
+- `m`: Used to specify the type of image processing method to use, either
+  (`imaging` or `imagick`).
+- `q`: Used to specify the output JPEG quality (default `80`).
+- `w`: Used to specify the output image width (default is the original width).
 
 ## License
 
