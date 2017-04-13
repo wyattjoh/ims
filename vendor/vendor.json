@@ -9,19 +9,6 @@
 			"revisionTime": "2017-01-02T19:04:32Z"
 		},
 		{
-			"checksumSHA1": "isRGvFzUCh72bNQFmw7WQaeT7xY=",
-			"path": "github.com/lox/httpcache",
-			"revision": "fff585cf25b80f4ccc4ac7be6d3f564aa9c117ff",
-			"revisionTime": "2017-01-09T03:46:36Z"
-		},
-		{
-			"checksumSHA1": "NLwKGa5B0STKAvQV+lz/ujnbzN4=",
-			"origin": "github.com/lox/httpcache/vendor/github.com/rainycape/vfs",
-			"path": "github.com/rainycape/vfs",
-			"revision": "fff585cf25b80f4ccc4ac7be6d3f564aa9c117ff",
-			"revisionTime": "2017-01-09T03:46:36Z"
-		},
-		{
 			"checksumSHA1": "UD/pejajPyS7WaWVXq2NU1eK4Ic=",
 			"path": "golang.org/x/image/bmp",
 			"revision": "05f0a469d9f7c77399b53a6bab80983eb856b52e",
@@ -38,13 +25,6 @@
 			"path": "golang.org/x/image/tiff/lzw",
 			"revision": "05f0a469d9f7c77399b53a6bab80983eb856b52e",
 			"revisionTime": "2017-02-04T03:43:53Z"
-		},
-		{
-			"checksumSHA1": "GOpub0wDqajUQKaTzVblQ6Ta+SA=",
-			"origin": "github.com/lox/httpcache/vendor/gopkg.in/djherbis/stream.v1",
-			"path": "gopkg.in/djherbis/stream.v1",
-			"revision": "fff585cf25b80f4ccc4ac7be6d3f564aa9c117ff",
-			"revisionTime": "2017-01-09T03:46:36Z"
 		},
 		{
 			"checksumSHA1": "NJqlhre0uf2qzJwTqPRiAS6LFLg=",

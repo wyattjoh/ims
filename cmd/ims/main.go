@@ -15,7 +15,6 @@ import (
 	"gopkg.in/gographics/imagick.v3/imagick"
 
 	"github.com/disintegration/imaging"
-	"github.com/lox/httpcache"
 )
 
 const (
@@ -181,10 +180,9 @@ func main() {
 
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	handler := httpcache.NewHandler(httpcache.NewMemoryCache(), imageResizingHandler{
+	handler := imageResizingHandler{
 		imagesDir: http.Dir("images"),
-	})
-	// handler.Shared = true
+	}
 
 	http.Handle("/resize/", handler)
 
