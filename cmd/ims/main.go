@@ -214,14 +214,6 @@ func main() {
 	imagick.Initialize()
 	defer imagick.Terminate()
 
-	// Serve the index.html file.
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "index.html")
-	})
-
-	// Serve everything out of static directly.
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-
 	// Mount the actual image resizing handler.
 	http.Handle("/resize/", imageResizingHandler{
 		imagesDir: http.Dir("images"),
