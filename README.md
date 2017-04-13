@@ -6,6 +6,9 @@ or a wrapped solution around the popular ImageMagick Library
 gopkg.in/gographics/imagick.v3/imagick. The latter of course requires that the
 imagemagick library is available.
 
+The application is also fitted with pprof for performance profiling, refer to
+https://golang.org/pkg/net/http/pprof/ for usage information.
+
 ## Usage
 
 Any images served out of the `images/` directory will be available under a
