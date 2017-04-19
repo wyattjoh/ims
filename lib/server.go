@@ -25,9 +25,35 @@ func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter,
 		return errors.Wrap(err, "can't decode the image")
 	}
 
-	width, err := strconv.Atoi(r.URL.Query().Get("w"))
+	resizeFilter := r.URL.Query().Get("resize-filter")
+	if resizeFilter == "" {
+		resizeFilter = "lanczos"
+	}
+
+	var filter imaging.ResampleFilter
+	switch resizeFilter {
+	case "lanczos":
+		filter = imaging.Lanczos
+	case "nearest":
+		filter = imaging.NearestNeighbor
+	case "linear":
+		filter = imaging.Linear
+	case "netravali":
+		filter = imaging.MitchellNetravali
+	case "box":
+		filter = imaging.Box
+	default:
+		filter = imaging.Lanczos
+	}
+
+	width, err := strconv.Atoi(r.URL.Query().Get("width"))
 	if err == nil {
-		srcImage = imaging.Resize(srcImage, width, 0, imaging.Linear)
+		srcImage = imaging.Resize(srcImage, width, 0, filter)
+	} else {
+		height, err := strconv.Atoi(r.URL.Query().Get("height"))
+		if err != nil {
+			srcImage = imaging.Resize(srcImage, 0, height, filter)
+		}
 	}
 
 	if timeout != 0 {

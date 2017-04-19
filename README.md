@@ -28,7 +28,9 @@ query parameters are available:
 	- `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
 		- `q`: the quality out of 100 for the output image (Default: 80)
 	- `default`: strips metadata
-- `w`: output image width (default is the original width).
+- `width`: output image width (default is the original width).
+- `height`: output image height. If both `width` and `height` are provided, the
+      `width` will be used instead.
 
 The default beheviour is to serve images out of a folder named "images", but it
 can also be changed to another folder or to an origin server for it to make the

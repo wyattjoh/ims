@@ -13,7 +13,7 @@ import (
 
 // defaultQuality is the quality of the image used when the quality param is
 // not provided.
-const defaultQuality = 80
+const defaultQuality = 75
 
 // Encoder describes any type that can encode with the image and response
 // writer.
