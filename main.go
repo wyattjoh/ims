@@ -4,6 +4,7 @@ import (
 	"flag"
 
 	"github.com/Sirupsen/logrus"
+	ims "github.com/wyattjoh/ims/lib"
 )
 
 func main() {
@@ -16,7 +17,7 @@ func main() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
-	if err := Serve(*listenAddr); err != nil {
+	if err := ims.Serve(*listenAddr); err != nil {
 		logrus.Fatalf("Could not serve: %s", err)
 	}
 }

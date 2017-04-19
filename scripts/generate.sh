@@ -2,9 +2,6 @@
 
 set -x -e
 
-# Generate the Proto Files
-go generate $(go list ./... | grep -v '/vendor/')
-
 # Install everything
 go install ./... &>/dev/null
 RESULT=$?

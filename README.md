@@ -1,6 +1,6 @@
 # ims
 
-[![Go Doc](https://godoc.org/github.com/wyattjoh/ims?status.svg)](http://godoc.org/github.com/wyattjoh/ims)
+[![Go Doc](https://godoc.org/github.com/wyattjoh/ims/lib?status.svg)](http://godoc.org/github.com/wyattjoh/ims/lib)
 [![Go Report](https://goreportcard.com/badge/github.com/wyattjoh/ims)](https://goreportcard.com/report/github.com/wyattjoh/ims)
 
 The ims service is designed to assist with performing image transformations on
