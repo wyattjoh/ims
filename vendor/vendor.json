@@ -3,10 +3,28 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "cT6+XPBZiXsFbb7cXT6AYNrZyuM=",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "3f603f494d61c73457fb234161d8982b9f0f0b71",
+			"revisionTime": "2017-02-07T18:34:08Z"
+		},
+		{
 			"checksumSHA1": "1OmwbWaOG0jEW8FJ5dqnpbhm1ZY=",
 			"path": "github.com/disintegration/imaging",
 			"revision": "243d2d8673c1225a6afceeb9b3b4423d485dc8df",
 			"revisionTime": "2017-01-02T19:04:32Z"
+		},
+		{
+			"checksumSHA1": "ynJSWoF6v+3zMnh9R0QmmG6iGV8=",
+			"path": "github.com/pkg/errors",
+			"revision": "ff09b135c25aae272398c51a07235b90a75aa4f0",
+			"revisionTime": "2017-03-16T20:15:38Z"
+		},
+		{
+			"checksumSHA1": "ezZyPBDiKHM5y+YmlIhrWIzgbfw=",
+			"path": "github.com/urfave/negroni",
+			"revision": "c0db5feaa33826cd5117930c8f4ee5c0f565eec6",
+			"revisionTime": "2017-02-26T00:53:33Z"
 		},
 		{
 			"checksumSHA1": "UD/pejajPyS7WaWVXq2NU1eK4Ic=",
@@ -27,16 +45,10 @@
 			"revisionTime": "2017-02-04T03:43:53Z"
 		},
 		{
-			"checksumSHA1": "NJqlhre0uf2qzJwTqPRiAS6LFLg=",
-			"path": "gopkg.in/gographics/imagick.v3/imagick",
-			"revision": "06fa38593213b8f900a322f9294d8825a6b113f3",
-			"revisionTime": "2016-11-05T21:22:17Z"
-		},
-		{
-			"checksumSHA1": "UYTozO7MDsQq7iLlT9bcYuBYjqM=",
-			"path": "gopkg.in/gographics/imagick.v3/imagick/types",
-			"revision": "06fa38593213b8f900a322f9294d8825a6b113f3",
-			"revisionTime": "2016-11-05T21:22:17Z"
+			"checksumSHA1": "/oZpHfYc+ZgOwYAhlvcMhmETYpw=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "99f16d856c9836c42d24e7ab64ea72916925fa97",
+			"revisionTime": "2017-03-08T15:04:45Z"
 		}
 	],
 	"rootPath": "github.com/wyattjoh/ims"
