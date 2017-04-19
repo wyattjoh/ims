@@ -48,6 +48,7 @@ func ProcessImage(input io.Reader, w http.ResponseWriter, r *http.Request) error
 	return nil
 }
 
+// GetFilename fetches the filename from the request path.
 func GetFilename(r *http.Request) (string, error) {
 
 	// We expect that the router sends us requests in the form `/resize/:filename`
