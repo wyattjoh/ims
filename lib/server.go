@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/pprof"
+	"net/url"
 	"os"
 	"strconv"
 	"time"
@@ -94,11 +95,70 @@ func HandleFileSystemResize(dir http.Dir) http.HandlerFunc {
 	}
 }
 
+// HandleOriginResize performs the actual resizing by loading the image
+// from the origin.
+func HandleOriginResize(origin string) (http.HandlerFunc, error) {
+	originURL, err := url.Parse(origin)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't parse the origin url")
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		// Extract the filename from the request.
+		filename, err := GetFilename(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		filenameURL, err := url.Parse(filename)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		fileURL := originURL.ResolveReference(filenameURL)
+
+		req, err := http.NewRequest("GET", fileURL.String(), nil)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadGateway)
+			return
+		}
+		defer res.Body.Close()
+
+		// If an error occurred during the image processing, return with an internal
+		// server error.
+		if err := ProcessImage(res.Body, w, r); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}, nil
+}
+
 // Serve creates and starts a new server to provide image resizing services.
-func Serve(addr string, debug bool, directory string) error {
+func Serve(addr string, debug bool, directory, origin string) error {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/resize/", HandleFileSystemResize(http.Dir(directory)))
+	if origin == "" {
+		logrus.WithField("directory", directory).Debug("serving from the filesystem")
+		mux.HandleFunc("/resize/", HandleFileSystemResize(http.Dir(directory)))
+	} else {
+		logrus.WithField("origin", origin).Debug("serving from the origin")
+
+		handler, err := HandleOriginResize(origin)
+		if err != nil {
+			return errors.Wrap(err, "can't create origin resize handler")
+		}
+
+		mux.HandleFunc("/resize/", handler)
+	}
 
 	// When debug mode is enabled, mount the debug handlers on this router.
 	if debug {
