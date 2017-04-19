@@ -15,7 +15,7 @@
 * [func HandleResize(dir http.Dir) http.HandlerFunc](#HandleResize)
 * [func PNGEncode(i image.Image, w http.ResponseWriter) error](#PNGEncode)
 * [func ProcessImage(input io.Reader, w http.ResponseWriter, r *http.Request) error](#ProcessImage)
-* [func Serve(addr string) error](#Serve)
+* [func Serve(addr string, debug bool) error](#Serve)
 * [type Encoder](#Encoder)
   * [func GetEncoder(format string, r *http.Request) Encoder](#GetEncoder)
 * [type EncoderFunc](#EncoderFunc)
@@ -40,7 +40,7 @@ GIFEncoder takes an image and writes the encoded gif image to it.
 
 
 
-## <a name="HandleResize">func</a> [HandleResize](/src/target/server.go?s=1240:1288#L44)
+## <a name="HandleResize">func</a> [HandleResize](/src/target/server.go?s=1181:1229#L42)
 ``` go
 func HandleResize(dir http.Dir) http.HandlerFunc
 ```
@@ -56,7 +56,7 @@ PNGEncode takes an image and writes the encoded png image to it.
 
 
 
-## <a name="ProcessImage">func</a> [ProcessImage](/src/target/server.go?s=548:628#L21)
+## <a name="ProcessImage">func</a> [ProcessImage](/src/target/server.go?s=489:569#L19)
 ``` go
 func ProcessImage(input io.Reader, w http.ResponseWriter, r *http.Request) error
 ```
@@ -65,9 +65,9 @@ image transformations.
 
 
 
-## <a name="Serve">func</a> [Serve](/src/target/server.go?s=2432:2461#L82)
+## <a name="Serve">func</a> [Serve](/src/target/server.go?s=2373:2414#L80)
 ``` go
-func Serve(addr string) error
+func Serve(addr string, debug bool) error
 ```
 Serve creates and starts a new server to provide image resizing services.
 
