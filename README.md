@@ -20,9 +20,9 @@ go get github.com/wyattjoh/ims
 
 You can also use the [wyattjoh/ims](https://hub.docker.com/r/wyattjoh/ims/) Docker image.
 
-Any images served will be available under a `resize/` prefix, which will allow
-you to attach different image manipulations via the query string. The following
-query parameters are available:
+Any images served will be available, which will allow you to attach different
+image manipulations via the query string. The following query parameters are
+available:
 
 - `format`: enables source transcoding:
 	- `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
