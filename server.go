@@ -79,7 +79,7 @@ func HandleResize(dir http.Dir) http.HandlerFunc {
 		}
 		defer f.Close()
 
-		// If an error occured during the image processing, return with an internal
+		// If an error occurred during the image processing, return with an internal
 		// server error.
 		if err := ProcessImage(f, w, r); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
