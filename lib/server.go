@@ -189,7 +189,7 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 	// url is provided, use it.
 	if origin == "" {
 		logrus.WithField("directory", directory).Debug("serving from the filesystem")
-		mux.HandleFunc("/resize/", HandleFileSystemResize(timeout, http.Dir(directory)))
+		mux.HandleFunc("/", HandleFileSystemResize(timeout, http.Dir(directory)))
 	} else {
 		logrus.WithField("origin", origin).Debug("serving from the origin")
 
