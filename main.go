@@ -17,7 +17,7 @@ func main() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
-	if err := ims.Serve(*listenAddr); err != nil {
+	if err := ims.Serve(*listenAddr, *debug); err != nil {
 		logrus.Fatalf("Could not serve: %s", err)
 	}
 }

@@ -6,12 +6,10 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/http/pprof"
 	"os"
 	"strconv"
 	"time"
-
-	// Import pprof so we can measure runtime performance.
-	_ "net/http/pprof"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/disintegration/imaging"
@@ -89,10 +87,19 @@ func HandleResize(dir http.Dir) http.HandlerFunc {
 }
 
 // Serve creates and starts a new server to provide image resizing services.
-func Serve(addr string) error {
+func Serve(addr string, debug bool) error {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/resize/", HandleResize(http.Dir("images")))
+
+	// When debug mode is enabled, mount the debug handlers on this router.
+	if debug {
+		mux.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
+		mux.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
+		mux.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
+		mux.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
+		mux.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
+	}
 
 	n := negroni.Classic() // Includes some default middlewares
 
