@@ -112,14 +112,17 @@ func HandleOriginResize(origin string) (http.HandlerFunc, error) {
 			return
 		}
 
+		// Parse the incomming url.
 		filenameURL, err := url.Parse(filename)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
+		// Resolve it relative to the origin url.
 		fileURL := originURL.ResolveReference(filenameURL)
 
+		// Perform the GET to the origin server.
 		req, err := http.NewRequest("GET", fileURL.String(), nil)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -146,6 +149,8 @@ func HandleOriginResize(origin string) (http.HandlerFunc, error) {
 func Serve(addr string, debug bool, directory, origin string) error {
 	mux := http.NewServeMux()
 
+	// By default, we'll try to use the directory resize, otherwise, if the origin
+	// url is provided, use it.
 	if origin == "" {
 		logrus.WithField("directory", directory).Debug("serving from the filesystem")
 		mux.HandleFunc("/resize/", HandleFileSystemResize(http.Dir(directory)))

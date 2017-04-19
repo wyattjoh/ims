@@ -9,7 +9,7 @@ import (
 
 func main() {
 	var (
-		debug           = flag.Bool("debug", false, "enable debug mode")
+		debug           = flag.Bool("debug", false, "enable debug logging and pprof routes")
 		listenAddr      = flag.String("listen-addr", "0.0.0.0:8080", "the address to listen for new connections on")
 		imagesDirectory = flag.String("images-dir", "images", "the location on the filesystem to load images from")
 		originURL       = flag.String("origin-url", "", "url for the origin server to pull images from")

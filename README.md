@@ -17,15 +17,33 @@ You can use the standard Go utility to get the binary and compile it yourself:
 go get github.com/wyattjoh/ims
 ```
 
-Any images served out of the `images/` directory will be available under a
-`resize/` prefix, which will allow you to attach different image manipulations
-via the query string. The following query parameters are available:
+Any images served will be available under a `resize/` prefix, which will allow
+you to attach different image manipulations via the query string. The following
+query parameters are available:
 
 - `m`: compression mode (`jpeg`, `default`):
 	- `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
 		- `q`: the quality out of 100 for the output image (Default: 80)
 	- `default`: strips metadata
 - `w`: output image width (default is the original width).
+
+The default beheviour is to serve images out of a folder named "images", but it
+can also be changed to another folder or to an origin server for it to make the
+request to.
+
+The ims application can be used as such:
+
+```
+Usage of ims:
+  -debug
+        enable debug logging and pprof routes
+  -images-dir string
+        the location on the filesystem to load images from (default "images")
+  -listen-addr string
+        the address to listen for new connections on (default "0.0.0.0:8080")
+  -origin-url string
+        url for the origin server to pull images from
+```
 
 ## License
 
