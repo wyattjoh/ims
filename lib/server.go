@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"image"
 	"io"
-	"log"
 	"net/http"
 	"net/http/pprof"
 	"os"
@@ -48,21 +47,30 @@ func ProcessImage(input io.Reader, w http.ResponseWriter, r *http.Request) error
 	return nil
 }
 
-// HandleResize performs the actual resizing.
-func HandleResize(dir http.Dir) http.HandlerFunc {
+func GetFilename(r *http.Request) (string, error) {
+
+	// We expect that the router sends us requests in the form `/resize/:filename`
+	// so we check to see if the path contains the image url that we want to
+	// parse. In this case, we check to see that the path is at least 9 characters
+	// long, which will ensure that the filename has at least 1 character.
+	if len(r.URL.Path) < 9 {
+		return "", errors.New("filename too short")
+	}
+
+	return r.URL.Path[8:], nil
+}
+
+// HandleFileSystemResize performs the actual resizing by loading the image
+// from the filesystem.
+func HandleFileSystemResize(dir http.Dir) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		// We expect that the router sends us requests in the form `/resize/:filename`
-		// so we check to see if the path contains the image url that we want to
-		// parse. In this case, we check to see that the path is at least 9 characters
-		// long, which will ensure that the filename has at least 1 character.
-		if len(r.URL.Path) < 9 {
-			log.Println("Filename too short")
-			http.Error(w, "Not Found", http.StatusNotFound)
+		// Extract the filename from the request.
+		filename, err := GetFilename(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-
-		filename := r.URL.Path[8:]
 
 		// Try to open the image from the virtual filesystem.
 		f, err := dir.Open(filename)
@@ -87,10 +95,10 @@ func HandleResize(dir http.Dir) http.HandlerFunc {
 }
 
 // Serve creates and starts a new server to provide image resizing services.
-func Serve(addr string, debug bool) error {
+func Serve(addr string, debug bool, directory string) error {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/resize/", HandleResize(http.Dir("images")))
+	mux.HandleFunc("/resize/", HandleFileSystemResize(http.Dir(directory)))
 
 	// When debug mode is enabled, mount the debug handlers on this router.
 	if debug {

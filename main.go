@@ -8,8 +8,11 @@ import (
 )
 
 func main() {
-	var debug = flag.Bool("debug", false, "enable debug mode")
-	var listenAddr = flag.String("listen-addr", "0.0.0.0:8080", "the address to listen for new connections on")
+	var (
+		debug           = flag.Bool("debug", false, "enable debug mode")
+		listenAddr      = flag.String("listen-addr", "0.0.0.0:8080", "the address to listen for new connections on")
+		imagesDirectory = flag.String("images-dir", "images", "the location on the filesystem to load images from")
+	)
 
 	flag.Parse()
 
@@ -17,7 +20,7 @@ func main() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
-	if err := ims.Serve(*listenAddr, *debug); err != nil {
+	if err := ims.Serve(*listenAddr, *debug, *imagesDirectory); err != nil {
 		logrus.Fatalf("Could not serve: %s", err)
 	}
 }
