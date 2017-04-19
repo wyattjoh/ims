@@ -37,9 +37,13 @@ func (f EncoderFunc) Encode(m image.Image, w http.ResponseWriter) error {
 // can encode the image with another format, otherwise, it just encodes it as
 // "jpeg".
 func GetEncoder(format string, r *http.Request) Encoder {
-	switch r.URL.Query().Get("m") {
+	switch r.URL.Query().Get("format") {
 	case "jpeg":
 		return NewJPEGEncoder(r)
+	case "png":
+		return EncoderFunc(PNGEncode)
+	case "gif":
+		return EncoderFunc(GIFEncoder)
 	}
 
 	switch format {
@@ -86,7 +90,7 @@ func GIFEncoder(i image.Image, w http.ResponseWriter) error {
 // parses the `q` query variable to check to see if it needs to change the
 // default quality format.
 func NewJPEGEncoder(r *http.Request) JPEGEncoder {
-	quality, err := strconv.Atoi(r.URL.Query().Get("q"))
+	quality, err := strconv.Atoi(r.URL.Query().Get("quality"))
 	if err != nil || quality == 0 {
 		quality = defaultQuality
 	}

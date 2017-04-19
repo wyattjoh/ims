@@ -24,10 +24,11 @@ Any images served will be available under a `resize/` prefix, which will allow
 you to attach different image manipulations via the query string. The following
 query parameters are available:
 
-- `m`: compression mode (`jpeg`, `default`):
+- `format`: enables source transcoding:
 	- `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
-		- `q`: the quality out of 100 for the output image (Default: 80).
-	- `default`: strips metadata.
+		- `quality`: the quality out of 100 for the output image (Default: 80).
+      - `png`: converts image to `image/png` encoding
+      - `gif`: converts image to `image/gif` encoding
 - `width`: output image width (default is the original width).
 - `height`: output image height. If both `width` and `height` are provided, the
       `width` will be used instead.
