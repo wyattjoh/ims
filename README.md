@@ -43,6 +43,8 @@ Usage of ims:
         the address to listen for new connections on (default "0.0.0.0:8080")
   -origin-url string
         url for the origin server to pull images from
+  -timeout duration
+        used to set the cache control max age headers, set to 0 to disable (default 15m0s)
 ```
 
 ## License

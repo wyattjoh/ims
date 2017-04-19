@@ -17,16 +17,9 @@ import (
 	"github.com/urfave/negroni"
 )
 
-const (
-
-	// timeout is the cache timeout used to add to requests to prevent the
-	// browser from re-requesting the image.
-	timeout = 15 * time.Minute
-)
-
 // ProcessImage uses the github.com/disintegration/imaging lib to perform the
 // image transformations.
-func ProcessImage(input io.Reader, w http.ResponseWriter, r *http.Request) error {
+func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error {
 	srcImage, format, err := image.Decode(input)
 	if err != nil {
 		return errors.Wrap(err, "can't decode the image")
@@ -37,8 +30,12 @@ func ProcessImage(input io.Reader, w http.ResponseWriter, r *http.Request) error
 		srcImage = imaging.Resize(srcImage, width, 0, imaging.Linear)
 	}
 
-	w.Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", int64(timeout.Seconds())))
-	w.Header().Set("Last-Modified", time.Now().String())
+	if timeout != 0 {
+		w.Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", int64(timeout.Seconds())))
+		w.Header().Set("Expires", time.Now().Add(timeout).Format(http.TimeFormat))
+	}
+
+	w.Header().Set("Last-Modified", time.Now().Format(http.TimeFormat))
 
 	encoder := GetEncoder(format, r)
 	if err := encoder.Encode(srcImage, w); err != nil {
@@ -64,7 +61,7 @@ func GetFilename(r *http.Request) (string, error) {
 
 // HandleFileSystemResize performs the actual resizing by loading the image
 // from the filesystem.
-func HandleFileSystemResize(dir http.Dir) http.HandlerFunc {
+func HandleFileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		// Extract the filename from the request.
@@ -89,7 +86,7 @@ func HandleFileSystemResize(dir http.Dir) http.HandlerFunc {
 
 		// If an error occurred during the image processing, return with an internal
 		// server error.
-		if err := ProcessImage(f, w, r); err != nil {
+		if err := ProcessImage(timeout, f, w, r); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -98,7 +95,7 @@ func HandleFileSystemResize(dir http.Dir) http.HandlerFunc {
 
 // HandleOriginResize performs the actual resizing by loading the image
 // from the origin.
-func HandleOriginResize(origin string) (http.HandlerFunc, error) {
+func HandleOriginResize(timeout time.Duration, origin string) (http.HandlerFunc, error) {
 	originURL, err := url.Parse(origin)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't parse the origin url")
@@ -123,6 +120,8 @@ func HandleOriginResize(origin string) (http.HandlerFunc, error) {
 		// Resolve it relative to the origin url.
 		fileURL := originURL.ResolveReference(filenameURL)
 
+		// TODO: improve, this is quite naive.
+
 		// Perform the GET to the origin server.
 		req, err := http.NewRequest("GET", fileURL.String(), nil)
 		if err != nil {
@@ -139,7 +138,7 @@ func HandleOriginResize(origin string) (http.HandlerFunc, error) {
 
 		// If an error occurred during the image processing, return with an internal
 		// server error.
-		if err := ProcessImage(res.Body, w, r); err != nil {
+		if err := ProcessImage(timeout, res.Body, w, r); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -147,18 +146,24 @@ func HandleOriginResize(origin string) (http.HandlerFunc, error) {
 }
 
 // Serve creates and starts a new server to provide image resizing services.
-func Serve(addr string, debug bool, directory, origin string) error {
+func Serve(addr string, debug bool, directory, origin string, timeout time.Duration) error {
 	mux := http.NewServeMux()
+
+	if timeout != 0 {
+		logrus.WithField("timeout", timeout.String()).Debug("cache headers enabled")
+	} else {
+		logrus.Debug("cache headers disabled")
+	}
 
 	// By default, we'll try to use the directory resize, otherwise, if the origin
 	// url is provided, use it.
 	if origin == "" {
 		logrus.WithField("directory", directory).Debug("serving from the filesystem")
-		mux.HandleFunc("/resize/", HandleFileSystemResize(http.Dir(directory)))
+		mux.HandleFunc("/resize/", HandleFileSystemResize(timeout, http.Dir(directory)))
 	} else {
 		logrus.WithField("origin", origin).Debug("serving from the origin")
 
-		handler, err := HandleOriginResize(origin)
+		handler, err := HandleOriginResize(timeout, origin)
 		if err != nil {
 			return errors.Wrap(err, "can't create origin resize handler")
 		}

@@ -12,10 +12,12 @@
 
 ## <a name="pkg-index">Index</a>
 * [func GIFEncoder(i image.Image, w http.ResponseWriter) error](#GIFEncoder)
-* [func HandleResize(dir http.Dir) http.HandlerFunc](#HandleResize)
+* [func GetFilename(r *http.Request) (string, error)](#GetFilename)
+* [func HandleFileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc](#HandleFileSystemResize)
+* [func HandleOriginResize(timeout time.Duration, origin string) (http.HandlerFunc, error)](#HandleOriginResize)
 * [func PNGEncode(i image.Image, w http.ResponseWriter) error](#PNGEncode)
-* [func ProcessImage(input io.Reader, w http.ResponseWriter, r *http.Request) error](#ProcessImage)
-* [func Serve(addr string, debug bool) error](#Serve)
+* [func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error](#ProcessImage)
+* [func Serve(addr string, debug bool, directory, origin string, timeout time.Duration) error](#Serve)
 * [type Encoder](#Encoder)
   * [func GetEncoder(format string, r *http.Request) Encoder](#GetEncoder)
 * [type EncoderFunc](#EncoderFunc)
@@ -40,11 +42,29 @@ GIFEncoder takes an image and writes the encoded gif image to it.
 
 
 
-## <a name="HandleResize">func</a> [HandleResize](/src/target/server.go?s=1181:1229#L42)
+## <a name="GetFilename">func</a> [GetFilename](/src/target/server.go?s=1183:1232#L39)
 ``` go
-func HandleResize(dir http.Dir) http.HandlerFunc
+func GetFilename(r *http.Request) (string, error)
 ```
-HandleResize performs the actual resizing.
+GetFilename fetches the filename from the request path.
+
+
+
+## <a name="HandleFileSystemResize">func</a> [HandleFileSystemResize](/src/target/server.go?s=1749:1830#L54)
+``` go
+func HandleFileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc
+```
+HandleFileSystemResize performs the actual resizing by loading the image
+from the filesystem.
+
+
+
+## <a name="HandleOriginResize">func</a> [HandleOriginResize](/src/target/server.go?s=2692:2779#L88)
+``` go
+func HandleOriginResize(timeout time.Duration, origin string) (http.HandlerFunc, error)
+```
+HandleOriginResize performs the actual resizing by loading the image
+from the origin.
 
 
 
@@ -56,18 +76,18 @@ PNGEncode takes an image and writes the encoded png image to it.
 
 
 
-## <a name="ProcessImage">func</a> [ProcessImage](/src/target/server.go?s=489:569#L19)
+## <a name="ProcessImage">func</a> [ProcessImage](/src/target/server.go?s=339:442#L12)
 ``` go
-func ProcessImage(input io.Reader, w http.ResponseWriter, r *http.Request) error
+func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error
 ```
 ProcessImage uses the github.com/disintegration/imaging lib to perform the
 image transformations.
 
 
 
-## <a name="Serve">func</a> [Serve](/src/target/server.go?s=2373:2414#L80)
+## <a name="Serve">func</a> [Serve](/src/target/server.go?s=4095:4185#L139)
 ``` go
-func Serve(addr string, debug bool) error
+func Serve(addr string, debug bool, directory, origin string, timeout time.Duration) error
 ```
 Serve creates and starts a new server to provide image resizing services.
 
