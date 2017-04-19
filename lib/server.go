@@ -176,6 +176,15 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 		logrus.Debug("cache headers disabled")
 	}
 
+	// When debug mode is enabled, mount the debug handlers on this router.
+	if debug {
+		mux.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
+		mux.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
+		mux.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
+		mux.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
+		mux.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
+	}
+
 	// By default, we'll try to use the directory resize, otherwise, if the origin
 	// url is provided, use it.
 	if origin == "" {
@@ -189,16 +198,7 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 			return errors.Wrap(err, "can't create origin resize handler")
 		}
 
-		mux.HandleFunc("/resize/", handler)
-	}
-
-	// When debug mode is enabled, mount the debug handlers on this router.
-	if debug {
-		mux.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
-		mux.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
-		mux.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
-		mux.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
-		mux.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
+		mux.HandleFunc("/", handler)
 	}
 
 	n := negroni.Classic() // Includes some default middlewares
