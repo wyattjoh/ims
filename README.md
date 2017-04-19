@@ -18,6 +18,8 @@ You can use the standard Go utility to get the binary and compile it yourself:
 go get github.com/wyattjoh/ims
 ```
 
+You can also use the `wyattjoh/ims` Docker image.
+
 Any images served will be available under a `resize/` prefix, which will allow
 you to attach different image manipulations via the query string. The following
 query parameters are available:
