@@ -52,7 +52,7 @@ Image manipulations can be applied by appending a query string with the followin
 
 - `format`: enables source transcoding:
   - `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
-    - `quality`: the quality out of 100 for the output image (Default: 80).
+    - `quality`: the quality out of 100 for the output image (Default: 75).
       - `png`: converts image to `image/png` encoding
       - `gif`: converts image to `image/gif` encoding
 - `width`: output image width (default is the original width).
