@@ -27,33 +27,35 @@ image manipulations via the query string. The following query parameters are
 available:
 
 - `format`: enables source transcoding:
-	- `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
-		- `quality`: the quality out of 100 for the output image (Default: 80).
+  - `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
+    - `quality`: the quality out of 100 for the output image (Default: 80).
       - `png`: converts image to `image/png` encoding
       - `gif`: converts image to `image/gif` encoding
 - `width`: output image width (default is the original width).
 - `height`: output image height. If both `width` and `height` are provided, the
-      `width` will be used instead.
+  `width` will be used instead.
 - `resize-filter`: select the resize filter to be used. Implementation is sourced via the [github.com/disintegration/imaging](https://github.com/disintegration/imaging) package and we provide the following filters:
-	- `box`: Box filter (averaging pixels).
-	- `netravali`: Mitchell-Netravali cubic filter (BC-spline; B=1/3; C=1/3).
-	- `linear`: Linear filter.
-	- `nearest`: Nearest-neighbor filter, no anti-aliasing.
-	- `lanczos` (**default**): Lanczos filter (3 lobes).
+  - `box`: Box filter (averaging pixels).
+  - `netravali`: Mitchell-Netravali cubic filter (BC-spline; B=1/3; C=1/3).
+  - `linear`: Linear filter.
+  - `nearest`: Nearest-neighbor filter, no anti-aliasing.
+  - `lanczos` (**default**): Lanczos filter (3 lobes).
 - `orient`: changes the image orientation:
-      - `r`: Orientate the image right.
-      - `l`: Orientate the image left.
-      - `h`: Flip the image horizontally.
-      - `v`: Flip the image vertically.
-      - `hv`: Horizontal and Vertical flip.
-      - `vh`: Vertical and Vertical flip.
-      - `2`: Flip the image horizontally.
-      - `3`: Horizontal and Vertical flip.
-      - `4`: Flip the image vertically.
-      - `5`: Horizontal flip then orientate the image left.
-      - `6`: Orientate the image right.
-      - `7`: Horizontal flip then orientate the image right.
-      - `8`: Orientate the image left.
+  - `r`: Orientate the image right.
+  - `l`: Orientate the image left.
+  - `h`: Flip the image horizontally.
+  - `v`: Flip the image vertically.
+  - `hv`: Horizontal and Vertical flip.
+  - `vh`: Vertical and Vertical flip.
+  - `2`: Flip the image horizontally.
+  - `3`: Horizontal and Vertical flip.
+  - `4`: Flip the image vertically.
+  - `5`: Horizontal flip then orientate the image left.
+  - `6`: Orientate the image right.
+  - `7`: Horizontal flip then orientate the image right.
+  - `8`: Orientate the image left.
+- `blur`: produces a blurred version of the image using a Gaussian function,
+  must be positive and indicates how much the image will be blurred
 
 The default beheviour is to serve images out of a folder named "images", but it
 can also be changed to another folder or to an origin server for it to make the

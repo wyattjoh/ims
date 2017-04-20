@@ -71,6 +71,8 @@ func TransformImage(m image.Image, v url.Values) (image.Image, error) {
 		filter = imaging.MitchellNetravali
 	case "box":
 		filter = imaging.Box
+	case "gaussian":
+		filter = imaging.Gaussian
 	default:
 		filter = imaging.Lanczos
 	}
@@ -90,6 +92,14 @@ func TransformImage(m image.Image, v url.Values) (image.Image, error) {
 
 		// Rotate the image.
 		m = RotateImage(m, orient)
+	}
+
+	blur := v.Get("blur")
+	if blur != "" {
+		sigma, err := strconv.ParseFloat(blur, 64)
+		if err == nil {
+			m = imaging.Blur(m, sigma)
+		}
 	}
 
 	return m, nil
