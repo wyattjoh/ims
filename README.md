@@ -80,7 +80,8 @@ Image manipulations can be applied by appending a query string with the followin
   - `7`: Horizontal flip then orientate the image right.
   - `8`: Orientate the image left.
 - `blur`: produces a blurred version of the image using a Gaussian function,
-  must be positive and indicates how much the image will be blurred
+  must be positive and indicates how much the image will be blurred, refers to
+  the sigma value.
 
 ## License
 
