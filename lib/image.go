@@ -26,9 +26,10 @@ func RotateImage(m image.Image, orient string) image.Image {
 	case "vh":
 		return imaging.FlipH(imaging.FlipV(m))
 
-	case "1":
-		// Pending support from https://github.com/golang/go/issues/4341
-		return m
+	// case "1":
+	// 	// Pending support from https://github.com/golang/go/issues/4341
+	// 	return m
+
 	case "2":
 		return imaging.FlipH(m)
 	case "3":

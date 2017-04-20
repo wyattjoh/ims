@@ -20,6 +20,8 @@ go get github.com/wyattjoh/ims
 
 You can also use the [wyattjoh/ims](https://hub.docker.com/r/wyattjoh/ims/) Docker image.
 
+The API matches the Fastly API as much as possible: https://docs.fastly.com/api/imageopto/
+
 Any images served will be available, which will allow you to attach different
 image manipulations via the query string. The following query parameters are
 available:
@@ -38,6 +40,20 @@ available:
 	- `linear`: Linear filter.
 	- `nearest`: Nearest-neighbor filter, no anti-aliasing.
 	- `lanczos` (**default**): Lanczos filter (3 lobes).
+- `orient`: changes the image orientation:
+      - `r`: Orientate the image right.
+      - `l`: Orientate the image left.
+      - `h`: Flip the image horizontally.
+      - `v`: Flip the image vertically.
+      - `hv`: Horizontal and Vertical flip.
+      - `vh`: Vertical and Vertical flip.
+      - `2`: Flip the image horizontally.
+      - `3`: Horizontal and Vertical flip.
+      - `4`: Flip the image vertically.
+      - `5`: Horizontal flip then orientate the image left.
+      - `6`: Orientate the image right.
+      - `7`: Horizontal flip then orientate the image right.
+      - `8`: Orientate the image left.
 
 The default beheviour is to serve images out of a folder named "images", but it
 can also be changed to another folder or to an origin server for it to make the
