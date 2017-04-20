@@ -74,14 +74,14 @@ func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) imag
 
 	// Resize the width if it was provided.
 	if w != "" {
-		if width, err := strconv.Atoi(w); err != nil {
+		if width, err := strconv.Atoi(w); err == nil {
 			return imaging.Resize(m, width, 0, filter)
 		}
 	}
 
 	// Resize the height if provided.
 	if h != "" {
-		if height, err := strconv.Atoi(h); err != nil {
+		if height, err := strconv.Atoi(h); err == nil {
 			return imaging.Resize(m, 0, height, filter)
 		}
 	}
