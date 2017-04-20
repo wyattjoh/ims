@@ -63,6 +63,7 @@ Image manipulations can be applied by appending a query string with the followin
   - `netravali`: Mitchell-Netravali cubic filter (BC-spline; B=1/3; C=1/3).
   - `linear`: Linear filter.
   - `nearest`: Nearest-neighbor filter, no anti-aliasing.
+  - `gaussian`: Gaussian is a Gaussian blurring Filter.
   - `lanczos` (**default**): Lanczos filter (3 lobes).
 - `orient`: changes the image orientation:
   - `r`: Orientate the image right.
