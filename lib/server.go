@@ -8,11 +8,9 @@ import (
 	"net/http/pprof"
 	"net/url"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/disintegration/imaging"
 	negronilogrus "github.com/meatballhat/negroni-logrus"
 	"github.com/pkg/errors"
 	"github.com/urfave/negroni"
@@ -21,35 +19,18 @@ import (
 // ProcessImage uses the github.com/disintegration/imaging lib to perform the
 // image transformations.
 func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error {
-	srcImage, format, err := image.Decode(input)
+	start := time.Now()
+	logrus.Debug("starting processing image")
+
+	m, format, err := image.Decode(input)
 	if err != nil {
 		return errors.Wrap(err, "can't decode the image")
 	}
 
-	var filter imaging.ResampleFilter
-	switch r.URL.Query().Get("resize-filter") {
-	case "lanczos":
-		filter = imaging.Lanczos
-	case "nearest":
-		filter = imaging.NearestNeighbor
-	case "linear":
-		filter = imaging.Linear
-	case "netravali":
-		filter = imaging.MitchellNetravali
-	case "box":
-		filter = imaging.Box
-	default:
-		filter = imaging.Lanczos
-	}
-
-	width, err := strconv.Atoi(r.URL.Query().Get("width"))
-	if err == nil {
-		srcImage = imaging.Resize(srcImage, width, 0, filter)
-	} else {
-		height, err := strconv.Atoi(r.URL.Query().Get("height"))
-		if err == nil {
-			srcImage = imaging.Resize(srcImage, 0, height, filter)
-		}
+	// Apply image transformations.
+	tm, err := TransformImage(m, r.URL.Query())
+	if err != nil {
+		return err
 	}
 
 	if timeout != 0 {
@@ -60,10 +41,11 @@ func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter,
 	w.Header().Set("Last-Modified", time.Now().Format(http.TimeFormat))
 
 	encoder := GetEncoder(format, r)
-	if err := encoder.Encode(srcImage, w); err != nil {
+	if err := encoder.Encode(tm, w); err != nil {
 		return errors.Wrap(err, "can't encode the image")
 	}
 
+	logrus.WithField("latency", time.Since(start).String()).Debug("completed processing image")
 	return nil
 }
 
@@ -203,6 +185,6 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 	// Attach the mux.
 	n.UseHandler(mux)
 
-	logrus.Debugf("Now listening on %s", addr)
+	logrus.WithField("address", addr).Info("Now listening")
 	return http.ListenAndServe(addr, n)
 }

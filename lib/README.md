@@ -1,44 +1,20 @@
 
-
 # ims
-`import "github.com/wyattjoh/ims/lib"`
-
-* [Overview](#pkg-overview)
-* [Index](#pkg-index)
-* [Subdirectories](#pkg-subdirectories)
-
-## <a name="pkg-overview">Overview</a>
-
-
-
-## <a name="pkg-index">Index</a>
-* [func GetFilename(r *http.Request) (string, error)](#GetFilename)
-* [func HandleFileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc](#HandleFileSystemResize)
-* [func HandleOriginResize(timeout time.Duration, originURL *url.URL) http.HandlerFunc](#HandleOriginResize)
-* [func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error](#ProcessImage)
-* [func Serve(addr string, debug bool, directory, origin string, timeout time.Duration) error](#Serve)
-* [type Encoder](#Encoder)
-  * [func GetEncoder(format string, r *http.Request) Encoder](#GetEncoder)
-* [type EncoderFunc](#EncoderFunc)
-  * [func (f EncoderFunc) Encode(m image.Image, w http.ResponseWriter) error](#EncoderFunc.Encode)
-
-
-#### <a name="pkg-files">Package files</a>
-[encoder.go](/src/github.com/wyattjoh/ims/lib/encoder.go) [server.go](/src/github.com/wyattjoh/ims/lib/server.go) 
+    import "github.com/wyattjoh/ims/lib"
 
 
 
 
 
-## <a name="GetFilename">func</a> [GetFilename](/src/target/server.go?s=1734:1783#L61)
+
+## func GetFilename
 ``` go
 func GetFilename(r *http.Request) (string, error)
 ```
 GetFilename fetches the filename from the request path.
 
 
-
-## <a name="HandleFileSystemResize">func</a> [HandleFileSystemResize](/src/target/server.go?s=2293:2374#L76)
+## func HandleFileSystemResize
 ``` go
 func HandleFileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc
 ```
@@ -46,8 +22,7 @@ HandleFileSystemResize performs the actual resizing by loading the image
 from the filesystem.
 
 
-
-## <a name="HandleOriginResize">func</a> [HandleOriginResize](/src/target/server.go?s=3236:3319#L110)
+## func HandleOriginResize
 ``` go
 func HandleOriginResize(timeout time.Duration, originURL *url.URL) http.HandlerFunc
 ```
@@ -55,8 +30,7 @@ HandleOriginResize performs the actual resizing by loading the image
 from the origin.
 
 
-
-## <a name="ProcessImage">func</a> [ProcessImage](/src/target/server.go?s=394:497#L13)
+## func ProcessImage
 ``` go
 func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error
 ```
@@ -64,17 +38,30 @@ ProcessImage uses the github.com/disintegration/imaging lib to perform the
 image transformations.
 
 
+## func RotateImage
+``` go
+func RotateImage(m image.Image, orient string) image.Image
+```
+RotateImage implements the rotating scheme described on:
+<a href="https://docs.fastly.com/api/imageopto/orient">https://docs.fastly.com/api/imageopto/orient</a>
 
-## <a name="Serve">func</a> [Serve](/src/target/server.go?s=4511:4601#L156)
+
+## func Serve
 ``` go
 func Serve(addr string, debug bool, directory, origin string, timeout time.Duration) error
 ```
 Serve creates and starts a new server to provide image resizing services.
 
 
+## func TransformImage
+``` go
+func TransformImage(m image.Image, v url.Values) (image.Image, error)
+```
+TransformImage transforms the image based on data found in the request.
 
 
-## <a name="Encoder">type</a> [Encoder](/src/target/encoder.go?s=916:994#L30)
+
+## type Encoder
 ``` go
 type Encoder interface {
     Encode(m image.Image, w http.ResponseWriter) error
@@ -89,7 +76,9 @@ writer.
 
 
 
-### <a name="GetEncoder">func</a> [GetEncoder](/src/target/encoder.go?s=402:457#L6)
+
+
+### func GetEncoder
 ``` go
 func GetEncoder(format string, r *http.Request) Encoder
 ```
@@ -101,8 +90,7 @@ can encode the image with another format, otherwise, it just encodes it as
 
 
 
-
-## <a name="EncoderFunc">type</a> [EncoderFunc](/src/target/encoder.go?s=1190:1255#L38)
+## type EncoderFunc
 ``` go
 type EncoderFunc func(m image.Image, w http.ResponseWriter) error
 ```
@@ -120,11 +108,13 @@ Encoder that calls f.
 
 
 
-### <a name="EncoderFunc.Encode">func</a> (EncoderFunc) [Encode](/src/target/encoder.go?s=1282:1353#L41)
+
+### func (EncoderFunc) Encode
 ``` go
 func (f EncoderFunc) Encode(m image.Image, w http.ResponseWriter) error
 ```
 Encode calls f(m, w).
+
 
 
 

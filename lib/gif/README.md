@@ -1,31 +1,18 @@
 
-
 # gif
-`import "github.com/wyattjoh/ims/lib/gif"`
-
-* [Overview](#pkg-overview)
-* [Index](#pkg-index)
-
-## <a name="pkg-overview">Overview</a>
-
-
-
-## <a name="pkg-index">Index</a>
-* [func Encode(i image.Image, w http.ResponseWriter) error](#Encode)
-
-
-#### <a name="pkg-files">Package files</a>
-[gif.go](/src/github.com/wyattjoh/ims/lib/gif/gif.go) 
+    import "github.com/wyattjoh/ims/lib/gif"
 
 
 
 
 
-## <a name="Encode">func</a> [Encode](/src/target/gif.go?s=150:205#L2)
+
+## func Encode
 ``` go
 func Encode(i image.Image, w http.ResponseWriter) error
 ```
 Encode takes an image and writes the encoded gif image to it.
+
 
 
 
