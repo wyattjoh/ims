@@ -34,7 +34,7 @@
 
 
 
-## <a name="GIFEncoder">func</a> [GIFEncoder](/src/target/encoder.go?s=1793:1852#L63)
+## <a name="GIFEncoder">func</a> [GIFEncoder](/src/target/encoder.go?s=1889:1948#L67)
 ``` go
 func GIFEncoder(i image.Image, w http.ResponseWriter) error
 ```
@@ -42,7 +42,7 @@ GIFEncoder takes an image and writes the encoded gif image to it.
 
 
 
-## <a name="GetFilename">func</a> [GetFilename](/src/target/server.go?s=1183:1232#L39)
+## <a name="GetFilename">func</a> [GetFilename](/src/target/server.go?s=1679:1728#L60)
 ``` go
 func GetFilename(r *http.Request) (string, error)
 ```
@@ -50,7 +50,7 @@ GetFilename fetches the filename from the request path.
 
 
 
-## <a name="HandleFileSystemResize">func</a> [HandleFileSystemResize](/src/target/server.go?s=1749:1830#L54)
+## <a name="HandleFileSystemResize">func</a> [HandleFileSystemResize](/src/target/server.go?s=2245:2326#L75)
 ``` go
 func HandleFileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc
 ```
@@ -59,7 +59,7 @@ from the filesystem.
 
 
 
-## <a name="HandleOriginResize">func</a> [HandleOriginResize](/src/target/server.go?s=2692:2779#L88)
+## <a name="HandleOriginResize">func</a> [HandleOriginResize](/src/target/server.go?s=3188:3275#L109)
 ``` go
 func HandleOriginResize(timeout time.Duration, origin string) (http.HandlerFunc, error)
 ```
@@ -68,7 +68,7 @@ from the origin.
 
 
 
-## <a name="PNGEncode">func</a> [PNGEncode](/src/target/encoder.go?s=1432:1490#L48)
+## <a name="PNGEncode">func</a> [PNGEncode](/src/target/encoder.go?s=1528:1586#L52)
 ``` go
 func PNGEncode(i image.Image, w http.ResponseWriter) error
 ```
@@ -85,7 +85,7 @@ image transformations.
 
 
 
-## <a name="Serve">func</a> [Serve](/src/target/server.go?s=4095:4185#L139)
+## <a name="Serve">func</a> [Serve](/src/target/server.go?s=4591:4681#L160)
 ``` go
 func Serve(addr string, debug bool, directory, origin string, timeout time.Duration) error
 ```
@@ -149,7 +149,7 @@ Encode calls f(m, w).
 
 
 
-## <a name="JPEGEncoder">type</a> [JPEGEncoder](/src/target/encoder.go?s=2515:2555#L90)
+## <a name="JPEGEncoder">type</a> [JPEGEncoder](/src/target/encoder.go?s=2617:2657#L94)
 ``` go
 type JPEGEncoder struct {
     Quality int
@@ -163,7 +163,7 @@ JPEGEncoder allows the encoding of JPEG's to a http.ResponseWriter.
 
 
 
-### <a name="NewJPEGEncoder">func</a> [NewJPEGEncoder](/src/target/encoder.go?s=2228:2276#L78)
+### <a name="NewJPEGEncoder">func</a> [NewJPEGEncoder](/src/target/encoder.go?s=2324:2372#L82)
 ``` go
 func NewJPEGEncoder(r *http.Request) JPEGEncoder
 ```
@@ -175,7 +175,7 @@ default quality format.
 
 
 
-### <a name="JPEGEncoder.Encode">func</a> (JPEGEncoder) [Encode](/src/target/encoder.go?s=2629:2701#L95)
+### <a name="JPEGEncoder.Encode">func</a> (JPEGEncoder) [Encode](/src/target/encoder.go?s=2731:2803#L99)
 ``` go
 func (je JPEGEncoder) Encode(i image.Image, w http.ResponseWriter) error
 ```
