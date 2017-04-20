@@ -14,6 +14,13 @@ func GetFilename(r *http.Request) (string, error)
 GetFilename fetches the filename from the request path.
 
 
+## func GetResampleFilter
+``` go
+func GetResampleFilter(filter string) imaging.ResampleFilter
+```
+GetResampleFilter gets the resample filter to use for resizing.
+
+
 ## func HandleFileSystemResize
 ``` go
 func HandleFileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc
@@ -36,6 +43,13 @@ func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter,
 ```
 ProcessImage uses the github.com/disintegration/imaging lib to perform the
 image transformations.
+
+
+## func ResizeImage
+``` go
+func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image
+```
+ResizeImage resizes the image with the given resample filter.
 
 
 ## func RotateImage

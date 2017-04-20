@@ -49,8 +49,50 @@ func RotateImage(m image.Image, orient string) image.Image {
 	}
 }
 
+// GetResampleFilter gets the resample filter to use for resizing.
+func GetResampleFilter(filter string) imaging.ResampleFilter {
+	switch filter {
+	case "lanczos":
+		return imaging.Lanczos
+	case "nearest":
+		return imaging.NearestNeighbor
+	case "linear":
+		return imaging.Linear
+	case "netravali":
+		return imaging.MitchellNetravali
+	case "box":
+		return imaging.Box
+	case "gaussian":
+		return imaging.Gaussian
+	default:
+		return imaging.Lanczos
+	}
+}
+
+// ResizeImage resizes the image with the given resample filter.
+func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image {
+
+	// Resize the width if it was provided.
+	if w != "" {
+		if width, err := strconv.Atoi(w); err != nil {
+			return imaging.Resize(m, width, 0, filter)
+		}
+	}
+
+	// Resize the height if provided.
+	if h != "" {
+		if height, err := strconv.Atoi(h); err != nil {
+			return imaging.Resize(m, 0, height, filter)
+		}
+	}
+
+	return m
+}
+
 // TransformImage transforms the image based on data found in the request.
 func TransformImage(m image.Image, v url.Values) (image.Image, error) {
+
+	// Extract the width + height from the image bounds.
 	width := m.Bounds().Max.X
 	height := m.Bounds().Max.Y
 
@@ -59,34 +101,18 @@ func TransformImage(m image.Image, v url.Values) (image.Image, error) {
 		"height": height,
 	})).Debug("image dimensions")
 
-	var filter imaging.ResampleFilter
-	switch v.Get("resize-filter") {
-	case "lanczos":
-		filter = imaging.Lanczos
-	case "nearest":
-		filter = imaging.NearestNeighbor
-	case "linear":
-		filter = imaging.Linear
-	case "netravali":
-		filter = imaging.MitchellNetravali
-	case "box":
-		filter = imaging.Box
-	case "gaussian":
-		filter = imaging.Gaussian
-	default:
-		filter = imaging.Lanczos
+	// Resize the image if the width or height are provided.
+	w := v.Get("width")
+	h := v.Get("height")
+	if w != "" || h != "" {
+
+		// Get the resize filter to use.
+		filter := GetResampleFilter(v.Get("resize-filter"))
+
+		m = ResizeImage(m, w, h, filter)
 	}
 
-	width, err := strconv.Atoi(v.Get("width"))
-	if err == nil {
-		m = imaging.Resize(m, width, 0, filter)
-	} else {
-		height, err := strconv.Atoi(v.Get("height"))
-		if err == nil {
-			m = imaging.Resize(m, 0, height, filter)
-		}
-	}
-
+	// Reorient the image if the orientation parameter was provided.
 	orient := v.Get("orient")
 	if orient != "" {
 
@@ -94,6 +120,7 @@ func TransformImage(m image.Image, v url.Values) (image.Image, error) {
 		m = RotateImage(m, orient)
 	}
 
+	// Blur the image if the parameter was provided.
 	blur := v.Get("blur")
 	if blur != "" {
 		sigma, err := strconv.ParseFloat(blur, 64)
