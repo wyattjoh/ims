@@ -18,13 +18,37 @@ You can use the standard Go utility to get the binary and compile it yourself:
 go get github.com/wyattjoh/ims
 ```
 
+The default beheviour is to serve images out of a folder named "images", but it
+can also be changed to another folder or to an origin server for it to make the
+request to.
+
+This application also provides no caching support, but will attach cache-friendly
+headers, it is recommened that when deploying in production you do so behind a
+service like [Varnish](https://www.varnish-cache.org/) or a CDN like [Fastly](https://www.fastly.com/).
+
+The ims application can be used as such:
+
+```
+Usage of ims:
+  -debug
+        enable debug logging and pprof routes
+  -images-dir string
+        the location on the filesystem to load images from (default "images")
+  -listen-addr string
+        the address to listen for new connections on (default "0.0.0.0:8080")
+  -origin-url string
+        url for the origin server to pull images from
+  -timeout duration
+        used to set the cache control max age headers, set to 0 to disable (default 15m0s)
+```
+
 You can also use the [wyattjoh/ims](https://hub.docker.com/r/wyattjoh/ims/) Docker image.
 
 The API matches the Fastly API as much as possible: https://docs.fastly.com/api/imageopto/
 
-Any images served will be available, which will allow you to attach different
-image manipulations via the query string. The following query parameters are
-available:
+## API
+
+Image manipulations can be applied by appending a query string with the following parameters:
 
 - `format`: enables source transcoding:
   - `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
@@ -56,26 +80,6 @@ available:
   - `8`: Orientate the image left.
 - `blur`: produces a blurred version of the image using a Gaussian function,
   must be positive and indicates how much the image will be blurred
-
-The default beheviour is to serve images out of a folder named "images", but it
-can also be changed to another folder or to an origin server for it to make the
-request to.
-
-The ims application can be used as such:
-
-```
-Usage of ims:
-  -debug
-        enable debug logging and pprof routes
-  -images-dir string
-        the location on the filesystem to load images from (default "images")
-  -listen-addr string
-        the address to listen for new connections on (default "0.0.0.0:8080")
-  -origin-url string
-        url for the origin server to pull images from
-  -timeout duration
-        used to set the cache control max age headers, set to 0 to disable (default 15m0s)
-```
 
 ## License
 
