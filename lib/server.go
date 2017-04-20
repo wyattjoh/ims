@@ -13,6 +13,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/disintegration/imaging"
+	negronilogrus "github.com/meatballhat/negroni-logrus"
 	"github.com/pkg/errors"
 	"github.com/urfave/negroni"
 )
@@ -69,15 +70,15 @@ func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter,
 // GetFilename fetches the filename from the request path.
 func GetFilename(r *http.Request) (string, error) {
 
-	// We expect that the router sends us requests in the form `/resize/:filename`
+	// We expect that the router sends us requests in the form `/:filename`
 	// so we check to see if the path contains the image url that we want to
 	// parse. In this case, we check to see that the path is at least 9 characters
 	// long, which will ensure that the filename has at least 1 character.
-	if len(r.URL.Path) < 9 {
+	if len(r.URL.Path) < 2 {
 		return "", errors.New("filename too short")
 	}
 
-	return r.URL.Path[8:], nil
+	return r.URL.Path[1:], nil
 }
 
 // HandleFileSystemResize performs the actual resizing by loading the image
@@ -116,12 +117,7 @@ func HandleFileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFun
 
 // HandleOriginResize performs the actual resizing by loading the image
 // from the origin.
-func HandleOriginResize(timeout time.Duration, origin string) (http.HandlerFunc, error) {
-	originURL, err := url.Parse(origin)
-	if err != nil {
-		return nil, errors.Wrap(err, "can't parse the origin url")
-	}
-
+func HandleOriginResize(timeout time.Duration, originURL *url.URL) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		// Extract the filename from the request.
@@ -163,7 +159,7 @@ func HandleOriginResize(timeout time.Duration, origin string) (http.HandlerFunc,
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-	}, nil
+	}
 }
 
 // Serve creates and starts a new server to provide image resizing services.
@@ -193,16 +189,18 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 	} else {
 		logrus.WithField("origin", origin).Debug("serving from the origin")
 
-		handler, err := HandleOriginResize(timeout, origin)
+		originURL, err := url.Parse(origin)
 		if err != nil {
-			return errors.Wrap(err, "can't create origin resize handler")
+			return errors.Wrap(err, "can't parse the origin url")
 		}
 
-		mux.HandleFunc("/", handler)
+		mux.HandleFunc("/", HandleOriginResize(timeout, originURL))
 	}
 
-	n := negroni.Classic() // Includes some default middlewares
+	// Create the negroni middleware bundle.
+	n := negroni.New(negroni.NewRecovery(), negronilogrus.NewMiddleware())
 
+	// Attach the mux.
 	n.UseHandler(mux)
 
 	logrus.Debugf("Now listening on %s", addr)
