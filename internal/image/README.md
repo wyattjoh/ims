@@ -1,17 +1,10 @@
 
-# ims
-    import "github.com/wyattjoh/ims/lib"
+# image
+    import "github.com/wyattjoh/ims/internal/image"
 
 
 
 
-
-
-## func GetFilename
-``` go
-func GetFilename(r *http.Request) (string, error)
-```
-GetFilename fetches the filename from the request path.
 
 
 ## func GetResampleFilter
@@ -21,27 +14,11 @@ func GetResampleFilter(filter string) imaging.ResampleFilter
 GetResampleFilter gets the resample filter to use for resizing.
 
 
-## func HandleFileSystemResize
+## func Process
 ``` go
-func HandleFileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc
+func Process(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error
 ```
-HandleFileSystemResize performs the actual resizing by loading the image
-from the filesystem.
-
-
-## func HandleOriginResize
-``` go
-func HandleOriginResize(timeout time.Duration, originURL *url.URL) http.HandlerFunc
-```
-HandleOriginResize performs the actual resizing by loading the image
-from the origin.
-
-
-## func ProcessImage
-``` go
-func ProcessImage(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error
-```
-ProcessImage uses the github.com/disintegration/imaging lib to perform the
+Process uses the github.com/disintegration/imaging lib to perform the
 image transformations.
 
 
@@ -58,13 +35,6 @@ func RotateImage(m image.Image, orient string) image.Image
 ```
 RotateImage implements the rotating scheme described on:
 <a href="https://docs.fastly.com/api/imageopto/orient">https://docs.fastly.com/api/imageopto/orient</a>
-
-
-## func Serve
-``` go
-func Serve(addr string, debug bool, directory, origin string, timeout time.Duration) error
-```
-Serve creates and starts a new server to provide image resizing services.
 
 
 ## func TransformImage

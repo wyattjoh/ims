@@ -1,4 +1,4 @@
-package ims
+package image
 
 import (
 	"image"

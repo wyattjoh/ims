@@ -1,12 +1,12 @@
-package ims
+package image
 
 import (
 	"image"
 	"net/http"
 
-	"github.com/wyattjoh/ims/lib/gif"
-	"github.com/wyattjoh/ims/lib/jpeg"
-	"github.com/wyattjoh/ims/lib/png"
+	"github.com/wyattjoh/ims/internal/image/gif"
+	"github.com/wyattjoh/ims/internal/image/jpeg"
+	"github.com/wyattjoh/ims/internal/image/png"
 )
 
 // GetEncoder parses the `m` query variable and checks to see if it is equal to

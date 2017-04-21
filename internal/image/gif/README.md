@@ -1,6 +1,6 @@
 
-# png
-    import "github.com/wyattjoh/ims/lib/png"
+# gif
+    import "github.com/wyattjoh/ims/internal/image/gif"
 
 
 
@@ -11,7 +11,7 @@
 ``` go
 func Encode(i image.Image, w http.ResponseWriter) error
 ```
-Encode takes an image and writes the encoded png image to it.
+Encode takes an image and writes the encoded gif image to it.
 
 
 
