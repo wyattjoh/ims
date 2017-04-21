@@ -7,13 +7,6 @@
 
 
 
-## func GetResampleFilter
-``` go
-func GetResampleFilter(filter string) imaging.ResampleFilter
-```
-GetResampleFilter gets the resample filter to use for resizing.
-
-
 ## func Process
 ``` go
 func Process(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error
@@ -22,37 +15,14 @@ Process uses the github.com/disintegration/imaging lib to perform the
 image transformations.
 
 
-## func ResizeImage
+
+## type FilesystemProvider
 ``` go
-func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image
-```
-ResizeImage resizes the image with the given resample filter.
-
-
-## func RotateImage
-``` go
-func RotateImage(m image.Image, orient string) image.Image
-```
-RotateImage implements the rotating scheme described on:
-<a href="https://docs.fastly.com/api/imageopto/orient">https://docs.fastly.com/api/imageopto/orient</a>
-
-
-## func TransformImage
-``` go
-func TransformImage(m image.Image, v url.Values) (image.Image, error)
-```
-TransformImage transforms the image based on data found in the request.
-
-
-
-## type Encoder
-``` go
-type Encoder interface {
-    Encode(m image.Image, w http.ResponseWriter) error
+type FilesystemProvider struct {
+    Dir http.Dir
 }
 ```
-Encoder describes any type that can encode with the image and response
-writer.
+FilesystemProvider provides a way to load files from the filesystem.
 
 
 
@@ -62,26 +32,23 @@ writer.
 
 
 
-### func GetEncoder
+
+
+### func (FilesystemProvider) Provide
 ``` go
-func GetEncoder(format string, r *http.Request) Encoder
+func (fp FilesystemProvider) Provide(filename string) (io.ReadCloser, error)
 ```
-GetEncoder parses the `m` query variable and checks to see if it is equal to
-"jpeg". If it is, it uses the jpeg.Encoder, otherwise, it tries to see if it
-can encode the image with another format, otherwise, it just encodes it as
-"jpeg".
+Provide provides a file via the virtual http.Dir filesystem.
 
 
 
-
-## type EncoderFunc
+## type OriginProvider
 ``` go
-type EncoderFunc func(m image.Image, w http.ResponseWriter) error
+type OriginProvider struct {
+    URL *url.URL
+}
 ```
-EncoderFunc type is an adapter to allow the use of
-ordinary functions as image Encoders. If f is a function
-with the appropriate signature, EncoderFunc(f) is a
-Encoder that calls f.
+OriginProvider provides a way to access files from a url.
 
 
 
@@ -93,11 +60,32 @@ Encoder that calls f.
 
 
 
-### func (EncoderFunc) Encode
+### func (OriginProvider) Provide
 ``` go
-func (f EncoderFunc) Encode(m image.Image, w http.ResponseWriter) error
+func (op OriginProvider) Provide(filename string) (io.ReadCloser, error)
 ```
-Encode calls f(m, w).
+Provide provides a file by making a request to the origin server with the
+specified filename and then returning the response body when the request was
+complete.
+
+
+
+## type Provider
+``` go
+type Provider interface {
+    Provide(filename string) (io.ReadCloser, error)
+}
+```
+Provider describes a struct that provides the "Provide" method to provide an
+image from a filename.
+
+
+
+
+
+
+
+
 
 
 

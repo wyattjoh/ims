@@ -1,4 +1,4 @@
-package image
+package transform
 
 import (
 	"image"
@@ -89,8 +89,8 @@ func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) imag
 	return m
 }
 
-// TransformImage transforms the image based on data found in the request.
-func TransformImage(m image.Image, v url.Values) (image.Image, error) {
+// Image transforms the image based on data found in the request.
+func Image(m image.Image, v url.Values) (image.Image, error) {
 
 	// Extract the width + height from the image bounds.
 	width := m.Bounds().Max.X

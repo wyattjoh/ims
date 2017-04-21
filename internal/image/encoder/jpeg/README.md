@@ -1,6 +1,6 @@
 
 # jpeg
-    import "github.com/wyattjoh/ims/internal/image/jpeg"
+    import "github.com/wyattjoh/ims/internal/image/encoder/jpeg"
 
 
 

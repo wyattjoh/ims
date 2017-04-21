@@ -12,6 +12,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/urfave/negroni"
 	"github.com/wyattjoh/ims/cmd/ims/routes"
+	"github.com/wyattjoh/ims/internal/image"
 )
 
 // Serve creates and starts a new server to provide image resizing services.
@@ -33,11 +34,15 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 		mux.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
 	}
 
+	// provider is the source where the image is loaded from.
+	var provider image.Provider
+
 	// By default, we'll try to use the directory resize, otherwise, if the origin
 	// url is provided, use it.
 	if origin == "" {
 		logrus.WithField("directory", directory).Debug("serving from the filesystem")
-		mux.HandleFunc("/", routes.FileSystemResize(timeout, http.Dir(directory)))
+
+		provider = image.FilesystemProvider{Dir: http.Dir(directory)}
 	} else {
 		logrus.WithField("origin", origin).Debug("serving from the origin")
 
@@ -46,8 +51,11 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 			return errors.Wrap(err, "can't parse the origin url")
 		}
 
-		mux.HandleFunc("/", routes.OriginResize(timeout, originURL))
+		provider = image.OriginProvider{URL: originURL}
 	}
+
+	// Mount the resize handler on the mux.
+	mux.HandleFunc("/", routes.Resize(timeout, provider))
 
 	// Create the negroni middleware bundle.
 	n := negroni.New(negroni.NewRecovery(), negronilogrus.NewMiddleware())

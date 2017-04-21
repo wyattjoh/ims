@@ -9,6 +9,8 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/pkg/errors"
+	"github.com/wyattjoh/ims/internal/image/encoder"
+	"github.com/wyattjoh/ims/internal/image/transform"
 )
 
 // Process uses the github.com/disintegration/imaging lib to perform the
@@ -24,7 +26,7 @@ func Process(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *h
 	}
 
 	// Apply image transformations.
-	tm, err := TransformImage(m, r.URL.Query())
+	tm, err := transform.Image(m, r.URL.Query())
 	if err != nil {
 		return err
 	}
@@ -37,8 +39,8 @@ func Process(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *h
 
 	w.Header().Set("Last-Modified", time.Now().Format(http.TimeFormat))
 
-	encoder := GetEncoder(format, r)
-	if err := encoder.Encode(tm, w); err != nil {
+	enc := encoder.Get(format, r)
+	if err := enc.Encode(tm, w); err != nil {
 		return errors.Wrap(err, "can't encode the image")
 	}
 

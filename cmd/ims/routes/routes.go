@@ -4,8 +4,6 @@ package routes
 import (
 	"errors"
 	"net/http"
-	"net/url"
-	"os"
 	"time"
 
 	"github.com/wyattjoh/ims/internal/image"
@@ -26,9 +24,10 @@ func getFilename(r *http.Request) (string, error) {
 	return r.URL.Path[1:], nil
 }
 
-// FileSystemResize performs the actual resizing by loading the image
-// from the filesystem.
-func FileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc {
+// Resize is the handler which loads the filename from the request, loads the
+// file via the provider, and processes the image to re-encode it with caching
+// headers.
+func Resize(timeout time.Duration, provider image.Provider) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		// Extract the filename from the request.
@@ -38,69 +37,16 @@ func FileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc {
 			return
 		}
 
-		// Try to open the image from the virtual filesystem.
-		f, err := dir.Open(filename)
+		// Try to get the image from the provider.
+		m, err := provider.Provide(filename)
 		if err != nil {
-			if _, ok := err.(*os.PathError); ok {
-				http.Error(w, "Not Found", http.StatusNotFound)
-				return
-			}
-
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		defer f.Close()
 
 		// If an error occurred during the image processing, return with an internal
 		// server error.
-		if err := image.Process(timeout, f, w, r); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	}
-}
-
-// OriginResize performs the actual resizing by loading the image
-// from the origin.
-func OriginResize(timeout time.Duration, originURL *url.URL) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-
-		// Extract the filename from the request.
-		filename, err := getFilename(r)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		// Parse the incomming url.
-		filenameURL, err := url.Parse(filename)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		// Resolve it relative to the origin url.
-		fileURL := originURL.ResolveReference(filenameURL)
-
-		// TODO: improve, this is quite naive.
-
-		// Perform the GET to the origin server.
-		req, err := http.NewRequest("GET", fileURL.String(), nil)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		res, err := http.DefaultClient.Do(req)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadGateway)
-			return
-		}
-		defer res.Body.Close()
-
-		// If an error occurred during the image processing, return with an internal
-		// server error.
-		if err := image.Process(timeout, res.Body, w, r); err != nil {
+		if err := image.Process(timeout, m, w, r); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

@@ -9,20 +9,13 @@ Package routes provides the routes used by the `ims` binary.
 
 
 
-## func FileSystemResize
+## func Resize
 ``` go
-func FileSystemResize(timeout time.Duration, dir http.Dir) http.HandlerFunc
+func Resize(timeout time.Duration, provider image.Provider) http.HandlerFunc
 ```
-FileSystemResize performs the actual resizing by loading the image
-from the filesystem.
-
-
-## func OriginResize
-``` go
-func OriginResize(timeout time.Duration, originURL *url.URL) http.HandlerFunc
-```
-OriginResize performs the actual resizing by loading the image
-from the origin.
+Resize is the handler which loads the filename from the request, loads the
+file via the provider, and processes the image to re-encode it with caching
+headers.
 
 
 
