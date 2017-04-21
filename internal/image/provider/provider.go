@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/url"
@@ -10,7 +11,7 @@ import (
 // Provider describes a struct that provides the "Provide" method to provide an
 // image from a filename.
 type Provider interface {
-	Provide(filename string) (io.ReadCloser, error)
+	Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 }
 
 // Filesystem provides a way to load files from the filesystem.
@@ -19,7 +20,7 @@ type Filesystem struct {
 }
 
 // Provide provides a file via the virtual http.Dir filesystem.
-func (fp Filesystem) Provide(filename string) (io.ReadCloser, error) {
+func (fp Filesystem) Provide(ctx context.Context, filename string) (io.ReadCloser, error) {
 
 	// Try to open the image from the virtual filesystem.
 	f, err := fp.Dir.Open(filename)
@@ -42,7 +43,7 @@ type Origin struct {
 // Provide provides a file by making a request to the origin server with the
 // specified filename and then returning the response body when the request was
 // complete.
-func (op Origin) Provide(filename string) (io.ReadCloser, error) {
+func (op Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error) {
 
 	// Parse the incomming url.
 	filenameURL, err := url.Parse(filename)
@@ -60,6 +61,10 @@ func (op Origin) Provide(filename string) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// Add the higher order context to the request. This way if the client closes
+	// the connection before we get the whole image we can abort safely.
+	req = req.WithContext(ctx)
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {

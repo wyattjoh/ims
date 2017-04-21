@@ -1,6 +1,7 @@
 package image
 
 import (
+	"context"
 	"fmt"
 	"image"
 	"io"
@@ -15,7 +16,7 @@ import (
 
 // Process uses the github.com/disintegration/imaging lib to perform the
 // image transformations.
-func Process(timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error {
+func Process(ctx context.Context, timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error {
 	start := time.Now()
 	logrus.Debug("starting processing image")
 

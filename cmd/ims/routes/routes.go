@@ -2,6 +2,7 @@
 package routes
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"time"
@@ -30,6 +31,8 @@ func getFilename(r *http.Request) (string, error) {
 // headers.
 func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		ctx, cancel := context.WithCancel(r.Context())
+		defer cancel()
 
 		// Extract the filename from the request.
 		filename, err := getFilename(r)
@@ -39,7 +42,7 @@ func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc {
 		}
 
 		// Try to get the image from the provider.
-		m, err := p.Provide(filename)
+		m, err := p.Provide(ctx, filename)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -47,7 +50,7 @@ func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc {
 
 		// If an error occurred during the image processing, return with an internal
 		// server error.
-		if err := image.Process(timeout, m, w, r); err != nil {
+		if err := image.Process(ctx, timeout, m, w, r); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
