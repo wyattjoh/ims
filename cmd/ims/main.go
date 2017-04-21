@@ -15,6 +15,9 @@ import (
 	"github.com/wyattjoh/ims/internal/image/provider"
 )
 
+// GetProvider gets the image provider to use for the resize handler. If the
+// origin is not provided, it defaults to the filesysytem provider with the
+// specified directory.
 func GetProvider(directory, origin string) (provider.Provider, error) {
 
 	// By default, we'll try to use the directory resize, otherwise, if the origin
