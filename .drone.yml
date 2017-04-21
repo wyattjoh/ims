@@ -8,9 +8,8 @@ pipeline:
     environment:
       - CGO_ENABLED=0
     commands:
-      - go vet
-      - go test -cover -coverprofile=coverage.out
-      - go build -ldflags "-s -w -X main.build=$DRONE_BUILD_NUMBER" -a -tags netgo
+      - bash ./scripts/test.sh
+      - go build -ldflags "-s -w -X main.build=$DRONE_BUILD_NUMBER" -a -tags netgo github.com/wyattjoh/ims/cmd/ims
 
   publish:
     image: plugins/docker

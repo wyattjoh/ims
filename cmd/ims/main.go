@@ -15,6 +15,27 @@ import (
 	"github.com/wyattjoh/ims/internal/image/provider"
 )
 
+func GetProvider(directory, origin string) (provider.Provider, error) {
+
+	// By default, we'll try to use the directory resize, otherwise, if the origin
+	// url is provided, use it.
+	if origin == "" {
+		logrus.WithField("directory", directory).Debug("serving from the filesystem")
+
+		return provider.Filesystem{Dir: http.Dir(directory)}, nil
+	}
+
+	logrus.WithField("origin", origin).Debug("serving from the origin")
+
+	originURL, err := url.Parse(origin)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't parse the origin url")
+	}
+
+	return provider.Origin{URL: originURL}, nil
+
+}
+
 // Serve creates and starts a new server to provide image resizing services.
 func Serve(addr string, debug bool, directory, origin string, timeout time.Duration) error {
 	mux := http.NewServeMux()
@@ -34,24 +55,10 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 		mux.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
 	}
 
-	// p is the source where the image is loaded from.
-	var p provider.Provider
-
-	// By default, we'll try to use the directory resize, otherwise, if the origin
-	// url is provided, use it.
-	if origin == "" {
-		logrus.WithField("directory", directory).Debug("serving from the filesystem")
-
-		p = provider.Filesystem{Dir: http.Dir(directory)}
-	} else {
-		logrus.WithField("origin", origin).Debug("serving from the origin")
-
-		originURL, err := url.Parse(origin)
-		if err != nil {
-			return errors.Wrap(err, "can't parse the origin url")
-		}
-
-		p = provider.Origin{URL: originURL}
+	// Get the image provider.
+	p, err := GetProvider(directory, origin)
+	if err != nil {
+		return err
 	}
 
 	// Mount the resize handler on the mux.
