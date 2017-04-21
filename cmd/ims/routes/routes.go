@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/wyattjoh/ims/internal/image"
+	"github.com/wyattjoh/ims/internal/image/provider"
 )
 
 // getFilename fetches the filename from the request path and validates that the
@@ -27,7 +28,7 @@ func getFilename(r *http.Request) (string, error) {
 // Resize is the handler which loads the filename from the request, loads the
 // file via the provider, and processes the image to re-encode it with caching
 // headers.
-func Resize(timeout time.Duration, provider image.Provider) http.HandlerFunc {
+func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		// Extract the filename from the request.
@@ -38,7 +39,7 @@ func Resize(timeout time.Duration, provider image.Provider) http.HandlerFunc {
 		}
 
 		// Try to get the image from the provider.
-		m, err := provider.Provide(filename)
+		m, err := p.Provide(filename)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

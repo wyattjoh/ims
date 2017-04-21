@@ -1,4 +1,4 @@
-package image
+package provider
 
 import (
 	"io"
@@ -13,13 +13,13 @@ type Provider interface {
 	Provide(filename string) (io.ReadCloser, error)
 }
 
-// FilesystemProvider provides a way to load files from the filesystem.
-type FilesystemProvider struct {
+// Filesystem provides a way to load files from the filesystem.
+type Filesystem struct {
 	Dir http.Dir
 }
 
 // Provide provides a file via the virtual http.Dir filesystem.
-func (fp FilesystemProvider) Provide(filename string) (io.ReadCloser, error) {
+func (fp Filesystem) Provide(filename string) (io.ReadCloser, error) {
 
 	// Try to open the image from the virtual filesystem.
 	f, err := fp.Dir.Open(filename)
@@ -34,15 +34,15 @@ func (fp FilesystemProvider) Provide(filename string) (io.ReadCloser, error) {
 	return f, nil
 }
 
-// OriginProvider provides a way to access files from a url.
-type OriginProvider struct {
+// Origin provides a way to access files from a url.
+type Origin struct {
 	URL *url.URL
 }
 
 // Provide provides a file by making a request to the origin server with the
 // specified filename and then returning the response body when the request was
 // complete.
-func (op OriginProvider) Provide(filename string) (io.ReadCloser, error) {
+func (op Origin) Provide(filename string) (io.ReadCloser, error) {
 
 	// Parse the incomming url.
 	filenameURL, err := url.Parse(filename)
