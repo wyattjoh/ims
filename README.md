@@ -15,7 +15,7 @@ The application is also fitted with pprof for performance profiling, refer to
 You can use the standard Go utility to get the binary and compile it yourself:
 
 ```bash
-go get github.com/wyattjoh/ims
+go get github.com/wyattjoh/ims/...
 ```
 
 The default beheviour is to serve images out of a folder named "images", but it
