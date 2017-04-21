@@ -2,17 +2,35 @@ package provider
 
 import (
 	"context"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
 )
 
+var (
+	// ErrNotFound is returned when the file could not be found on the provider.
+	ErrNotFound = errors.New("not found")
+
+	// ErrFilename is returned when the filename could not be parsed by the
+	// provider.
+	ErrFilename = errors.New("bad filename")
+
+	// ErrBadGateway is returned when the upstream provider could not service the
+	// request.
+	ErrBadGateway = errors.New("bad gateway")
+)
+
+//==============================================================================
+
 // Provider describes a struct that provides the "Provide" method to provide an
 // image from a filename.
 type Provider interface {
 	Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 }
+
+//==============================================================================
 
 // Filesystem provides a way to load files from the filesystem.
 type Filesystem struct {
@@ -25,8 +43,8 @@ func (fp Filesystem) Provide(ctx context.Context, filename string) (io.ReadClose
 	// Try to open the image from the virtual filesystem.
 	f, err := fp.Dir.Open(filename)
 	if err != nil {
-		if perr, ok := err.(*os.PathError); ok {
-			return nil, perr
+		if _, ok := err.(*os.PathError); ok {
+			return nil, ErrNotFound
 		}
 
 		return nil, err
@@ -34,6 +52,8 @@ func (fp Filesystem) Provide(ctx context.Context, filename string) (io.ReadClose
 
 	return f, nil
 }
+
+//==============================================================================
 
 // Origin provides a way to access files from a url.
 type Origin struct {
@@ -48,7 +68,7 @@ func (op Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, e
 	// Parse the incomming url.
 	filenameURL, err := url.Parse(filename)
 	if err != nil {
-		return nil, err
+		return nil, ErrFilename
 	}
 
 	// Resolve it relative to the origin url.
@@ -69,6 +89,14 @@ func (op Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, e
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
+	}
+
+	if res.StatusCode == 404 {
+		return nil, ErrNotFound
+	}
+
+	if res.StatusCode != 200 {
+		return nil, ErrBadGateway
 	}
 
 	return res.Body, nil

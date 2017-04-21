@@ -49,6 +49,8 @@ func RotateImage(m image.Image, orient string) image.Image {
 	}
 }
 
+//==============================================================================
+
 // GetResampleFilter gets the resample filter to use for resizing.
 func GetResampleFilter(filter string) imaging.ResampleFilter {
 	switch filter {
@@ -69,6 +71,8 @@ func GetResampleFilter(filter string) imaging.ResampleFilter {
 	}
 }
 
+//==============================================================================
+
 // ResizeImage resizes the image with the given resample filter.
 func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image {
 
@@ -88,6 +92,8 @@ func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) imag
 
 	return m
 }
+
+//==============================================================================
 
 // Image transforms the image based on data found in the request.
 func Image(m image.Image, v url.Values) (image.Image, error) {

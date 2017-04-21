@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/wyattjoh/ims/internal/image"
 	"github.com/wyattjoh/ims/internal/image/provider"
 )
@@ -37,14 +38,26 @@ func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc {
 		// Extract the filename from the request.
 		filename, err := getFilename(r)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			logrus.WithError(err).Error("could not process the filename")
+			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 			return
 		}
 
 		// Try to get the image from the provider.
 		m, err := p.Provide(ctx, filename)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			switch err {
+			case provider.ErrBadGateway:
+				http.Error(w, http.StatusText(http.StatusBadGateway), http.StatusBadGateway)
+			case provider.ErrFilename:
+				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			case provider.ErrNotFound:
+				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+			default:
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			}
+
+			logrus.WithError(err).Error("could not load the image from the provider")
 			return
 		}
 
@@ -52,6 +65,7 @@ func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc {
 		// server error.
 		if err := image.Process(ctx, timeout, m, w, r); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logrus.WithError(err).Error("could not process the image")
 			return
 		}
 	}

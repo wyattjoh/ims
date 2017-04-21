@@ -9,9 +9,9 @@ import (
 	"github.com/wyattjoh/ims/internal/image/encoder/png"
 )
 
-// Get parses the `m` query variable and checks to see if it is equal to "jpeg".
-// If it is, it uses the jpeg.Encoder, otherwise, it tries to see if it can
-// encode the image with another format, otherwise, it just encodes it as
+// Get parses the `format` query variable and uses it to see if the user has
+// specified the output format, otherwise, it tries to see if it can
+// encode the image with the source format, otherwise, it just encodes it as
 // "jpeg".
 func Get(format string, r *http.Request) Encoder {
 	switch r.URL.Query().Get("format") {
@@ -40,6 +40,8 @@ func Get(format string, r *http.Request) Encoder {
 type Encoder interface {
 	Encode(m image.Image, w http.ResponseWriter) error
 }
+
+//==============================================================================
 
 // WrapEncoderFunc type is an adapter to allow the use of
 // ordinary functions as image Encoders. If f is a function
