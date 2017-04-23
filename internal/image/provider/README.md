@@ -1,14 +1,48 @@
 
+
 # provider
-    import "github.com/wyattjoh/ims/internal/image/provider"
+`import "github.com/wyattjoh/ims/internal/image/provider"`
+
+* [Overview](#pkg-overview)
+* [Index](#pkg-index)
+
+## <a name="pkg-overview">Overview</a>
 
 
 
+## <a name="pkg-index">Index</a>
+* [Variables](#pkg-variables)
+* [type Filesystem](#Filesystem)
+  * [func (fp Filesystem) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#Filesystem.Provide)
+* [type Origin](#Origin)
+  * [func (op Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#Origin.Provide)
+* [type Provider](#Provider)
+
+
+#### <a name="pkg-files">Package files</a>
+[provider.go](/src/github.com/wyattjoh/ims/internal/image/provider/provider.go) 
 
 
 
+## <a name="pkg-variables">Variables</a>
+``` go
+var (
+    // ErrNotFound is returned when the file could not be found on the provider.
+    ErrNotFound = errors.New("not found")
 
-## type Filesystem
+    // ErrFilename is returned when the filename could not be parsed by the
+    // provider.
+    ErrFilename = errors.New("bad filename")
+
+    // ErrBadGateway is returned when the upstream provider could not service the
+    // request.
+    ErrBadGateway = errors.New("bad gateway")
+)
+```
+
+
+
+## <a name="Filesystem">type</a> [Filesystem](/src/target/provider.go?s=911:951#L26)
 ``` go
 type Filesystem struct {
     Dir http.Dir
@@ -25,16 +59,16 @@ Filesystem provides a way to load files from the filesystem.
 
 
 
-
-### func (Filesystem) Provide
+### <a name="Filesystem.Provide">func</a> (Filesystem) [Provide](/src/target/provider.go?s=1017:1106#L31)
 ``` go
-func (fp Filesystem) Provide(filename string) (io.ReadCloser, error)
+func (fp Filesystem) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 ```
 Provide provides a file via the virtual http.Dir filesystem.
 
 
 
-## type Origin
+
+## <a name="Origin">type</a> [Origin](/src/target/provider.go?s=1462:1498#L49)
 ``` go
 type Origin struct {
     URL *url.URL
@@ -51,10 +85,9 @@ Origin provides a way to access files from a url.
 
 
 
-
-### func (Origin) Provide
+### <a name="Origin.Provide">func</a> (Origin) [Provide](/src/target/provider.go?s=1670:1755#L56)
 ``` go
-func (op Origin) Provide(filename string) (io.ReadCloser, error)
+func (op Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 ```
 Provide provides a file by making a request to the origin server with the
 specified filename and then returning the response body when the request was
@@ -62,17 +95,15 @@ complete.
 
 
 
-## type Provider
+
+## <a name="Provider">type</a> [Provider](/src/target/provider.go?s=666:763#L19)
 ``` go
 type Provider interface {
-    Provide(filename string) (io.ReadCloser, error)
+    Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 }
 ```
 Provider describes a struct that provides the "Provide" method to provide an
 image from a filename.
-
-
-
 
 
 

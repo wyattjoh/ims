@@ -1,22 +1,35 @@
 
-# routes
-    import "github.com/wyattjoh/ims/cmd/ims/routes"
 
+# routes
+`import "github.com/wyattjoh/ims/cmd/ims/routes"`
+
+* [Overview](#pkg-overview)
+* [Index](#pkg-index)
+
+## <a name="pkg-overview">Overview</a>
 Package routes provides the routes used by the `ims` binary.
 
 
 
 
+## <a name="pkg-index">Index</a>
+* [func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc](#Resize)
 
 
-## func Resize
+#### <a name="pkg-files">Package files</a>
+[routes.go](/src/github.com/wyattjoh/ims/cmd/ims/routes/routes.go) 
+
+
+
+
+
+## <a name="Resize">func</a> [Resize](/src/target/routes.go?s=984:1056#L23)
 ``` go
 func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc
 ```
 Resize is the handler which loads the filename from the request, loads the
 file via the provider, and processes the image to re-encode it with caching
 headers.
-
 
 
 

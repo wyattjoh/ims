@@ -1,40 +1,59 @@
 
+
 # transform
-    import "github.com/wyattjoh/ims/internal/image/transform"
+`import "github.com/wyattjoh/ims/internal/image/transform"`
+
+* [Overview](#pkg-overview)
+* [Index](#pkg-index)
+
+## <a name="pkg-overview">Overview</a>
+
+
+
+## <a name="pkg-index">Index</a>
+* [func GetResampleFilter(filter string) imaging.ResampleFilter](#GetResampleFilter)
+* [func Image(m image.Image, v url.Values) (image.Image, error)](#Image)
+* [func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image](#ResizeImage)
+* [func RotateImage(m image.Image, orient string) image.Image](#RotateImage)
+
+
+#### <a name="pkg-files">Package files</a>
+[transform.go](/src/github.com/wyattjoh/ims/internal/image/transform/transform.go) 
 
 
 
 
 
-
-## func GetResampleFilter
+## <a name="GetResampleFilter">func</a> [GetResampleFilter](/src/target/transform.go?s=1171:1231#L45)
 ``` go
 func GetResampleFilter(filter string) imaging.ResampleFilter
 ```
 GetResampleFilter gets the resample filter to use for resizing.
 
 
-## func Image
+
+## <a name="Image">func</a> [Image](/src/target/transform.go?s=2267:2327#L89)
 ``` go
 func Image(m image.Image, v url.Values) (image.Image, error)
 ```
 Image transforms the image based on data found in the request.
 
 
-## func ResizeImage
+
+## <a name="ResizeImage">func</a> [ResizeImage](/src/target/transform.go?s=1703:1790#L67)
 ``` go
 func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image
 ```
 ResizeImage resizes the image with the given resample filter.
 
 
-## func RotateImage
+
+## <a name="RotateImage">func</a> [RotateImage](/src/target/transform.go?s=238:296#L4)
 ``` go
 func RotateImage(m image.Image, orient string) image.Image
 ```
 RotateImage implements the rotating scheme described on:
 <a href="https://docs.fastly.com/api/imageopto/orient">https://docs.fastly.com/api/imageopto/orient</a>
-
 
 
 

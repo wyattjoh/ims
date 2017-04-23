@@ -10,6 +10,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	negronilogrus "github.com/meatballhat/negroni-logrus"
 	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/urfave/negroni"
 	"github.com/wyattjoh/ims/cmd/ims/routes"
 	"github.com/wyattjoh/ims/internal/image/provider"
@@ -39,18 +40,27 @@ func GetProvider(directory, origin string) (provider.Provider, error) {
 
 }
 
+type ServerOpts struct {
+	Addr           string
+	Debug          bool
+	DisableMetrics bool
+	Directory      string
+	Origin         string
+	CacheTimeout   time.Duration
+}
+
 // Serve creates and starts a new server to provide image resizing services.
-func Serve(addr string, debug bool, directory, origin string, timeout time.Duration) error {
+func Serve(opts *ServerOpts) error {
 	mux := http.NewServeMux()
 
-	if timeout != 0 {
-		logrus.WithField("timeout", timeout.String()).Debug("cache headers enabled")
+	if opts.CacheTimeout != 0 {
+		logrus.WithField("timeout", opts.CacheTimeout.String()).Debug("cache headers enabled")
 	} else {
 		logrus.Debug("cache headers disabled")
 	}
 
 	// When debug mode is enabled, mount the debug handlers on this router.
-	if debug {
+	if opts.Debug {
 		mux.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
 		mux.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
 		mux.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
@@ -59,13 +69,24 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 	}
 
 	// Get the image provider.
-	p, err := GetProvider(directory, origin)
+	p, err := GetProvider(opts.Directory, opts.Origin)
 	if err != nil {
 		return err
 	}
 
-	// Mount the resize handler on the mux.
-	mux.HandleFunc("/", routes.Resize(timeout, p))
+	if !opts.DisableMetrics {
+
+		// Mount the resize handler on the mux with the instrumentation wrapped on
+		// the handler.
+		mux.HandleFunc("/", prometheus.InstrumentHandler("image", routes.Resize(opts.CacheTimeout, p)))
+
+		// Register the prometheus metrics handler.
+		mux.Handle("/metrics", prometheus.Handler())
+	} else {
+
+		// Mount the resize handler on the mux.
+		mux.HandleFunc("/", routes.Resize(opts.CacheTimeout, p))
+	}
 
 	// Create the negroni middleware bundle.
 	n := negroni.New(negroni.NewRecovery(), negronilogrus.NewMiddleware())
@@ -73,8 +94,8 @@ func Serve(addr string, debug bool, directory, origin string, timeout time.Durat
 	// Attach the mux.
 	n.UseHandler(mux)
 
-	logrus.WithField("address", addr).Info("Now listening")
-	return http.ListenAndServe(addr, n)
+	logrus.WithField("address", opts.Addr).Info("Now listening")
+	return http.ListenAndServe(opts.Addr, n)
 }
 
 func main() {
@@ -84,6 +105,7 @@ func main() {
 		imagesDirectory = flag.String("images-dir", "images", "the location on the filesystem to load images from")
 		originURL       = flag.String("origin-url", "", "url for the origin server to pull images from")
 		timeout         = flag.Duration("timeout", 15*time.Minute, "used to set the cache control max age headers, set to 0 to disable")
+		disableMetrics  = flag.Bool("disable-metrics", false, "disable the prometheus metrics")
 	)
 
 	flag.Parse()
@@ -92,7 +114,17 @@ func main() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
-	if err := Serve(*listenAddr, *debug, *imagesDirectory, *originURL, *timeout); err != nil {
+	// Setup the server options.
+	opts := &ServerOpts{
+		Addr:           *listenAddr,
+		Debug:          *debug,
+		DisableMetrics: *disableMetrics,
+		Directory:      *imagesDirectory,
+		Origin:         *originURL,
+		CacheTimeout:   *timeout,
+	}
+
+	if err := Serve(opts); err != nil {
 		logrus.Fatalf("Could not serve: %s", err)
 	}
 }

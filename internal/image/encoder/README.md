@@ -1,14 +1,32 @@
 
+
 # encoder
-    import "github.com/wyattjoh/ims/internal/image/encoder"
+`import "github.com/wyattjoh/ims/internal/image/encoder"`
+
+* [Overview](#pkg-overview)
+* [Index](#pkg-index)
+* [Subdirectories](#pkg-subdirectories)
+
+## <a name="pkg-overview">Overview</a>
+
+
+
+## <a name="pkg-index">Index</a>
+* [type Encoder](#Encoder)
+  * [func Get(format string, r *http.Request) Encoder](#Get)
+* [type WrapEncoderFunc](#WrapEncoderFunc)
+  * [func (f WrapEncoderFunc) Encode(m image.Image, w http.ResponseWriter) error](#WrapEncoderFunc.Encode)
+
+
+#### <a name="pkg-files">Package files</a>
+[encoder.go](/src/github.com/wyattjoh/ims/internal/image/encoder/encoder.go) 
 
 
 
 
 
 
-
-## type Encoder
+## <a name="Encoder">type</a> [Encoder](/src/target/encoder.go?s=971:1049#L30)
 ``` go
 type Encoder interface {
     Encode(m image.Image, w http.ResponseWriter) error
@@ -23,21 +41,20 @@ writer.
 
 
 
-
-
-### func Get
+### <a name="Get">func</a> [Get](/src/target/encoder.go?s=448:496#L6)
 ``` go
 func Get(format string, r *http.Request) Encoder
 ```
-Get parses the `m` query variable and checks to see if it is equal to "jpeg".
-If it is, it uses the jpeg.Encoder, otherwise, it tries to see if it can
-encode the image with another format, otherwise, it just encodes it as
+Get parses the `format` query variable and uses it to see if the user has
+specified the output format, otherwise, it tries to see if it can
+encode the image with the source format, otherwise, it just encodes it as
 "jpeg".
 
 
 
 
-## type WrapEncoderFunc
+
+## <a name="WrapEncoderFunc">type</a> [WrapEncoderFunc](/src/target/encoder.go?s=1335:1404#L40)
 ``` go
 type WrapEncoderFunc func(m image.Image, w http.ResponseWriter) error
 ```
@@ -55,13 +72,11 @@ Encoder that calls f.
 
 
 
-
-### func (WrapEncoderFunc) Encode
+### <a name="WrapEncoderFunc.Encode">func</a> (WrapEncoderFunc) [Encode](/src/target/encoder.go?s=1431:1506#L43)
 ``` go
 func (f WrapEncoderFunc) Encode(m image.Image, w http.ResponseWriter) error
 ```
 Encode calls f(m, w).
-
 
 
 

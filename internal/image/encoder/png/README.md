@@ -1,18 +1,31 @@
 
+
 # png
-    import "github.com/wyattjoh/ims/internal/image/encoder/png"
+`import "github.com/wyattjoh/ims/internal/image/encoder/png"`
+
+* [Overview](#pkg-overview)
+* [Index](#pkg-index)
+
+## <a name="pkg-overview">Overview</a>
+
+
+
+## <a name="pkg-index">Index</a>
+* [func Encode(i image.Image, w http.ResponseWriter) error](#Encode)
+
+
+#### <a name="pkg-files">Package files</a>
+[png.go](/src/github.com/wyattjoh/ims/internal/image/encoder/png/png.go) 
 
 
 
 
 
-
-## func Encode
+## <a name="Encode">func</a> [Encode](/src/target/png.go?s=150:205#L2)
 ``` go
 func Encode(i image.Image, w http.ResponseWriter) error
 ```
 Encode takes an image and writes the encoded png image to it.
-
 
 
 

@@ -31,15 +31,17 @@ The ims application can be used as such:
 ```
 Usage of ims:
   -debug
-        enable debug logging and pprof routes
+    	enable debug logging and pprof routes
+  -disable-metrics
+    	disable the prometheus metrics
   -images-dir string
-        the location on the filesystem to load images from (default "images")
+    	the location on the filesystem to load images from (default "images")
   -listen-addr string
-        the address to listen for new connections on (default "0.0.0.0:8080")
+    	the address to listen for new connections on (default "0.0.0.0:8080")
   -origin-url string
-        url for the origin server to pull images from
+    	url for the origin server to pull images from
   -timeout duration
-        used to set the cache control max age headers, set to 0 to disable (default 15m0s)
+    	used to set the cache control max age headers, set to 0 to disable (default 15m0s)
 ```
 
 You can also use the [wyattjoh/ims](https://hub.docker.com/r/wyattjoh/ims/) Docker image.
