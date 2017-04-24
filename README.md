@@ -4,11 +4,14 @@
 [![Go Doc](https://godoc.org/github.com/wyattjoh/ims/lib?status.svg)](http://godoc.org/github.com/wyattjoh/ims/lib)
 [![Go Report](https://goreportcard.com/badge/github.com/wyattjoh/ims)](https://goreportcard.com/report/github.com/wyattjoh/ims)
 
-The ims service is designed to assist with performing image transformations on
-the fly using a full Go solution provided by [github.com/disintegration/imaging](https://github.com/disintegration/imaging).
+The [ims](https://github.com/wyattjoh/ims) (image manipulation service) is
+designed to assist with performing image transformations on the fly using a full
+Go solution provided by
+[github.com/disintegration/imaging](https://github.com/disintegration/imaging).
 
 The application is also fitted with pprof for performance profiling, refer to
-[golang.org/pkg/net/http/pprof](https://golang.org/pkg/net/http/pprof/) for usage information.
+[golang.org/pkg/net/http/pprof](https://golang.org/pkg/net/http/pprof/) for
+usage information.
 
 ## Usage
 
@@ -18,16 +21,17 @@ You can use the standard Go utility to get the binary and compile it yourself:
 go get github.com/wyattjoh/ims/...
 ```
 
-You can also use the [wyattjoh/ims](https://hub.docker.com/r/wyattjoh/ims/) Docker image.
+You can also use the [wyattjoh/ims](https://hub.docker.com/r/wyattjoh/ims/)
+Docker image.
 
 The default beheviour is to serve images out of a folder named "images", but it
 can also be changed to another folder or to an origin server for it to make the
 request to.
 
-This application also provides no caching support, but will attach cache-friendly
-headers, it is recommened that when deploying in production you do so behind a
-service like [Varnish](https://www.varnish-cache.org/) or a CDN like
-[Fastly](https://www.fastly.com/).
+This application also provides no caching support, but will attach
+cache-friendly headers, it is recommened that when deploying in production you
+do so behind a service like [Varnish](https://www.varnish-cache.org/) or a CDN
+like [Fastly](https://www.fastly.com/) ;).
 
 The ims application can be used as such:
 
