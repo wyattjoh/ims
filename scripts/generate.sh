@@ -11,7 +11,7 @@ if [ $RESULT -ne 0 ]; then
 fi
 
 # Install godoc2md if we don't already got it.
-go get github.com/davecheney/godoc2md
+go get -u github.com/davecheney/godoc2md
 
 # list all the packges, trim out the vendor directory and any main packages,
 # then strip off the package name

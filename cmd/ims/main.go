@@ -40,6 +40,12 @@ func GetProvider(directory, origin string) (provider.Provider, error) {
 
 }
 
+// MountEndpoint mounts an endpoint on the mux and logs out the action.
+func MountEndpoint(mux *http.ServeMux, endpoint string, handler http.Handler) {
+	mux.Handle(endpoint, handler)
+	logrus.WithField("endpoint", endpoint).Debug("mounting endpoint")
+}
+
 // ServerOpts is the options for starting a new Server,
 type ServerOpts struct {
 
@@ -76,32 +82,11 @@ func Serve(opts *ServerOpts) error {
 
 	// When debug mode is enabled, mount the debug handlers on this router.
 	if opts.Debug {
-		mux.Handle("/debug/pprof/", http.HandlerFunc(pprof.Index))
-		mux.Handle("/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
-		mux.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
-		mux.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
-		mux.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
-
-		logrus.WithFields(logrus.Fields(map[string]interface{}{
-			"endpoint":     "/debug/pprof",
-			"instrumented": false,
-		})).Debug("mounting debug index endpoint")
-		logrus.WithFields(logrus.Fields(map[string]interface{}{
-			"endpoint":     "/debug/pprof/cmdline",
-			"instrumented": false,
-		})).Debug("mounting debug cmdline endpoint")
-		logrus.WithFields(logrus.Fields(map[string]interface{}{
-			"endpoint":     "/debug/pprof/profile",
-			"instrumented": false,
-		})).Debug("mounting debug profile endpoint")
-		logrus.WithFields(logrus.Fields(map[string]interface{}{
-			"endpoint":     "/debug/pprof/symbol",
-			"instrumented": false,
-		})).Debug("mounting debug symbol endpoint")
-		logrus.WithFields(logrus.Fields(map[string]interface{}{
-			"endpoint":     "/debug/pprof/trace",
-			"instrumented": false,
-		})).Debug("mounting debug trace endpoint")
+		MountEndpoint(mux, "/debug/pprof/", http.HandlerFunc(pprof.Index))
+		MountEndpoint(mux, "/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
+		MountEndpoint(mux, "/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
+		MountEndpoint(mux, "/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
+		MountEndpoint(mux, "/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
 	}
 
 	// Get the image provider.
@@ -113,30 +98,19 @@ func Serve(opts *ServerOpts) error {
 	if opts.DisableMetrics {
 
 		// Mount the resize handler on the mux.
-		mux.HandleFunc("/", routes.Resize(opts.CacheTimeout, p))
+		MountEndpoint(mux, "/", http.HandlerFunc(routes.Image(opts.CacheTimeout, p)))
 
-		logrus.WithFields(logrus.Fields(map[string]interface{}{
-			"endpoint":     "/",
-			"instrumented": false,
-		})).Debug("mounting resize endpoint")
+		logrus.Debug("prometheus metrics disabled")
 	} else {
 
 		// Mount the resize handler on the mux with the instrumentation wrapped on
 		// the handler.
-		mux.HandleFunc("/", prometheus.InstrumentHandler("image", routes.Resize(opts.CacheTimeout, p)))
-
-		logrus.WithFields(logrus.Fields(map[string]interface{}{
-			"endpoint":     "/",
-			"instrumented": true,
-		})).Debug("mounting resize endpoint")
+		MountEndpoint(mux, "/", prometheus.InstrumentHandlerFunc("image", routes.Image(opts.CacheTimeout, p)))
 
 		// Register the prometheus metrics handler.
-		mux.Handle("/metrics", prometheus.Handler())
+		MountEndpoint(mux, "/metrics", prometheus.Handler())
 
-		logrus.WithFields(logrus.Fields(map[string]interface{}{
-			"endpoint":     "/metrics",
-			"instrumented": false,
-		})).Debug("mounting prometheus metrics endpoint")
+		logrus.Debug("prometheus metrics enabled")
 	}
 
 	// Create the negroni middleware bundle.

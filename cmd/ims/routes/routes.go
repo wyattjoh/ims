@@ -27,10 +27,10 @@ func getFilename(r *http.Request) (string, error) {
 	return r.URL.Path[1:], nil
 }
 
-// Resize is the handler which loads the filename from the request, loads the
+// Image is the handler which loads the filename from the request, loads the
 // file via the provider, and processes the image to re-encode it with caching
 // headers.
-func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc {
+func Image(timeout time.Duration, p provider.Provider) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithCancel(r.Context())
 		defer cancel()

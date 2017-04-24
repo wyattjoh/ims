@@ -13,7 +13,7 @@ Package routes provides the routes used by the `ims` binary.
 
 
 ## <a name="pkg-index">Index</a>
-* [func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc](#Resize)
+* [func Image(timeout time.Duration, p provider.Provider) http.HandlerFunc](#Image)
 
 
 #### <a name="pkg-files">Package files</a>
@@ -23,11 +23,11 @@ Package routes provides the routes used by the `ims` binary.
 
 
 
-## <a name="Resize">func</a> [Resize](/src/target/routes.go?s=984:1056#L23)
+## <a name="Image">func</a> [Image](/src/target/routes.go?s=983:1054#L23)
 ``` go
-func Resize(timeout time.Duration, p provider.Provider) http.HandlerFunc
+func Image(timeout time.Duration, p provider.Provider) http.HandlerFunc
 ```
-Resize is the handler which loads the filename from the request, loads the
+Image is the handler which loads the filename from the request, loads the
 file via the provider, and processes the image to re-encode it with caching
 headers.
 
