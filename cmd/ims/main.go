@@ -22,13 +22,9 @@ func main() {
 			Name:  "debug",
 			Usage: "enable debug logging and pprof routes",
 		},
-		cli.StringFlag{
-			Name:  "images-dir",
-			Usage: "the location on the filesystem to load images from",
-		},
-		cli.StringFlag{
-			Name:  "origin-url",
-			Usage: "url for the origin server to pull images from",
+		cli.StringSliceFlag{
+			Name:  "backend",
+			Usage: "comma seperated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from",
 		},
 		cli.StringFlag{
 			Name:  "origin-cache",
@@ -51,6 +47,9 @@ func main() {
 
 // ServeAction starts the ims daemon.
 func ServeAction(c *cli.Context) error {
+	if !c.IsSet("backend") {
+		return cli.NewExitError("no origins specified", 1)
+	}
 
 	// We want to enable debug logging as soon as we know that we're in debug
 	// mode.
@@ -63,8 +62,7 @@ func ServeAction(c *cli.Context) error {
 		Addr:           c.String("listen-addr"),
 		Debug:          c.Bool("debug"),
 		DisableMetrics: c.Bool("disable-metrics"),
-		Directory:      c.String("images-dir"),
-		Origin:         c.String("origin-url"),
+		Backends:       c.StringSlice("backend"),
 		OriginCache:    c.String("origin-cache"),
 		CacheTimeout:   c.Duration("timeout"),
 	}

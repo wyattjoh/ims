@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/gregjones/httpcache"
@@ -55,7 +56,7 @@ func GetOriginRoundTripper(ctx context.Context, underlyingTrasport http.RoundTri
 func GetOriginProvider(ctx context.Context, origin, originCache string) (provider.Provider, error) {
 	originURL, err := url.Parse(origin)
 	if err != nil {
-		return nil, errors.Wrap(err, "can't parse the origin url")
+		return nil, errors.Wrap(err, "cannot parse the origin url")
 	}
 
 	underlyingTrasport, err := GetUnderlyingTransport(ctx, originURL)
@@ -73,27 +74,75 @@ func GetOriginProvider(ctx context.Context, origin, originCache string) (provide
 		return provider.NewGCS(ctx, originURL.Host, transport)
 	case "s3":
 		return provider.NewS3(originURL.Host, transport)
-	default:
+	case "http", "https":
 		return provider.NewOrigin(originURL, transport), nil
+	default:
+		return nil, errors.New("invalid origin url provided, scheme could not be matched to an available provider")
 	}
 }
 
-// Get gets the image provider to use for the resize handler. If the origin is
-// not provided, it defaults to the filesysytem provider with the specified
-// directory.
-func Get(ctx context.Context, directory, origin, originCache string) (provider.Provider, error) {
-	if origin == "" && directory == "" {
+// New loops over the origins provided, parsing with the specified providers,
+// and returns the providers keyed by host and optionally wrapped with an origin
+// cache.
+func New(ctx context.Context, defaultHost string, backends []string, originCache string) (map[string]provider.Provider, error) {
+	if len(backends) == 0 {
 		return nil, errors.New("no provider selected")
 	}
 
-	// By default, we'll try to use the directory resize, otherwise, if the origin
-	// url is provided, use it.
-	if origin == "" {
-		logrus.WithField("directory", directory).Debug("serving from the filesystem")
+	// Collect all the providers to the map of Host -> provider.Provider.
+	providers := make(map[string]provider.Provider)
+	for _, originString := range backends {
+		originSplit := strings.Split(originString, ",")
 
-		return &provider.Filesystem{Dir: http.Dir(directory)}, nil
+		var host, origin string
+
+		// We always expect that the origin should arrive in the form of:
+		//   <host>,<origin> OR <origin>
+		// So if we don't get it, ensure that we do error out.
+		if len(originSplit) == 2 {
+			host = originSplit[0]
+			origin = originSplit[1]
+		} else if len(originSplit) == 1 {
+			host = defaultHost
+			origin = originSplit[0]
+		} else {
+			return nil, errors.New("origin format invalid, expected form <host>,<origin> OR <origin>")
+		}
+
+		// Check to see if we've already attached this host.
+		if _, ok := providers[host]; ok {
+			return nil, errors.Errorf("host %s already has a provider attached to it", host)
+		}
+
+		// If the origin contains the "://" then it must be a remote provider, so
+		// attempt to create a origin provider.
+		if strings.Contains(origin, "://") {
+
+			// This looks a little weird because we aren't passing a constructed
+			// origin cache down to the provider that is shared, but each provider
+			// will have a different http.RoundTripper anyways, so no need to reuse
+			// the cache in the same way.
+			p, err := GetOriginProvider(ctx, origin, originCache)
+			if err != nil {
+				return nil, errors.Wrap(err, "cannot get the origin provider")
+			}
+
+			logrus.WithFields(logrus.Fields{
+				"host":   host,
+				"origin": origin,
+			}).Debug("serving from the origin")
+			providers[host] = p
+
+		} else {
+
+			logrus.WithFields(logrus.Fields{
+				"host":      host,
+				"directory": origin,
+			}).Debug("serving from the filesystem")
+			providers[host] = &provider.Filesystem{Dir: http.Dir(origin)}
+
+		}
 	}
 
-	logrus.WithField("origin", origin).Debug("serving from the origin")
-	return GetOriginProvider(ctx, origin, originCache)
+	return providers, nil
 }

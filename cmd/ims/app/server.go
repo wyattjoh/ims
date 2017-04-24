@@ -32,12 +32,12 @@ type ServerOpts struct {
 	// DisableMetrics disables Prometheus endpoints.
 	DisableMetrics bool
 
-	// Directory is the folder in which images are served out of.
-	Directory string
+	// Directories is the folder in which images are served out of.
+	Directories string
 
-	// Origin is the url that is the base url for images and will act as the
-	// provider.
-	Origin string
+	// Backends is the comma seperated <host>,<origin> where <origin> is a pathname
+	// or a url (with scheme) to load images from.
+	Backends []string
 
 	// OriginCache is the reference to the cache source for origin based
 	// backends.
@@ -72,23 +72,26 @@ func Serve(opts *ServerOpts) error {
 		MountEndpoint(mux, "/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
 	}
 
-	// Get the image provider.
-	p, err := provider.Get(ctx, opts.Directory, opts.Origin, opts.OriginCache)
+	// Get the image provider map.
+	providers, err := provider.New(ctx, opts.Addr, opts.Backends, opts.OriginCache)
 	if err != nil {
 		return err
 	}
 
+	// Wrap the handler with the image handler and the providers.
+	handler := provider.Middleware(providers, handlers.Image(opts.CacheTimeout))
+
 	if opts.DisableMetrics {
 
 		// Mount the resize handler on the mux.
-		MountEndpoint(mux, "/", http.HandlerFunc(handlers.Image(opts.CacheTimeout, p)))
+		MountEndpoint(mux, "/", handler)
 
 		logrus.Debug("prometheus metrics disabled")
 	} else {
 
 		// Mount the resize handler on the mux with the instrumentation wrapped on
 		// the handler.
-		MountEndpoint(mux, "/", prometheus.InstrumentHandlerFunc("image", handlers.Image(opts.CacheTimeout, p)))
+		MountEndpoint(mux, "/", prometheus.InstrumentHandlerFunc("image", handler))
 
 		// Register the prometheus metrics handler.
 		MountEndpoint(mux, "/metrics", prometheus.Handler())

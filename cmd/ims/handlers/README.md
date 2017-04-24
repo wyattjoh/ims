@@ -13,7 +13,7 @@ Package handlers provides the routes used by the `ims` binary.
 
 
 ## <a name="pkg-index">Index</a>
-* [func Image(timeout time.Duration, p provider.Provider) http.HandlerFunc](#Image)
+* [func Image(timeout time.Duration) http.HandlerFunc](#Image)
 
 
 #### <a name="pkg-files">Package files</a>
@@ -23,9 +23,9 @@ Package handlers provides the routes used by the `ims` binary.
 
 
 
-## <a name="Image">func</a> [Image](/src/target/handlers.go?s=987:1058#L23)
+## <a name="Image">func</a> [Image](/src/target/handlers.go?s=1058:1108#L24)
 ``` go
-func Image(timeout time.Duration, p provider.Provider) http.HandlerFunc
+func Image(timeout time.Duration) http.HandlerFunc
 ```
 Image is the handler which loads the filename from the request, loads the
 file via the provider, and processes the image to re-encode it with caching

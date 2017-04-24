@@ -11,30 +11,28 @@
 
 
 ## <a name="pkg-index">Index</a>
-* [func Get(ctx context.Context, directory, origin, originCache string) (provider.Provider, error)](#Get)
+* [Constants](#pkg-constants)
 * [func GetOriginProvider(ctx context.Context, origin, originCache string) (provider.Provider, error)](#GetOriginProvider)
 * [func GetOriginRoundTripper(ctx context.Context, underlyingTrasport http.RoundTripper, originCache string) (http.RoundTripper, error)](#GetOriginRoundTripper)
 * [func GetUnderlyingTransport(ctx context.Context, originURL *url.URL) (http.RoundTripper, error)](#GetUnderlyingTransport)
+* [func Middleware(providers map[string]provider.Provider, next http.HandlerFunc) http.HandlerFunc](#Middleware)
+* [func New(ctx context.Context, defaultHost string, backends []string, originCache string) (map[string]provider.Provider, error)](#New)
 
 
 #### <a name="pkg-files">Package files</a>
-[provider.go](/src/github.com/wyattjoh/ims/internal/platform/provider/provider.go) 
+[middleware.go](/src/github.com/wyattjoh/ims/internal/platform/provider/middleware.go) [provider.go](/src/github.com/wyattjoh/ims/internal/platform/provider/provider.go) 
 
 
-
-
-
-## <a name="Get">func</a> [Get](/src/target/provider.go?s=2479:2574#L74)
+## <a name="pkg-constants">Constants</a>
 ``` go
-func Get(ctx context.Context, directory, origin, originCache string) (provider.Provider, error)
+const ContextKey keyValue = 1
 ```
-Get gets the image provider to use for the resize handler. If the origin is
-not provided, it defaults to the filesysytem provider with the specified
-directory.
+ContextKey is the key for the provider.Provider value in the context.
 
 
 
-## <a name="GetOriginProvider">func</a> [GetOriginProvider](/src/target/provider.go?s=1533:1631#L45)
+
+## <a name="GetOriginProvider">func</a> [GetOriginProvider](/src/target/provider.go?s=1544:1642#L46)
 ``` go
 func GetOriginProvider(ctx context.Context, origin, originCache string) (provider.Provider, error)
 ```
@@ -43,7 +41,7 @@ url.
 
 
 
-## <a name="GetOriginRoundTripper">func</a> [GetOriginRoundTripper](/src/target/provider.go?s=684:816#L18)
+## <a name="GetOriginRoundTripper">func</a> [GetOriginRoundTripper](/src/target/provider.go?s=695:827#L19)
 ``` go
 func GetOriginRoundTripper(ctx context.Context, underlyingTrasport http.RoundTripper, originCache string) (http.RoundTripper, error)
 ```
@@ -52,12 +50,31 @@ origin type.
 
 
 
-## <a name="GetUnderlyingTransport">func</a> [GetUnderlyingTransport](/src/target/provider.go?s=365:460#L7)
+## <a name="GetUnderlyingTransport">func</a> [GetUnderlyingTransport](/src/target/provider.go?s=376:471#L8)
 ``` go
 func GetUnderlyingTransport(ctx context.Context, originURL *url.URL) (http.RoundTripper, error)
 ```
 GetUnderlyingTransport checks the url as some clients have specific
 requirements of the underlying transport.
+
+
+
+## <a name="Middleware">func</a> [Middleware](/src/target/middleware.go?s=343:438#L8)
+``` go
+func Middleware(providers map[string]provider.Provider, next http.HandlerFunc) http.HandlerFunc
+```
+Middleware attaches the correct provider.Provider to the request so that
+the next handler can use it.
+
+
+
+## <a name="New">func</a> [New](/src/target/provider.go?s=2624:2750#L77)
+``` go
+func New(ctx context.Context, defaultHost string, backends []string, originCache string) (map[string]provider.Provider, error)
+```
+New loops over the origins provided, parsing with the specified providers,
+and returns the providers keyed by host and optionally wrapped with an origin
+cache.
 
 
 

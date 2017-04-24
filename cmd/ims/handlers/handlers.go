@@ -10,6 +10,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/wyattjoh/ims/internal/image"
 	"github.com/wyattjoh/ims/internal/image/provider"
+	platformprovider "github.com/wyattjoh/ims/internal/platform/provider"
 )
 
 // getFilename fetches the filename from the request path and validates that the
@@ -30,10 +31,18 @@ func getFilename(r *http.Request) (string, error) {
 // Image is the handler which loads the filename from the request, loads the
 // file via the provider, and processes the image to re-encode it with caching
 // headers.
-func Image(timeout time.Duration, p provider.Provider) http.HandlerFunc {
+func Image(timeout time.Duration) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithCancel(r.Context())
 		defer cancel()
+
+		// Extract the provider from the context.
+		p, ok := ctx.Value(platformprovider.ContextKey).(provider.Provider)
+		if !ok {
+			logrus.Error("expected request to contain context with provider, none found")
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
 
 		// Extract the filename from the request.
 		filename, err := getFilename(r)

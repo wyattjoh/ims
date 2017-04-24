@@ -31,7 +31,7 @@ MountEndpoint mounts an endpoint on the mux and logs out the action.
 
 
 
-## <a name="Serve">func</a> [Serve](/src/target/server.go?s=1393:1427#L42)
+## <a name="Serve">func</a> [Serve](/src/target/server.go?s=1442:1476#L42)
 ``` go
 func Serve(opts *ServerOpts) error
 ```
@@ -40,7 +40,7 @@ Serve creates and starts a new server to provide image resizing services.
 
 
 
-## <a name="ServerOpts">type</a> [ServerOpts](/src/target/server.go?s=646:1314#L14)
+## <a name="ServerOpts">type</a> [ServerOpts](/src/target/server.go?s=646:1363#L14)
 ``` go
 type ServerOpts struct {
 
@@ -53,12 +53,12 @@ type ServerOpts struct {
     // DisableMetrics disables Prometheus endpoints.
     DisableMetrics bool
 
-    // Directory is the folder in which images are served out of.
-    Directory string
+    // Directories is the folder in which images are served out of.
+    Directories string
 
-    // Origin is the url that is the base url for images and will act as the
-    // provider.
-    Origin string
+    // Backends is the comma seperated <host>,<origin> where <origin> is a pathname
+    // or a url (with scheme) to load images from.
+    Backends []string
 
     // OriginCache is the reference to the cache source for origin based
     // backends.
