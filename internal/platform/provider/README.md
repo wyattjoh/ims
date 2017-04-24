@@ -24,7 +24,7 @@
 
 
 
-## <a name="Get">func</a> [Get](/src/target/provider.go?s=2580:2675#L77)
+## <a name="Get">func</a> [Get](/src/target/provider.go?s=2479:2574#L74)
 ``` go
 func Get(ctx context.Context, directory, origin, originCache string) (provider.Provider, error)
 ```
@@ -34,7 +34,7 @@ directory.
 
 
 
-## <a name="GetOriginProvider">func</a> [GetOriginProvider](/src/target/provider.go?s=1634:1732#L48)
+## <a name="GetOriginProvider">func</a> [GetOriginProvider](/src/target/provider.go?s=1533:1631#L45)
 ``` go
 func GetOriginProvider(ctx context.Context, origin, originCache string) (provider.Provider, error)
 ```

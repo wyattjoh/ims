@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/wyattjoh/ims/cmd/ims/app"
 )
 
 func main() {
@@ -27,7 +28,7 @@ func main() {
 	}
 
 	// Setup the server options.
-	opts := &ServerOpts{
+	opts := &app.ServerOpts{
 		Addr:           *listenAddr,
 		Debug:          *debug,
 		DisableMetrics: *disableMetrics,
@@ -37,7 +38,7 @@ func main() {
 		CacheTimeout:   *timeout,
 	}
 
-	if err := Serve(opts); err != nil {
+	if err := app.Serve(opts); err != nil {
 		logrus.WithError(err).Fatalf("could not serve")
 	}
 }
