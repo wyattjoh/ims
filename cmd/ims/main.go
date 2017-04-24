@@ -81,6 +81,27 @@ func Serve(opts *ServerOpts) error {
 		mux.Handle("/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
 		mux.Handle("/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
 		mux.Handle("/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
+
+		logrus.WithFields(logrus.Fields(map[string]interface{}{
+			"endpoint":     "/debug/pprof",
+			"instrumented": false,
+		})).Debug("mounting debug index endpoint")
+		logrus.WithFields(logrus.Fields(map[string]interface{}{
+			"endpoint":     "/debug/pprof/cmdline",
+			"instrumented": false,
+		})).Debug("mounting debug cmdline endpoint")
+		logrus.WithFields(logrus.Fields(map[string]interface{}{
+			"endpoint":     "/debug/pprof/profile",
+			"instrumented": false,
+		})).Debug("mounting debug profile endpoint")
+		logrus.WithFields(logrus.Fields(map[string]interface{}{
+			"endpoint":     "/debug/pprof/symbol",
+			"instrumented": false,
+		})).Debug("mounting debug symbol endpoint")
+		logrus.WithFields(logrus.Fields(map[string]interface{}{
+			"endpoint":     "/debug/pprof/trace",
+			"instrumented": false,
+		})).Debug("mounting debug trace endpoint")
 	}
 
 	// Get the image provider.
@@ -89,18 +110,33 @@ func Serve(opts *ServerOpts) error {
 		return err
 	}
 
-	if !opts.DisableMetrics {
+	if opts.DisableMetrics {
+
+		// Mount the resize handler on the mux.
+		mux.HandleFunc("/", routes.Resize(opts.CacheTimeout, p))
+
+		logrus.WithFields(logrus.Fields(map[string]interface{}{
+			"endpoint":     "/",
+			"instrumented": false,
+		})).Debug("mounting resize endpoint")
+	} else {
 
 		// Mount the resize handler on the mux with the instrumentation wrapped on
 		// the handler.
 		mux.HandleFunc("/", prometheus.InstrumentHandler("image", routes.Resize(opts.CacheTimeout, p)))
 
+		logrus.WithFields(logrus.Fields(map[string]interface{}{
+			"endpoint":     "/",
+			"instrumented": true,
+		})).Debug("mounting resize endpoint")
+
 		// Register the prometheus metrics handler.
 		mux.Handle("/metrics", prometheus.Handler())
-	} else {
 
-		// Mount the resize handler on the mux.
-		mux.HandleFunc("/", routes.Resize(opts.CacheTimeout, p))
+		logrus.WithFields(logrus.Fields(map[string]interface{}{
+			"endpoint":     "/metrics",
+			"instrumented": false,
+		})).Debug("mounting prometheus metrics endpoint")
 	}
 
 	// Create the negroni middleware bundle.
@@ -109,7 +145,7 @@ func Serve(opts *ServerOpts) error {
 	// Attach the mux.
 	n.UseHandler(mux)
 
-	logrus.WithField("address", opts.Addr).Info("Now listening")
+	logrus.WithField("address", opts.Addr).Info("now listening")
 	return http.ListenAndServe(opts.Addr, n)
 }
 
@@ -140,6 +176,6 @@ func main() {
 	}
 
 	if err := Serve(opts); err != nil {
-		logrus.Fatalf("Could not serve: %s", err)
+		logrus.WithError(err).Fatalf("could not serve")
 	}
 }
