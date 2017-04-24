@@ -5,6 +5,7 @@ import (
 	"context"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 
 	minio "github.com/minio/minio-go"
@@ -13,7 +14,7 @@ import (
 
 // NewS3 returns an S3 client capable of providing files from any S3 compatible
 // service such as Minio or Amazon S3 itself.
-func NewS3(bucket string) (*S3, error) {
+func NewS3(bucket string, transport http.RoundTripper) (*S3, error) {
 	endpoint := os.Getenv("S3_ENDPOINT")
 	accessKeyID := os.Getenv("S3_ACCESS_KEY_ID")
 	secretAccessKey := os.Getenv("S3_ACCESS_KEY_SECRET")
@@ -24,6 +25,9 @@ func NewS3(bucket string) (*S3, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot create the s3 client")
 	}
+
+	// Attach the new transport.
+	client.SetCustomTransport(transport)
 
 	return &S3{
 		bucket: bucket,

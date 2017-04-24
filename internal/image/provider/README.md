@@ -12,16 +12,18 @@
 
 ## <a name="pkg-index">Index</a>
 * [Variables](#pkg-variables)
+* [func NewGCSTransport(ctx context.Context) (http.RoundTripper, error)](#NewGCSTransport)
 * [type Filesystem](#Filesystem)
   * [func (fp *Filesystem) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#Filesystem.Provide)
 * [type GCS](#GCS)
-  * [func NewGCS(ctx context.Context, bucket string) (*GCS, error)](#NewGCS)
+  * [func NewGCS(ctx context.Context, bucket string, transport http.RoundTripper) (*GCS, error)](#NewGCS)
   * [func (gcs *GCS) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#GCS.Provide)
 * [type Origin](#Origin)
+  * [func NewOrigin(baseURL *url.URL, transport http.RoundTripper) *Origin](#NewOrigin)
   * [func (op *Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#Origin.Provide)
 * [type Provider](#Provider)
 * [type S3](#S3)
-  * [func NewS3(bucket string) (*S3, error)](#NewS3)
+  * [func NewS3(bucket string, transport http.RoundTripper) (*S3, error)](#NewS3)
   * [func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#S3.Provide)
 
 
@@ -45,6 +47,14 @@ var (
     ErrBadGateway = errors.New("bad gateway")
 )
 ```
+
+
+## <a name="NewGCSTransport">func</a> [NewGCSTransport](/src/target/gcs.go?s=255:323#L7)
+``` go
+func NewGCSTransport(ctx context.Context) (http.RoundTripper, error)
+```
+NewGCSTransport returns the transport used by GCS.
+
 
 
 
@@ -74,7 +84,7 @@ Provide provides a file via the virtual http.Dir filesystem.
 
 
 
-## <a name="GCS">type</a> [GCS](/src/target/gcs.go?s=617:666#L19)
+## <a name="GCS">type</a> [GCS](/src/target/gcs.go?s=1177:1226#L40)
 ``` go
 type GCS struct {
     // contains filtered or unexported fields
@@ -90,9 +100,9 @@ variable.
 
 
 
-### <a name="NewGCS">func</a> [NewGCS](/src/target/gcs.go?s=149:210#L3)
+### <a name="NewGCS">func</a> [NewGCS](/src/target/gcs.go?s=523:613#L17)
 ``` go
-func NewGCS(ctx context.Context, bucket string) (*GCS, error)
+func NewGCS(ctx context.Context, bucket string, transport http.RoundTripper) (*GCS, error)
 ```
 NewGCS will create the GCS Provider.
 
@@ -100,7 +110,7 @@ NewGCS will create the GCS Provider.
 
 
 
-### <a name="GCS.Provide">func</a> (\*GCS) [Provide](/src/target/gcs.go?s=836:920#L26)
+### <a name="GCS.Provide">func</a> (\*GCS) [Provide](/src/target/gcs.go?s=1396:1480#L47)
 ``` go
 func (gcs *GCS) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 ```
@@ -111,10 +121,10 @@ complete.
 
 
 
-## <a name="Origin">type</a> [Origin](/src/target/origin.go?s=123:159#L1)
+## <a name="Origin">type</a> [Origin](/src/target/origin.go?s=396:458#L12)
 ``` go
 type Origin struct {
-    URL *url.URL
+    // contains filtered or unexported fields
 }
 ```
 Origin provides a way to access files from a url.
@@ -125,10 +135,18 @@ Origin provides a way to access files from a url.
 
 
 
+### <a name="NewOrigin">func</a> [NewOrigin](/src/target/origin.go?s=174:243#L2)
+``` go
+func NewOrigin(baseURL *url.URL, transport http.RoundTripper) *Origin
+```
+NewOrigin returns a new Origin Provider that will return files relative to
+the provided base url.
 
 
 
-### <a name="Origin.Provide">func</a> (\*Origin) [Provide](/src/target/origin.go?s=331:417#L8)
+
+
+### <a name="Origin.Provide">func</a> (\*Origin) [Provide](/src/target/origin.go?s=630:716#L20)
 ``` go
 func (op *Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 ```
@@ -157,7 +175,7 @@ image from a filename.
 
 
 
-## <a name="S3">type</a> [S3](/src/target/s3.go?s=874:929#L26)
+## <a name="S3">type</a> [S3](/src/target/s3.go?s=984:1039#L30)
 ``` go
 type S3 struct {
     // contains filtered or unexported fields
@@ -172,9 +190,9 @@ compatible service such as Minio or Amazon S3 itself.
 
 
 
-### <a name="NewS3">func</a> [NewS3](/src/target/s3.go?s=262:300#L6)
+### <a name="NewS3">func</a> [NewS3](/src/target/s3.go?s=274:341#L7)
 ``` go
-func NewS3(bucket string) (*S3, error)
+func NewS3(bucket string, transport http.RoundTripper) (*S3, error)
 ```
 NewS3 returns an S3 client capable of providing files from any S3 compatible
 service such as Minio or Amazon S3 itself.
@@ -183,7 +201,7 @@ service such as Minio or Amazon S3 itself.
 
 
 
-### <a name="S3.Provide">func</a> (\*S3) [Provide](/src/target/s3.go?s=977:1058#L32)
+### <a name="S3.Provide">func</a> (\*S3) [Provide](/src/target/s3.go?s=1087:1168#L36)
 ``` go
 func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 ```

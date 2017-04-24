@@ -3,17 +3,38 @@ package provider
 import (
 	"context"
 	"io"
+	"net/http"
 
 	"github.com/pkg/errors"
 
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
+	"google.golang.org/cloud"
 	"google.golang.org/cloud/storage"
 )
 
-// NewGCS will create the GCS Provider.
-func NewGCS(ctx context.Context, bucket string) (*GCS, error) {
+// NewGCSTransport returns the transport used by GCS.
+func NewGCSTransport(ctx context.Context) (http.RoundTripper, error) {
+	ts, err := google.DefaultTokenSource(ctx, storage.ScopeReadOnly)
+	if err != nil {
+		return nil, err
+	}
 
-	// Creates a storage client for the span of this request.
-	client, err := storage.NewClient(ctx)
+	return oauth2.NewClient(ctx, ts).Transport, nil
+}
+
+// NewGCS will create the GCS Provider.
+func NewGCS(ctx context.Context, bucket string, transport http.RoundTripper) (*GCS, error) {
+
+	// Create the options for the client.
+	opts := []cloud.ClientOption{
+		cloud.WithBaseHTTP(&http.Client{
+			Transport: transport,
+		}),
+	}
+
+	// Creates a storage client for the requests made by this server.
+	client, err := storage.NewClient(ctx, opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot create storage client")
 	}

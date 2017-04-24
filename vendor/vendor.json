@@ -27,6 +27,24 @@
 			"revisionTime": "2017-03-31T03:19:02Z"
 		},
 		{
+			"checksumSHA1": "mygGPzw0Q81XnyUgA7+YYDIjYD8=",
+			"path": "github.com/google/btree",
+			"revision": "316fb6d3f031ae8f4d457c6c5186b9e3ded70435",
+			"revisionTime": "2016-12-17T18:35:37Z"
+		},
+		{
+			"checksumSHA1": "Yys4Zg9FS1VnJyrNpaoPT5LyxhA=",
+			"path": "github.com/gregjones/httpcache",
+			"revision": "d02018f006d98f58512bf3adfc171d88d17626df",
+			"revisionTime": "2017-02-11T09:20:55Z"
+		},
+		{
+			"checksumSHA1": "A+TX1jxqy7iWvcb9ZldoG1b5SsY=",
+			"path": "github.com/gregjones/httpcache/diskcache",
+			"revision": "d02018f006d98f58512bf3adfc171d88d17626df",
+			"revisionTime": "2017-02-11T09:20:55Z"
+		},
+		{
 			"checksumSHA1": "bKMZjd2wPw13VwoE7mBeSv5djFA=",
 			"path": "github.com/matttproud/golang_protobuf_extensions/pbutil",
 			"revision": "c12348ce28de40eed0136aa2b644d0ee0650e56c",
@@ -73,6 +91,12 @@
 			"path": "github.com/minio/minio-go/pkg/set",
 			"revision": "bddd6ac5ebcdba7a45690262d28c2aa2327c5f84",
 			"revisionTime": "2017-04-24T11:38:32Z"
+		},
+		{
+			"checksumSHA1": "GfnXm54E98jxQJMXPZz0LbPVaRc=",
+			"path": "github.com/peterbourgon/diskv",
+			"revision": "5dfcb07a075adbaaa4094cddfd160b1e1c77a043",
+			"revisionTime": "2016-04-04T09:36:48Z"
 		},
 		{
 			"checksumSHA1": "ynJSWoF6v+3zMnh9R0QmmG6iGV8=",

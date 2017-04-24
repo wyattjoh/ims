@@ -7,9 +7,21 @@ import (
 	"net/url"
 )
 
+// NewOrigin returns a new Origin Provider that will return files relative to
+// the provided base url.
+func NewOrigin(baseURL *url.URL, transport http.RoundTripper) *Origin {
+	return &Origin{
+		baseURL: baseURL,
+		client: &http.Client{
+			Transport: transport,
+		},
+	}
+}
+
 // Origin provides a way to access files from a url.
 type Origin struct {
-	URL *url.URL
+	baseURL *url.URL
+	client  *http.Client
 }
 
 // Provide provides a file by making a request to the origin server with the
@@ -24,7 +36,7 @@ func (op *Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, 
 	}
 
 	// Resolve it relative to the origin url.
-	fileURL := op.URL.ResolveReference(filenameURL)
+	fileURL := op.baseURL.ResolveReference(filenameURL)
 
 	// TODO: improve, this is quite naive.
 
@@ -38,7 +50,7 @@ func (op *Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, 
 	// the connection before we get the whole image we can abort safely.
 	req = req.WithContext(ctx)
 
-	res, err := http.DefaultClient.Do(req)
+	res, err := op.client.Do(req)
 	if err != nil {
 		return nil, err
 	}

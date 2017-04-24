@@ -41,6 +41,10 @@ Usage of ims:
     	the location on the filesystem to load images from (default "images")
   -listen-addr string
     	the address to listen for new connections on (default "0.0.0.0:8080")
+  -origin-cache string
+    	cache the origin resources based on their cache headers (:memory: for
+      memory based cache, directory name for file based, not specified for
+      disabled)
   -origin-url string
     	url for the origin server to pull images from
   -timeout duration
