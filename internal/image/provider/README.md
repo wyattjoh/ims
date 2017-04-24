@@ -20,10 +20,13 @@
 * [type Origin](#Origin)
   * [func (op *Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#Origin.Provide)
 * [type Provider](#Provider)
+* [type S3](#S3)
+  * [func NewS3(bucket string) (*S3, error)](#NewS3)
+  * [func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#S3.Provide)
 
 
 #### <a name="pkg-files">Package files</a>
-[filesystem.go](/src/github.com/wyattjoh/ims/internal/image/provider/filesystem.go) [gcs.go](/src/github.com/wyattjoh/ims/internal/image/provider/gcs.go) [origin.go](/src/github.com/wyattjoh/ims/internal/image/provider/origin.go) [provider.go](/src/github.com/wyattjoh/ims/internal/image/provider/provider.go) 
+[filesystem.go](/src/github.com/wyattjoh/ims/internal/image/provider/filesystem.go) [gcs.go](/src/github.com/wyattjoh/ims/internal/image/provider/gcs.go) [origin.go](/src/github.com/wyattjoh/ims/internal/image/provider/origin.go) [provider.go](/src/github.com/wyattjoh/ims/internal/image/provider/provider.go) [s3.go](/src/github.com/wyattjoh/ims/internal/image/provider/s3.go) 
 
 
 
@@ -71,13 +74,15 @@ Provide provides a file via the virtual http.Dir filesystem.
 
 
 
-## <a name="GCS">type</a> [GCS](/src/target/gcs.go?s=519:568#L17)
+## <a name="GCS">type</a> [GCS](/src/target/gcs.go?s=617:666#L19)
 ``` go
 type GCS struct {
     // contains filtered or unexported fields
 }
 ```
-GCS provides a way to access files from Google Cloud Storage.
+GCS provides a way to access files from Google Cloud Storage. Credentials
+used are loaded from the `GOOGLE_APPLICATION_CREDENTIALS` environment
+variable.
 
 
 
@@ -95,7 +100,7 @@ NewGCS will create the GCS Provider.
 
 
 
-### <a name="GCS.Provide">func</a> (\*GCS) [Provide](/src/target/gcs.go?s=738:822#L24)
+### <a name="GCS.Provide">func</a> (\*GCS) [Provide](/src/target/gcs.go?s=836:920#L26)
 ``` go
 func (gcs *GCS) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 ```
@@ -148,6 +153,41 @@ image from a filename.
 
 
 
+
+
+
+
+## <a name="S3">type</a> [S3](/src/target/s3.go?s=874:929#L26)
+``` go
+type S3 struct {
+    // contains filtered or unexported fields
+}
+```
+S3 is a file provider that is capable of providing files from any S3
+compatible service such as Minio or Amazon S3 itself.
+
+
+
+
+
+
+
+### <a name="NewS3">func</a> [NewS3](/src/target/s3.go?s=262:300#L6)
+``` go
+func NewS3(bucket string) (*S3, error)
+```
+NewS3 returns an S3 client capable of providing files from any S3 compatible
+service such as Minio or Amazon S3 itself.
+
+
+
+
+
+### <a name="S3.Provide">func</a> (\*S3) [Provide](/src/target/s3.go?s=977:1058#L32)
+``` go
+func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
+```
+Provide loads the file from the S3 client.
 
 
 

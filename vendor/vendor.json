@@ -39,6 +39,42 @@
 			"revisionTime": "2016-06-28T04:38:43Z"
 		},
 		{
+			"checksumSHA1": "ENwz2DjVOSMc80/Eb0sumfnRjWE=",
+			"path": "github.com/minio/minio-go",
+			"revision": "bddd6ac5ebcdba7a45690262d28c2aa2327c5f84",
+			"revisionTime": "2017-04-24T11:38:32Z"
+		},
+		{
+			"checksumSHA1": "lsxCcRcNUDxhQyO999SOdvKzzfM=",
+			"path": "github.com/minio/minio-go/pkg/encrypt",
+			"revision": "bddd6ac5ebcdba7a45690262d28c2aa2327c5f84",
+			"revisionTime": "2017-04-24T11:38:32Z"
+		},
+		{
+			"checksumSHA1": "neH34/65OXeKHM/MlV8MbhcdFBc=",
+			"path": "github.com/minio/minio-go/pkg/policy",
+			"revision": "bddd6ac5ebcdba7a45690262d28c2aa2327c5f84",
+			"revisionTime": "2017-04-24T11:38:32Z"
+		},
+		{
+			"checksumSHA1": "/5IXp1nGKqOfHn8Piiod3OCkG2U=",
+			"path": "github.com/minio/minio-go/pkg/s3signer",
+			"revision": "bddd6ac5ebcdba7a45690262d28c2aa2327c5f84",
+			"revisionTime": "2017-04-24T11:38:32Z"
+		},
+		{
+			"checksumSHA1": "gRnCFKb4x83GBLVUZXoOjujd+U0=",
+			"path": "github.com/minio/minio-go/pkg/s3utils",
+			"revision": "bddd6ac5ebcdba7a45690262d28c2aa2327c5f84",
+			"revisionTime": "2017-04-24T11:38:32Z"
+		},
+		{
+			"checksumSHA1": "maUy+dbN6VfTTnfErrAW2lLit1w=",
+			"path": "github.com/minio/minio-go/pkg/set",
+			"revision": "bddd6ac5ebcdba7a45690262d28c2aa2327c5f84",
+			"revisionTime": "2017-04-24T11:38:32Z"
+		},
+		{
 			"checksumSHA1": "ynJSWoF6v+3zMnh9R0QmmG6iGV8=",
 			"path": "github.com/pkg/errors",
 			"revision": "ff09b135c25aae272398c51a07235b90a75aa4f0",

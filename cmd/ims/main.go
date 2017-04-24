@@ -40,6 +40,8 @@ func GetProvider(ctx context.Context, directory, origin string) (provider.Provid
 	switch originURL.Scheme {
 	case "gs":
 		return provider.NewGCS(ctx, originURL.Host)
+	case "s3":
+		return provider.NewS3(originURL.Host)
 	default:
 		return &provider.Origin{URL: originURL}, nil
 	}

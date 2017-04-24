@@ -47,17 +47,29 @@ Usage of ims:
     	used to set the cache control max age headers, set to 0 to disable (default 15m0s)
 ```
 
+### Google Cloud Storage
+
 If the `-origin-url` is specified with a `gs://` scheme, [ims](https://github.com/wyattjoh/ims)
 will use the Google Cloud Storage provider. _Note that for authentication
 purposes, the environment variable `GOOGLE_APPLICATION_CREDENTIALS` must be
 present, refer to [Google Application Default Credentials](https://developers.google.com/identity/protocols/application-default-credentials)
 for more information._
 
-The API matches the Fastly API as much as possible: https://docs.fastly.com/api/imageopto/
+### Minio/Amazon S3
+
+If the `-origin-url` is specified with a `s3://` scheme, [ims](https://github.com/wyattjoh/ims)
+will use the S3 provider. For configuration, you must specify the following environment variables:
+
+- `S3_ENDPOINT`: the endpoint to use as the base for the s3 client, can be a Amazon S3 endpoint or
+	a [Minio](https://www.minio.io/) one.
+- `S3_ACCESS_KEY_ID`: access key id.
+- `S3_ACCESS_KEY_SECRET`: access key secret.
+- `S3_DONT_USE_SSL`: `TRUE` if your endpoint should be accessed by SSL (Default: `FALSE`).
 
 ## API
 
-Image manipulations can be applied by appending a query string with the following parameters:
+Image manipulations can be applied by appending a query string with the following parameters and as
+such matches the [Fastly API](https://docs.fastly.com/api/imageopto) as much as possible:
 
 - `format`: enables source transcoding:
   - `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
