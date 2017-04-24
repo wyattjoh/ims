@@ -5,8 +5,8 @@
 [![Go Report](https://goreportcard.com/badge/github.com/wyattjoh/ims)](https://goreportcard.com/report/github.com/wyattjoh/ims)
 
 The [ims](https://github.com/wyattjoh/ims) (image manipulation service) is
-designed to assist with performing image transformations on the fly using a full
-Go solution provided by
+designed to assist with performing image transformations and optimizations on
+the fly using a full Go solution provided by:
 [github.com/disintegration/imaging](https://github.com/disintegration/imaging).
 
 The application is also fitted with pprof for performance profiling, refer to
