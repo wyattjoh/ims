@@ -18,13 +18,16 @@ You can use the standard Go utility to get the binary and compile it yourself:
 go get github.com/wyattjoh/ims/...
 ```
 
+You can also use the [wyattjoh/ims](https://hub.docker.com/r/wyattjoh/ims/) Docker image.
+
 The default beheviour is to serve images out of a folder named "images", but it
 can also be changed to another folder or to an origin server for it to make the
 request to.
 
 This application also provides no caching support, but will attach cache-friendly
 headers, it is recommened that when deploying in production you do so behind a
-service like [Varnish](https://www.varnish-cache.org/) or a CDN like [Fastly](https://www.fastly.com/).
+service like [Varnish](https://www.varnish-cache.org/) or a CDN like
+[Fastly](https://www.fastly.com/).
 
 The ims application can be used as such:
 
@@ -44,7 +47,11 @@ Usage of ims:
     	used to set the cache control max age headers, set to 0 to disable (default 15m0s)
 ```
 
-You can also use the [wyattjoh/ims](https://hub.docker.com/r/wyattjoh/ims/) Docker image.
+If the `-origin-url` is specified with a `gs://` scheme, [ims](https://github.com/wyattjoh/ims)
+will use the Google Cloud Storage provider. _Note that for authentication
+purposes, the environment variable `GOOGLE_APPLICATION_CREDENTIALS` must be
+present, refer to [Google Application Default Credentials](https://developers.google.com/identity/protocols/application-default-credentials)
+for more information._
 
 The API matches the Fastly API as much as possible: https://docs.fastly.com/api/imageopto/
 

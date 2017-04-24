@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"net/http"
 	"net/http/pprof"
@@ -19,14 +20,14 @@ import (
 // GetProvider gets the image provider to use for the resize handler. If the
 // origin is not provided, it defaults to the filesysytem provider with the
 // specified directory.
-func GetProvider(directory, origin string) (provider.Provider, error) {
+func GetProvider(ctx context.Context, directory, origin string) (provider.Provider, error) {
 
 	// By default, we'll try to use the directory resize, otherwise, if the origin
 	// url is provided, use it.
 	if origin == "" {
 		logrus.WithField("directory", directory).Debug("serving from the filesystem")
 
-		return provider.Filesystem{Dir: http.Dir(directory)}, nil
+		return &provider.Filesystem{Dir: http.Dir(directory)}, nil
 	}
 
 	logrus.WithField("origin", origin).Debug("serving from the origin")
@@ -36,8 +37,12 @@ func GetProvider(directory, origin string) (provider.Provider, error) {
 		return nil, errors.Wrap(err, "can't parse the origin url")
 	}
 
-	return provider.Origin{URL: originURL}, nil
-
+	switch originURL.Scheme {
+	case "gs":
+		return provider.NewGCS(ctx, originURL.Host)
+	default:
+		return &provider.Origin{URL: originURL}, nil
+	}
 }
 
 // MountEndpoint mounts an endpoint on the mux and logs out the action.
@@ -72,6 +77,11 @@ type ServerOpts struct {
 
 // Serve creates and starts a new server to provide image resizing services.
 func Serve(opts *ServerOpts) error {
+
+	// Create the context that will manage the state for the request.
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
 	mux := http.NewServeMux()
 
 	if opts.CacheTimeout != 0 {
@@ -90,7 +100,7 @@ func Serve(opts *ServerOpts) error {
 	}
 
 	// Get the image provider.
-	p, err := GetProvider(opts.Directory, opts.Origin)
+	p, err := GetProvider(ctx, opts.Directory, opts.Origin)
 	if err != nil {
 		return err
 	}
@@ -116,7 +126,7 @@ func Serve(opts *ServerOpts) error {
 	// Create the negroni middleware bundle.
 	n := negroni.New(negroni.NewRecovery(), negronilogrus.NewMiddleware())
 
-	// Attach the mux.
+	// Attach the mux to the middleware handler.
 	n.UseHandler(mux)
 
 	logrus.WithField("address", opts.Addr).Info("now listening")
@@ -135,6 +145,8 @@ func main() {
 
 	flag.Parse()
 
+	// We want to enable debug logging as soon as we know that we're in debug
+	// mode.
 	if *debug {
 		logrus.SetLevel(logrus.DebugLevel)
 	}

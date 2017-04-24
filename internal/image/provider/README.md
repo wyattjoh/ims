@@ -13,14 +13,17 @@
 ## <a name="pkg-index">Index</a>
 * [Variables](#pkg-variables)
 * [type Filesystem](#Filesystem)
-  * [func (fp Filesystem) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#Filesystem.Provide)
+  * [func (fp *Filesystem) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#Filesystem.Provide)
+* [type GCS](#GCS)
+  * [func NewGCS(ctx context.Context, bucket string) (*GCS, error)](#NewGCS)
+  * [func (gcs *GCS) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#GCS.Provide)
 * [type Origin](#Origin)
-  * [func (op Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#Origin.Provide)
+  * [func (op *Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error)](#Origin.Provide)
 * [type Provider](#Provider)
 
 
 #### <a name="pkg-files">Package files</a>
-[provider.go](/src/github.com/wyattjoh/ims/internal/image/provider/provider.go) 
+[filesystem.go](/src/github.com/wyattjoh/ims/internal/image/provider/filesystem.go) [gcs.go](/src/github.com/wyattjoh/ims/internal/image/provider/gcs.go) [origin.go](/src/github.com/wyattjoh/ims/internal/image/provider/origin.go) [provider.go](/src/github.com/wyattjoh/ims/internal/image/provider/provider.go) 
 
 
 
@@ -42,7 +45,7 @@ var (
 
 
 
-## <a name="Filesystem">type</a> [Filesystem](/src/target/provider.go?s=911:951#L26)
+## <a name="Filesystem">type</a> [Filesystem](/src/target/filesystem.go?s=129:169#L1)
 ``` go
 type Filesystem struct {
     Dir http.Dir
@@ -59,16 +62,51 @@ Filesystem provides a way to load files from the filesystem.
 
 
 
-### <a name="Filesystem.Provide">func</a> (Filesystem) [Provide](/src/target/provider.go?s=1017:1106#L31)
+### <a name="Filesystem.Provide">func</a> (\*Filesystem) [Provide](/src/target/filesystem.go?s=235:325#L6)
 ``` go
-func (fp Filesystem) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
+func (fp *Filesystem) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 ```
 Provide provides a file via the virtual http.Dir filesystem.
 
 
 
 
-## <a name="Origin">type</a> [Origin](/src/target/provider.go?s=1462:1498#L49)
+## <a name="GCS">type</a> [GCS](/src/target/gcs.go?s=519:568#L17)
+``` go
+type GCS struct {
+    // contains filtered or unexported fields
+}
+```
+GCS provides a way to access files from Google Cloud Storage.
+
+
+
+
+
+
+
+### <a name="NewGCS">func</a> [NewGCS](/src/target/gcs.go?s=149:210#L3)
+``` go
+func NewGCS(ctx context.Context, bucket string) (*GCS, error)
+```
+NewGCS will create the GCS Provider.
+
+
+
+
+
+### <a name="GCS.Provide">func</a> (\*GCS) [Provide](/src/target/gcs.go?s=738:822#L24)
+``` go
+func (gcs *GCS) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
+```
+Provide provides a file by making a request to Google Cloud Storage with the
+specified key and then returning the response body when the request was
+complete.
+
+
+
+
+## <a name="Origin">type</a> [Origin](/src/target/origin.go?s=123:159#L1)
 ``` go
 type Origin struct {
     URL *url.URL
@@ -85,9 +123,9 @@ Origin provides a way to access files from a url.
 
 
 
-### <a name="Origin.Provide">func</a> (Origin) [Provide](/src/target/provider.go?s=1670:1755#L56)
+### <a name="Origin.Provide">func</a> (\*Origin) [Provide](/src/target/origin.go?s=331:417#L8)
 ``` go
-func (op Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
+func (op *Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error)
 ```
 Provide provides a file by making a request to the origin server with the
 specified filename and then returning the response body when the request was
@@ -96,7 +134,7 @@ complete.
 
 
 
-## <a name="Provider">type</a> [Provider](/src/target/provider.go?s=666:763#L19)
+## <a name="Provider">type</a> [Provider](/src/target/provider.go?s=637:734#L16)
 ``` go
 type Provider interface {
     Provide(ctx context.Context, filename string) (io.ReadCloser, error)
