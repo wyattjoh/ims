@@ -26,9 +26,6 @@ func GetUnderlyingTransport(ctx context.Context, originURL *url.URL) (http.Round
 // GetOriginRoundTripper gets the roundtripper if the provider is a remote
 // origin type.
 func GetOriginRoundTripper(ctx context.Context, underlyingTrasport http.RoundTripper, originCache string) (http.RoundTripper, error) {
-
-	// If the cache is enabled, we need to switch in the cache'd transport.
-	transport := http.DefaultTransport
 	switch originCache {
 	case ":memory:":
 
@@ -41,7 +38,7 @@ func GetOriginRoundTripper(ctx context.Context, underlyingTrasport http.RoundTri
 		return mct, nil
 	case "":
 		logrus.Debug("origin cache disabled")
-		return transport, nil
+		return underlyingTrasport, nil
 	default:
 
 		// Create a new disk transport cache.
