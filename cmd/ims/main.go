@@ -40,13 +40,28 @@ func GetProvider(directory, origin string) (provider.Provider, error) {
 
 }
 
+// ServerOpts is the options for starting a new Server,
 type ServerOpts struct {
-	Addr           string
-	Debug          bool
+
+	// Addr is the address to listen for http requests on.
+	Addr string
+
+	// Debug enables pprof endpoints and debug logs.
+	Debug bool
+
+	// DisableMetrics disables Prometheus endpoints.
 	DisableMetrics bool
-	Directory      string
-	Origin         string
-	CacheTimeout   time.Duration
+
+	// Directory is the folder in which images are served out of.
+	Directory string
+
+	// Origin is the url that is the base url for images and will act as the
+	// provider.
+	Origin string
+
+	// CacheTimeout is the time that images will have cache headers for when
+	// writing them out to the http response.
+	CacheTimeout time.Duration
 }
 
 // Serve creates and starts a new server to provide image resizing services.
