@@ -123,7 +123,9 @@ func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) imag
 
 //==============================================================================
 
-// Image transforms the image based on data found in the request.
+// Image transforms the image based on data found in the request. Following the
+// available query params in the root README, this will parse the query params
+// and apply image transformations.
 func Image(m image.Image, v url.Values) (image.Image, error) {
 
 	// Extract the width + height from the image bounds.

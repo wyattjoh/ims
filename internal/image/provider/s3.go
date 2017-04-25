@@ -50,6 +50,9 @@ func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error
 	if err != nil {
 		return nil, err
 	}
+
+	// We wouldn't normally close this, but because we're just reading this into
+	// a buffer below, no need to keep this dangling.
 	defer r.Close()
 
 	// Read the image into the buffer. You would think that we could just return
@@ -70,6 +73,7 @@ func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error
 	}
 
 	// The bytes buffer isn't a closer by nature, just wrap it with a no-op closer
-	// to satisfy the interface.
+	// to satisfy the interface, it will be managed by the GC to clean up
+	// afterwards.
 	return ioutil.NopCloser(buf), nil
 }

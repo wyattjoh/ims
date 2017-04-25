@@ -42,11 +42,13 @@ GetResampleFilter gets the resample filter to use for resizing.
 
 
 
-## <a name="Image">func</a> [Image](/src/target/transform.go?s=2991:3051#L117)
+## <a name="Image">func</a> [Image](/src/target/transform.go?s=3120:3180#L119)
 ``` go
 func Image(m image.Image, v url.Values) (image.Image, error)
 ```
-Image transforms the image based on data found in the request.
+Image transforms the image based on data found in the request. Following the
+available query params in the root README, this will parse the query params
+and apply image transformations.
 
 
 

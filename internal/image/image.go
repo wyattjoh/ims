@@ -32,13 +32,15 @@ func Process(ctx context.Context, timeout time.Duration, input io.Reader, w http
 		return err
 	}
 
+	now := time.Now()
+
 	// Write some caching headers if needed.
 	if timeout != 0 {
 		w.Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", int64(timeout.Seconds())))
-		w.Header().Set("Expires", time.Now().Add(timeout).Format(http.TimeFormat))
+		w.Header().Set("Expires", now.Add(timeout).Format(http.TimeFormat))
 	}
 
-	w.Header().Set("Last-Modified", time.Now().Format(http.TimeFormat))
+	w.Header().Set("Last-Modified", now.Format(http.TimeFormat))
 
 	enc := encoder.Get(format, r)
 	if err := enc.Encode(tm, w); err != nil {
