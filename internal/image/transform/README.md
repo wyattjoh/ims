@@ -24,7 +24,7 @@
 
 
 
-## <a name="GetResampleFilter">func</a> [GetResampleFilter](/src/target/transform.go?s=1171:1231#L45)
+## <a name="GetResampleFilter">func</a> [GetResampleFilter](/src/target/transform.go?s=1237:1297#L46)
 ``` go
 func GetResampleFilter(filter string) imaging.ResampleFilter
 ```
@@ -32,7 +32,7 @@ GetResampleFilter gets the resample filter to use for resizing.
 
 
 
-## <a name="Image">func</a> [Image](/src/target/transform.go?s=2267:2327#L89)
+## <a name="Image">func</a> [Image](/src/target/transform.go?s=2333:2393#L90)
 ``` go
 func Image(m image.Image, v url.Values) (image.Image, error)
 ```
@@ -40,7 +40,7 @@ Image transforms the image based on data found in the request.
 
 
 
-## <a name="ResizeImage">func</a> [ResizeImage](/src/target/transform.go?s=1703:1790#L67)
+## <a name="ResizeImage">func</a> [ResizeImage](/src/target/transform.go?s=1769:1856#L68)
 ``` go
 func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image
 ```

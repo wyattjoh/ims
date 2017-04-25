@@ -69,6 +69,7 @@ func Image(timeout time.Duration) http.HandlerFunc {
 			logrus.WithError(err).Error("could not load the image from the provider")
 			return
 		}
+		defer m.Close()
 
 		// If an error occurred during the image processing, return with an internal
 		// server error.

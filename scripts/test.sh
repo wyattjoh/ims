@@ -15,4 +15,4 @@ for package in $(go list ./... | grep -v '/vendor/'); do golint -set_exit_status
 go vet $(go list ./... | grep -v '/vendor/')
 
 # Test.
-go test $(go list ./... | grep -v '/vendor/')
+go test $(go list ./... | grep -v '/vendor/') -v -cover

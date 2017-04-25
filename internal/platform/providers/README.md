@@ -12,12 +12,13 @@
 
 ## <a name="pkg-index">Index</a>
 * [Constants](#pkg-constants)
-* [func GetBackendProvider(ctx context.Context, origin, originCache string) (provider.Provider, error)](#GetBackendProvider)
-* [func GetBackendRoundTripper(ctx context.Context, underlyingTrasport http.RoundTripper, originCache string) (http.RoundTripper, error)](#GetBackendRoundTripper)
+* [func GetRemoteBackendProvider(ctx context.Context, origin, originCache string) (provider.Provider, error)](#GetRemoteBackendProvider)
+* [func GetRemoteProviderClient(ctx context.Context, originURL *url.URL, transport http.RoundTripper) (provider.Provider, error)](#GetRemoteProviderClient)
 * [func GetUnderlyingTransport(ctx context.Context, originURL *url.URL) (http.RoundTripper, error)](#GetUnderlyingTransport)
 * [func Middleware(providers map[string]provider.Provider, next http.HandlerFunc) http.HandlerFunc](#Middleware)
 * [func New(ctx context.Context, defaultHost string, backends []string, originCache string) (map[string]provider.Provider, error)](#New)
 * [func ParseBackend(defaultHost, backend string) (string, string, error)](#ParseBackend)
+* [func WrapCacheRoundTripper(ctx context.Context, underlyingTransport http.RoundTripper, originCache string) (http.RoundTripper, error)](#WrapCacheRoundTripper)
 
 
 #### <a name="pkg-files">Package files</a>
@@ -33,21 +34,20 @@ ContextKey is the key for the provider.Provider value in the context.
 
 
 
-## <a name="GetBackendProvider">func</a> [GetBackendProvider](/src/target/providers.go?s=1621:1720#L50)
+## <a name="GetRemoteBackendProvider">func</a> [GetRemoteBackendProvider](/src/target/providers.go?s=2191:2296#L65)
 ``` go
-func GetBackendProvider(ctx context.Context, origin, originCache string) (provider.Provider, error)
+func GetRemoteBackendProvider(ctx context.Context, origin, originCache string) (provider.Provider, error)
 ```
-GetBackendProvider will get the backend provider based on the scheme of the
-url.
+GetRemoteBackendProvider will get the backend provider based on the scheme of
+the url.
 
 
 
-## <a name="GetBackendRoundTripper">func</a> [GetBackendRoundTripper](/src/target/providers.go?s=698:831#L19)
+## <a name="GetRemoteProviderClient">func</a> [GetRemoteProviderClient](/src/target/providers.go?s=1607:1732#L50)
 ``` go
-func GetBackendRoundTripper(ctx context.Context, underlyingTrasport http.RoundTripper, originCache string) (http.RoundTripper, error)
+func GetRemoteProviderClient(ctx context.Context, originURL *url.URL, transport http.RoundTripper) (provider.Provider, error)
 ```
-GetBackendRoundTripper gets the roundtripper if the provider is a remote
-backend type.
+GetRemoteProviderClient gets the remote provider client or errors.
 
 
 
@@ -69,17 +69,17 @@ the next handler can use it.
 
 
 
-## <a name="New">func</a> [New](/src/target/providers.go?s=3304:3430#L99)
+## <a name="New">func</a> [New](/src/target/providers.go?s=3843:3969#L110)
 ``` go
 func New(ctx context.Context, defaultHost string, backends []string, originCache string) (map[string]provider.Provider, error)
 ```
 New loops over the origins provided, parsing with the specified providers,
 and returns the providers keyed by host and optionally wrapped with an origin
-cache.
+cache. This will error if the same backend host is extracted more than once.
 
 
 
-## <a name="ParseBackend">func</a> [ParseBackend](/src/target/providers.go?s=2782:2852#L84)
+## <a name="ParseBackend">func</a> [ParseBackend](/src/target/providers.go?s=3092:3162#L91)
 ``` go
 func ParseBackend(defaultHost, backend string) (string, string, error)
 ```
@@ -89,6 +89,15 @@ ParseBackend parses the backend using the following formats:
 	<host>,<origin> OR <origin>
 
 Where if the host is not specified, it falls back to the defaultHost.
+
+
+
+## <a name="WrapCacheRoundTripper">func</a> [WrapCacheRoundTripper](/src/target/providers.go?s=697:830#L19)
+``` go
+func WrapCacheRoundTripper(ctx context.Context, underlyingTransport http.RoundTripper, originCache string) (http.RoundTripper, error)
+```
+WrapCacheRoundTripper gets the roundtripper if the provider is a remote
+backend type.
 
 
 

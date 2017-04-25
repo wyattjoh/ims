@@ -27,6 +27,7 @@ func RotateImage(m image.Image, orient string) image.Image {
 		return imaging.FlipH(imaging.FlipV(m))
 
 	// case "1":
+	//  // Parse the EXIF data and perform a rotation automatically.
 	// 	// Pending support from https://github.com/golang/go/issues/4341
 	// 	return m
 
