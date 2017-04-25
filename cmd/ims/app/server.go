@@ -9,6 +9,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	negronilogrus "github.com/meatballhat/negroni-logrus"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/rs/cors"
 	"github.com/urfave/negroni"
 	"github.com/wyattjoh/ims/cmd/ims/handlers"
 	"github.com/wyattjoh/ims/internal/platform/providers"
@@ -46,6 +47,8 @@ type ServerOpts struct {
 	// CacheTimeout is the time that images will have cache headers for when
 	// writing them out to the http response.
 	CacheTimeout time.Duration
+
+	CORSDomains []string
 }
 
 // Serve creates and starts a new server to provide image resizing services.
@@ -101,6 +104,15 @@ func Serve(opts *ServerOpts) error {
 
 	// Create the negroni middleware bundle.
 	n := negroni.New(negroni.NewRecovery(), negronilogrus.NewMiddleware())
+
+	if len(opts.CORSDomains) > 0 {
+
+		// Mount the CORS middleware if it was enabled.
+		n.Use(cors.New(cors.Options{
+			AllowedOrigins: opts.CORSDomains,
+			AllowedMethods: []string{"GET"},
+		}))
+	}
 
 	// Attach the mux to the middleware handler.
 	n.UseHandler(mux)
