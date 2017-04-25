@@ -11,6 +11,7 @@
 
 
 ## <a name="pkg-index">Index</a>
+* [func CropImage(m image.Image, crop string) image.Image](#CropImage)
 * [func GetResampleFilter(filter string) imaging.ResampleFilter](#GetResampleFilter)
 * [func Image(m image.Image, v url.Values) (image.Image, error)](#Image)
 * [func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image](#ResizeImage)
@@ -24,7 +25,16 @@
 
 
 
-## <a name="GetResampleFilter">func</a> [GetResampleFilter](/src/target/transform.go?s=1237:1297#L46)
+## <a name="CropImage">func</a> [CropImage](/src/target/transform.go?s=1297:1351#L48)
+``` go
+func CropImage(m image.Image, crop string) image.Image
+```
+CropImage performs cropping operations based on the api described:
+<a href="https://docs.fastly.com/api/imageopto/crop">https://docs.fastly.com/api/imageopto/crop</a>
+
+
+
+## <a name="GetResampleFilter">func</a> [GetResampleFilter](/src/target/transform.go?s=1895:1955#L73)
 ``` go
 func GetResampleFilter(filter string) imaging.ResampleFilter
 ```
@@ -32,7 +42,7 @@ GetResampleFilter gets the resample filter to use for resizing.
 
 
 
-## <a name="Image">func</a> [Image](/src/target/transform.go?s=2333:2393#L90)
+## <a name="Image">func</a> [Image](/src/target/transform.go?s=2991:3051#L117)
 ``` go
 func Image(m image.Image, v url.Values) (image.Image, error)
 ```
@@ -40,7 +50,7 @@ Image transforms the image based on data found in the request.
 
 
 
-## <a name="ResizeImage">func</a> [ResizeImage](/src/target/transform.go?s=1769:1856#L68)
+## <a name="ResizeImage">func</a> [ResizeImage](/src/target/transform.go?s=2427:2514#L95)
 ``` go
 func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image
 ```
@@ -48,7 +58,7 @@ ResizeImage resizes the image with the given resample filter.
 
 
 
-## <a name="RotateImage">func</a> [RotateImage](/src/target/transform.go?s=238:296#L4)
+## <a name="RotateImage">func</a> [RotateImage](/src/target/transform.go?s=249:307#L5)
 ``` go
 func RotateImage(m image.Image, orient string) image.Image
 ```

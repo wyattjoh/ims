@@ -128,6 +128,7 @@ such matches the [Fastly API](https://docs.fastly.com/api/imageopto) as much as 
 - `blur`: produces a blurred version of the image using a Gaussian function,
   must be positive and indicates how much the image will be blurred, refers to
   the sigma value.
+- `crop`: crops the image in the form: `{width},{height}`
 
 ## License
 

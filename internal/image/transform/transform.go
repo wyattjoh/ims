@@ -4,6 +4,7 @@ import (
 	"image"
 	"net/url"
 	"strconv"
+	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/disintegration/imaging"
@@ -48,6 +49,32 @@ func RotateImage(m image.Image, orient string) image.Image {
 	default:
 		return m
 	}
+}
+
+//==============================================================================
+
+// CropImage performs cropping operations based on the api described:
+// https://docs.fastly.com/api/imageopto/crop
+func CropImage(m image.Image, crop string) image.Image {
+
+	// This assumes that the crop string contains the following form:
+	//   {width},{height}
+	// And will anchor it to the center point.
+	if wh := strings.Split(crop, ","); len(wh) == 2 {
+		width, err := strconv.Atoi(wh[0])
+		if err != nil {
+			return m
+		}
+
+		height, err := strconv.Atoi(wh[1])
+		if err != nil {
+			return m
+		}
+
+		return imaging.CropCenter(m, width, height)
+	}
+
+	return m
 }
 
 //==============================================================================
@@ -107,6 +134,14 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 		"width":  width,
 		"height": height,
 	})).Debug("image dimensions")
+
+	// Crop the image if the crop parameter was provided.
+	crop := v.Get("crop")
+	if crop != "" {
+
+		// Crop the image.
+		m = CropImage(m, crop)
+	}
 
 	// Resize the image if the width or height are provided.
 	w := v.Get("width")
