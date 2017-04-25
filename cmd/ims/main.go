@@ -24,6 +24,10 @@ func main() {
 	app.Usage = "Image Manipulation Server"
 	app.Version = build
 	app.Flags = []cli.Flag{
+		cli.BoolFlag{
+			Name:  "json",
+			Usage: "print logs out in JSON",
+		},
 		cli.StringFlag{
 			Name:  "listen-addr",
 			Value: "0.0.0.0:8080",
@@ -66,6 +70,10 @@ func ServeAction(c *cli.Context) error {
 	// mode.
 	if c.Bool("debug") {
 		logrus.SetLevel(logrus.DebugLevel)
+	}
+
+	if c.Bool("json") {
+		logrus.SetFormatter(&logrus.JSONFormatter{})
 	}
 
 	// Setup the server options.

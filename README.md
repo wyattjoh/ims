@@ -46,6 +46,7 @@ COMMANDS:
      help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
+   --json                print logs out in JSON
    --listen-addr value   the address to listen for new connections on (default: "0.0.0.0:8080")
    --debug               enable debug logging and pprof routes
    --backend value       comma seperated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address
