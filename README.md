@@ -96,8 +96,16 @@ tilda in your paths.
 ## API
 
 Image manipulations can be applied by appending a query string with the following parameters and as
-such matches the [Fastly API](https://docs.fastly.com/api/imageopto) as much as possible:
+such matches the [Fastly API](https://docs.fastly.com/api/imageopto) as much as possible. These are also in the same order that they are processed.
 
+- `crop`: crops the image in the form: `{width},{height}`
+- `resize-filter`: select the resize filter to be used. Implementation is sourced via the [github.com/disintegration/imaging](https://github.com/disintegration/imaging) package and we provide the following filters:
+  - `box`: Box filter (averaging pixels).
+  - `netravali`: Mitchell-Netravali cubic filter (BC-spline; B=1/3; C=1/3).
+  - `linear`: Linear filter.
+  - `nearest`: Nearest-neighbor filter, no anti-aliasing.
+  - `gaussian`: Gaussian is a Gaussian blurring Filter.
+  - `lanczos` (**default**): Lanczos filter (3 lobes).
 - `format`: enables source transcoding:
   - `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
     - `quality`: the quality out of 100 for the output image (Default: 75).
@@ -106,13 +114,6 @@ such matches the [Fastly API](https://docs.fastly.com/api/imageopto) as much as 
 - `width`: output image width (default is the original width).
 - `height`: output image height. If both `width` and `height` are provided, the
   `width` will be used instead.
-- `resize-filter`: select the resize filter to be used. Implementation is sourced via the [github.com/disintegration/imaging](https://github.com/disintegration/imaging) package and we provide the following filters:
-  - `box`: Box filter (averaging pixels).
-  - `netravali`: Mitchell-Netravali cubic filter (BC-spline; B=1/3; C=1/3).
-  - `linear`: Linear filter.
-  - `nearest`: Nearest-neighbor filter, no anti-aliasing.
-  - `gaussian`: Gaussian is a Gaussian blurring Filter.
-  - `lanczos` (**default**): Lanczos filter (3 lobes).
 - `orient`: changes the image orientation:
   - `r`: Orientate the image right.
   - `l`: Orientate the image left.
@@ -130,7 +131,6 @@ such matches the [Fastly API](https://docs.fastly.com/api/imageopto) as much as 
 - `blur`: produces a blurred version of the image using a Gaussian function,
   must be positive and indicates how much the image will be blurred, refers to
   the sigma value.
-- `crop`: crops the image in the form: `{width},{height}`
 
 ## License
 
