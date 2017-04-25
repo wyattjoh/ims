@@ -46,13 +46,14 @@ COMMANDS:
      help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --json                print logs out in JSON
    --listen-addr value   the address to listen for new connections on (default: "0.0.0.0:8080")
-   --debug               enable debug logging and pprof routes
    --backend value       comma seperated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address
    --origin-cache value  cache the origin resources based on their cache headers (:memory: for memory based cache, directory name for file based, not specified for disabled)
    --disable-metrics     disable the prometheus metrics
    --timeout value       used to set the cache control max age headers, set to 0 to disable (default: 15m0s)
+   --cors-domain value   use to enable CORS for the specified domain (note, this is not required to use as an image service)
+   --debug               enable debug logging and pprof routes
+   --json                print logs out in JSON
    --help, -h            show help
    --version, -v         print the version
 ```

@@ -23,7 +23,7 @@
 
 
 
-## <a name="MountEndpoint">func</a> [MountEndpoint](/src/target/server.go?s=410:487#L8)
+## <a name="MountEndpoint">func</a> [MountEndpoint](/src/target/server.go?s=432:509#L9)
 ``` go
 func MountEndpoint(mux *http.ServeMux, endpoint string, handler http.Handler)
 ```
@@ -31,7 +31,7 @@ MountEndpoint mounts an endpoint on the mux and logs out the action.
 
 
 
-## <a name="Serve">func</a> [Serve](/src/target/server.go?s=1443:1477#L42)
+## <a name="Serve">func</a> [Serve](/src/target/server.go?s=1488:1522#L45)
 ``` go
 func Serve(opts *ServerOpts) error
 ```
@@ -40,7 +40,7 @@ Serve creates and starts a new server to provide image resizing services.
 
 
 
-## <a name="ServerOpts">type</a> [ServerOpts](/src/target/server.go?s=647:1364#L14)
+## <a name="ServerOpts">type</a> [ServerOpts](/src/target/server.go?s=669:1409#L15)
 ``` go
 type ServerOpts struct {
 
@@ -67,6 +67,8 @@ type ServerOpts struct {
     // CacheTimeout is the time that images will have cache headers for when
     // writing them out to the http response.
     CacheTimeout time.Duration
+
+    CORSDomains []string
 }
 ```
 ServerOpts is the options for starting a new Server,
