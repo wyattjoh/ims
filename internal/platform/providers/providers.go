@@ -1,4 +1,4 @@
-package provider
+package providers
 
 import (
 	"context"
@@ -24,9 +24,9 @@ func GetUnderlyingTransport(ctx context.Context, originURL *url.URL) (http.Round
 	}
 }
 
-// GetOriginRoundTripper gets the roundtripper if the provider is a remote
-// origin type.
-func GetOriginRoundTripper(ctx context.Context, underlyingTrasport http.RoundTripper, originCache string) (http.RoundTripper, error) {
+// GetBackendRoundTripper gets the roundtripper if the provider is a remote
+// backend type.
+func GetBackendRoundTripper(ctx context.Context, underlyingTrasport http.RoundTripper, originCache string) (http.RoundTripper, error) {
 	switch originCache {
 	case ":memory:":
 
@@ -38,8 +38,11 @@ func GetOriginRoundTripper(ctx context.Context, underlyingTrasport http.RoundTri
 		logrus.WithField("transport", ":memory:").Debug("origin cache enabled")
 		return mct, nil
 	case "":
+
+		// No cache was specified, fall back to the underlying transport.
 		logrus.Debug("origin cache disabled")
 		return underlyingTrasport, nil
+
 	default:
 
 		// Create a new disk transport cache.
@@ -48,23 +51,25 @@ func GetOriginRoundTripper(ctx context.Context, underlyingTrasport http.RoundTri
 
 		logrus.WithField("transport", originCache).Debug("origin cache enabled")
 		return ct, nil
+
 	}
 }
 
-// GetOriginProvider will get the origin provider based on the scheme of the
+// GetBackendProvider will get the backend provider based on the scheme of the
 // url.
-func GetOriginProvider(ctx context.Context, origin, originCache string) (provider.Provider, error) {
+func GetBackendProvider(ctx context.Context, origin, originCache string) (provider.Provider, error) {
 	originURL, err := url.Parse(origin)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot parse the origin url")
 	}
 
+	// Get the underlying transport to use to fetch the original resource.
 	underlyingTrasport, err := GetUnderlyingTransport(ctx, originURL)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot get the underlying transport")
 	}
 
-	transport, err := GetOriginRoundTripper(ctx, underlyingTrasport, originCache)
+	transport, err := GetBackendRoundTripper(ctx, underlyingTrasport, originCache)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't get the origin round tripper")
 	}
@@ -81,6 +86,23 @@ func GetOriginProvider(ctx context.Context, origin, originCache string) (provide
 	}
 }
 
+// ParseBackend parses the backend using the following formats:
+//
+//   <host>,<origin> OR <origin>
+//
+// Where if the host is not specified, it falls back to the defaultHost.
+func ParseBackend(defaultHost, backend string) (string, string, error) {
+	backendSplit := strings.Split(backend, ",")
+
+	if len(backendSplit) == 2 {
+		return backendSplit[0], backendSplit[1], nil
+	} else if len(backendSplit) == 1 {
+		return defaultHost, backendSplit[0], nil
+	}
+
+	return "", "", errors.New("expected form <host>,<origin> OR <origin>")
+}
+
 // New loops over the origins provided, parsing with the specified providers,
 // and returns the providers keyed by host and optionally wrapped with an origin
 // cache.
@@ -91,22 +113,10 @@ func New(ctx context.Context, defaultHost string, backends []string, originCache
 
 	// Collect all the providers to the map of Host -> provider.Provider.
 	providers := make(map[string]provider.Provider)
-	for _, originString := range backends {
-		originSplit := strings.Split(originString, ",")
-
-		var host, origin string
-
-		// We always expect that the origin should arrive in the form of:
-		//   <host>,<origin> OR <origin>
-		// So if we don't get it, ensure that we do error out.
-		if len(originSplit) == 2 {
-			host = originSplit[0]
-			origin = originSplit[1]
-		} else if len(originSplit) == 1 {
-			host = defaultHost
-			origin = originSplit[0]
-		} else {
-			return nil, errors.New("origin format invalid, expected form <host>,<origin> OR <origin>")
+	for _, backend := range backends {
+		host, origin, err := ParseBackend(defaultHost, backend)
+		if err != nil {
+			return nil, errors.Wrap(err, "cannot parse the backend")
 		}
 
 		// Check to see if we've already attached this host.
@@ -122,7 +132,7 @@ func New(ctx context.Context, defaultHost string, backends []string, originCache
 			// origin cache down to the provider that is shared, but each provider
 			// will have a different http.RoundTripper anyways, so no need to reuse
 			// the cache in the same way.
-			p, err := GetOriginProvider(ctx, origin, originCache)
+			p, err := GetBackendProvider(ctx, origin, originCache)
 			if err != nil {
 				return nil, errors.Wrap(err, "cannot get the origin provider")
 			}

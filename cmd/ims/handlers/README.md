@@ -23,7 +23,7 @@ Package handlers provides the routes used by the `ims` binary.
 
 
 
-## <a name="Image">func</a> [Image](/src/target/handlers.go?s=1058:1108#L24)
+## <a name="Image">func</a> [Image](/src/target/handlers.go?s=1042:1092#L24)
 ``` go
 func Image(timeout time.Duration) http.HandlerFunc
 ```

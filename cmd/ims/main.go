@@ -9,9 +9,20 @@ import (
 	"github.com/wyattjoh/ims/cmd/ims/app"
 )
 
+// build is inserted at compile time by the linker in CI.
+var build string
+
+func init() {
+	if build == "" {
+		build = "dev"
+	}
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "ims"
+	app.Usage = "Image Manipulation Server"
+	app.Version = build
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "listen-addr",
@@ -24,7 +35,7 @@ func main() {
 		},
 		cli.StringSliceFlag{
 			Name:  "backend",
-			Usage: "comma seperated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from",
+			Usage: "comma seperated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address",
 		},
 		cli.StringFlag{
 			Name:  "origin-cache",

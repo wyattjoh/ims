@@ -11,7 +11,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/urfave/negroni"
 	"github.com/wyattjoh/ims/cmd/ims/handlers"
-	"github.com/wyattjoh/ims/internal/platform/provider"
+	"github.com/wyattjoh/ims/internal/platform/providers"
 )
 
 // MountEndpoint mounts an endpoint on the mux and logs out the action.
@@ -73,13 +73,13 @@ func Serve(opts *ServerOpts) error {
 	}
 
 	// Get the image provider map.
-	providers, err := provider.New(ctx, opts.Addr, opts.Backends, opts.OriginCache)
+	p, err := providers.New(ctx, opts.Addr, opts.Backends, opts.OriginCache)
 	if err != nil {
 		return err
 	}
 
 	// Wrap the handler with the image handler and the providers.
-	handler := provider.Middleware(providers, handlers.Image(opts.CacheTimeout))
+	handler := providers.Middleware(p, handlers.Image(opts.CacheTimeout))
 
 	if opts.DisableMetrics {
 

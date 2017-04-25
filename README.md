@@ -36,43 +36,60 @@ like [Fastly](https://www.fastly.com/) ;).
 The ims application can be used as such:
 
 ```
-Usage of ims:
-  -debug
-    	enable debug logging and pprof routes
-  -disable-metrics
-    	disable the prometheus metrics
-  -images-dir string
-    	the location on the filesystem to load images from (default "images")
-  -listen-addr string
-    	the address to listen for new connections on (default "0.0.0.0:8080")
-  -origin-cache string
-    	cache the origin resources based on their cache headers (:memory: for
-      memory based cache, directory name for file based, not specified for
-      disabled)
-  -origin-url string
-    	url for the origin server to pull images from
-  -timeout duration
-    	used to set the cache control max age headers, set to 0 to disable (default 15m0s)
+NAME:
+   ims - Image Manipulation Server
+
+USAGE:
+   ims [global options] command [command options] [arguments...]
+
+COMMANDS:
+     help, h  Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --listen-addr value   the address to listen for new connections on (default: "0.0.0.0:8080")
+   --debug               enable debug logging and pprof routes
+   --backend value       comma seperated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address
+   --origin-cache value  cache the origin resources based on their cache headers (:memory: for memory based cache, directory name for file based, not specified for disabled)
+   --disable-metrics     disable the prometheus metrics
+   --timeout value       used to set the cache control max age headers, set to 0 to disable (default: 15m0s)
+   --help, -h            show help
+   --version, -v         print the version
 ```
 
 ### Google Cloud Storage
 
-If the `-origin-url` is specified with a `gs://` scheme, [ims](https://github.com/wyattjoh/ims)
-will use the Google Cloud Storage provider. _Note that for authentication
-purposes, the environment variable `GOOGLE_APPLICATION_CREDENTIALS` must be
-present, refer to [Google Application Default Credentials](https://developers.google.com/identity/protocols/application-default-credentials)
+If the `--backend` is specified with an origin with a `gs://` scheme,
+[ims](https://github.com/wyattjoh/ims) will use the Google Cloud Storage
+provider. _Note that for authentication purposes, the environment variable
+`GOOGLE_APPLICATION_CREDENTIALS` must be present, refer to
+[Google Application Default Credentials](https://developers.google.com/identity/protocols/application-default-credentials)
 for more information._
 
 ### Minio/Amazon S3
 
-If the `-origin-url` is specified with a `s3://` scheme, [ims](https://github.com/wyattjoh/ims)
-will use the S3 provider. For configuration, you must specify the following environment variables:
+If the `--backend` is specified with an origin with a `s3://` scheme,
+[ims](https://github.com/wyattjoh/ims) will use the S3 provider. For
+configuration, you must specify the following environment variables:
 
 - `S3_ENDPOINT`: the endpoint to use as the base for the s3 client, can be a Amazon S3 endpoint or
 	a [Minio](https://www.minio.io/) one.
 - `S3_ACCESS_KEY_ID`: access key id.
 - `S3_ACCESS_KEY_SECRET`: access key secret.
 - `S3_DONT_USE_SSL`: `TRUE` if your endpoint should be accessed by SSL (Default: `FALSE`).
+
+### Other HTTP/HTTPS
+
+If the `--backend` is specified with an origin with a `http://` or `https://`
+scheme, then [ims](https://github.com/wyattjoh/ims) will use the standard
+http(s) based provider. This will simply perform a GET request (merging the
+relative path) against the provided origin url.
+
+### Local/Filesystem
+
+If the `--backend` is specified with an origin without a scheme, it will be
+inferred that the origin is a local folder instead. This folder may be relative,
+absolute, and will not be expanded. It is therefore not recommended to use a
+tilda in your paths.
 
 ## API
 

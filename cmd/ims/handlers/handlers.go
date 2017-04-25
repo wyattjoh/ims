@@ -10,7 +10,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/wyattjoh/ims/internal/image"
 	"github.com/wyattjoh/ims/internal/image/provider"
-	platformprovider "github.com/wyattjoh/ims/internal/platform/provider"
+	"github.com/wyattjoh/ims/internal/platform/providers"
 )
 
 // getFilename fetches the filename from the request path and validates that the
@@ -37,7 +37,7 @@ func Image(timeout time.Duration) http.HandlerFunc {
 		defer cancel()
 
 		// Extract the provider from the context.
-		p, ok := ctx.Value(platformprovider.ContextKey).(provider.Provider)
+		p, ok := ctx.Value(providers.ContextKey).(provider.Provider)
 		if !ok {
 			logrus.Error("expected request to contain context with provider, none found")
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
