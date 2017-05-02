@@ -22,7 +22,6 @@ const (
 	flagTimeout        = "timeout"
 	flagCORSDomain     = "cors-domain"
 
-	// These are some defaults that are used for arguments to the program.
 	defaultListenAddr = "0.0.0.0:8080"
 	defaultTimeout    = 15 * time.Minute
 )
@@ -31,8 +30,6 @@ const (
 var build string
 
 func init() {
-
-	// If the build string is empty, then set to "dev".
 	if build == "" {
 		build = "dev"
 	}

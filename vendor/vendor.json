@@ -387,10 +387,10 @@
 			"revisionTime": "2016-08-03T00:26:24Z"
 		},
 		{
-			"checksumSHA1": "7bsKxDLUJiNKMmElP7RGP9KJ24s=",
+			"checksumSHA1": "sMRh7U8exmiH2FeTxNVzMTiEhLs=",
 			"path": "google.golang.org/cloud/storage",
-			"revision": "2f1da5d762c81a12c516bfb8a9ede96f42750361",
-			"revisionTime": "2017-05-01T17:57:10Z"
+			"revision": "3424547c8520afc56e7e62e125fecc0e39f73a44",
+			"revisionTime": "2016-08-03T00:26:24Z"
 		},
 		{
 			"checksumSHA1": "+qB6gzApLVQj5Am4zO/a5VP+dCc=",
