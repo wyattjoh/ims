@@ -168,7 +168,7 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 	blur := v.Get("blur")
 	if blur != "" {
 		sigma, err := strconv.ParseFloat(blur, 64)
-		if err == nil {
+		if err == nil && sigma > 0 {
 			m = imaging.Blur(m, sigma)
 		}
 	}
