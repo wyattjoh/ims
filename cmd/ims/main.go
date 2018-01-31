@@ -83,7 +83,7 @@ func main() {
 
 // ServeAction starts the ims daemon.
 func ServeAction(c *cli.Context) error {
-	if !c.IsSet(flagDebug) {
+	if !c.IsSet(flagBackend) {
 		return cli.NewExitError(fmt.Sprintf("no origins specified, please use the --%s flag", flagBackend), 1)
 	}
 
