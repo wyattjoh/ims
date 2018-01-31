@@ -69,6 +69,10 @@ GLOBAL OPTIONS:
    --version, -v         print the version
 ```
 
+## Backends
+
+Different backends are supported by [ims](https://github.com/wyattjoh/ims).
+
 ### Google Cloud Storage
 
 If the `--backend` is specified with an origin with a `gs://` scheme,
