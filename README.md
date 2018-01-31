@@ -1,6 +1,6 @@
 # ims
 
-[![Build Status](https://drone.wyattjoh.com/api/badges/wyatt/ims/status.svg)](https://drone.wyattjoh.com/wyatt/ims)
+[![Build Status](https://travis-ci.org/wyattjoh/ims.svg?branch=master)](https://travis-ci.org/wyattjoh/ims)
 [![Go Doc](https://godoc.org/github.com/wyattjoh/ims/lib?status.svg)](http://godoc.org/github.com/wyattjoh/ims/lib)
 [![Go Report](https://goreportcard.com/badge/github.com/wyattjoh/ims)](https://goreportcard.com/report/github.com/wyattjoh/ims)
 
