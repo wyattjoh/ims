@@ -79,12 +79,12 @@ func GetRemoteBackendProvider(ctx context.Context, origin, originCache string) (
 	}
 
 	// Get the underlying transport to use to fetch the original resource.
-	underlyingTrasport, err := GetUnderlyingTransport(ctx, originURL)
+	underlyingTransport, err := GetUnderlyingTransport(ctx, originURL)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot get the underlying transport")
 	}
 
-	transport, err := WrapCacheRoundTripper(ctx, underlyingTrasport, originCache)
+	transport, err := WrapCacheRoundTripper(ctx, underlyingTransport, originCache)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't get the origin round tripper")
 	}
