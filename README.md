@@ -21,17 +21,28 @@ You can use the standard Go utility to get the binary and compile it yourself:
 go get github.com/wyattjoh/ims/...
 ```
 
+Running is as easy as running:
+
+```bash
+ims
+```
+
+Which will serve images from the current working directory at
+`http://127.0.0.1:8080/image.jpg`. _(Note: `image.jpg` just refers to an image
+url, and does not now exist, to perform a test, grab any image, throw it in the
+current working directory and try it out with that url)_.
+
 You can also use the [wyattjoh/ims](https://hub.docker.com/r/wyattjoh/ims/)
 Docker image.
 
-The default beheviour is to serve images out of a folder named "images", but it
-can also be changed to another folder or to an origin server for it to make the
-request to.
+The default behavior is to serve images out of the present working directory,
+but it can also be changed to another folder or to an origin server for it to
+make the request to.
 
-This application also provides no caching support, but will attach
-cache-friendly headers, it is recommened that when deploying in production you
+This application provides no transformation caching support, but will attach
+cache-friendly headers, it is recommend that when deploying in production you
 do so behind a service like [Varnish](https://www.varnish-cache.org/) or a CDN
-like [Fastly](https://www.fastly.com/) ;).
+like [Fastly](https://www.fastly.com/).
 
 The ims application can be used as such:
 
@@ -47,7 +58,7 @@ COMMANDS:
 
 GLOBAL OPTIONS:
    --listen-addr value   the address to listen for new connections on (default: "0.0.0.0:8080")
-   --backend value       comma seperated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address
+   --backend value       comma separated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address
    --origin-cache value  cache the origin resources based on their cache headers (:memory: for memory based cache, directory name for file based, not specified for disabled)
    --disable-metrics     disable the prometheus metrics
    --timeout value       used to set the cache control max age headers, set to 0 to disable (default: 15m0s)
@@ -77,7 +88,7 @@ configuration, you must specify the following environment variables:
 	a [Minio](https://www.minio.io/) one.
 - `S3_ACCESS_KEY_ID`: access key id.
 - `S3_ACCESS_KEY_SECRET`: access key secret.
-- `S3_DONT_USE_SSL`: `TRUE` if your endpoint should be accessed by SSL (Default: `FALSE`).
+- `S3_DONT_USE_SSL`: `TRUE` if your endpoint should be accessed by http instead of https (Default: `FALSE`).
 
 ### Other HTTP/HTTPS
 

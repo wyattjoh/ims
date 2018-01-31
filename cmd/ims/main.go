@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 	"github.com/wyattjoh/ims/cmd/ims/app"
 )
@@ -22,7 +22,7 @@ const (
 	flagTimeout        = "timeout"
 	flagCORSDomain     = "cors-domain"
 
-	defaultListenAddr = "0.0.0.0:8080"
+	defaultListenAddr = "127.0.0.1:8080"
 	defaultTimeout    = 15 * time.Minute
 )
 
@@ -36,6 +36,7 @@ func init() {
 }
 
 func main() {
+
 	app := cli.NewApp()
 	app.Name = "ims"
 	app.Usage = "Image Manipulation Server"
@@ -48,7 +49,7 @@ func main() {
 		},
 		cli.StringSliceFlag{
 			Name:  flagBackend,
-			Usage: "comma seperated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address",
+			Usage: "comma separated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address",
 		},
 		cli.StringFlag{
 			Name:  flagOriginCache,
@@ -83,8 +84,15 @@ func main() {
 
 // ServeAction starts the ims daemon.
 func ServeAction(c *cli.Context) error {
-	if !c.IsSet(flagBackend) {
-		return cli.NewExitError(fmt.Sprintf("no origins specified, please use the --%s flag", flagBackend), 1)
+	var backends []string
+	if c.IsSet(flagBackend) {
+		backends = c.StringSlice(flagBackend)
+	} else {
+		pwd, err := os.Getwd()
+		if err != nil {
+			return cli.NewExitError(errors.Wrap(err, "can't get the current working directory").Error(), 1)
+		}
+		backends = []string{pwd}
 	}
 
 	// We want to enable debug logging as soon as we know that we're in debug
@@ -102,7 +110,7 @@ func ServeAction(c *cli.Context) error {
 		Addr:           c.String(flagListenAddr),
 		Debug:          c.Bool(flagDebug),
 		DisableMetrics: c.Bool(flagDisableMetrics),
-		Backends:       c.StringSlice(flagBackend),
+		Backends:       backends,
 		OriginCache:    c.String(flagOriginCache),
 		CacheTimeout:   c.Duration(flagTimeout),
 		CORSDomains:    c.StringSlice(flagCORSDomain),
