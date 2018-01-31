@@ -11,8 +11,8 @@ script:
   - bash ./scripts/test.sh
 
 after_success:
-  - docker build -t wyattjoh/ims .
+  - docker build -t wyattjoh/ims:latest .
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker push wyattjoh/ims;
+    docker push wyattjoh/ims:latest;
     fi
