@@ -27,7 +27,7 @@
 
 [[constraint]]
   name = "github.com/disintegration/imaging"
-  version = "1.0.0"
+  version = "1.4.2"
 
 [[constraint]]
   name = "github.com/rs/cors"
