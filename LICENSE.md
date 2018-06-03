@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2017 Wyatt Johnson
+Copyright (c) 2018 Wyatt Johnson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
