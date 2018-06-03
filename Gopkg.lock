@@ -15,8 +15,8 @@
 [[projects]]
   name = "github.com/disintegration/imaging"
   packages = ["."]
-  revision = "243d2d8673c1225a6afceeb9b3b4423d485dc8df"
-  version = "v1.0.0"
+  revision = "bbcee2f5c9d5e94ca42c8b50ec847fec64a6c134"
+  version = "v1.4.2"
 
 [[projects]]
   name = "github.com/golang/protobuf"
@@ -226,6 +226,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e0aa6d212222225180441c74d86bafb0dfd9f958d4ec3c6a4ee5fc716c8db172"
+  inputs-digest = "0711e13ad5ccfeef99e9a0558836476ff6d001fceb05fe69a570ccbc41840aa8"
   solver-name = "gps-cdcl"
   solver-version = 1
