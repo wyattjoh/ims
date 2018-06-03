@@ -21,6 +21,12 @@ You can use the standard Go utility to get the binary and compile it yourself:
 go get github.com/wyattjoh/ims/...
 ```
 
+Or from Homebrew:
+
+```bash
+brew install wyattjoh/stable/ims
+```
+
 Running is as easy as running:
 
 ```bash
