@@ -1,18 +1,27 @@
-sudo: required
-
 language: go
+
 go:
-  - 1.9
+  - 1.x
 
-services:
-  - docker
+before_install:
+  # Download and install dep
+  - curl -sI https://github.com/golang/dep/releases/latest | grep -Fi Location  | tr -d '\r' | sed "s/tag/download/g" | awk -F " " '{ print $2 "/dep-linux-amd64"}' | wget --output-document=$GOPATH/bin/dep -i -
+  - chmod +x $GOPATH/bin/dep
 
-script:
-  - bash ./scripts/test.sh
+  # Install linters and misspell
+  - go get -u github.com/alecthomas/gometalinter
+  - gometalinter --install
 
-after_success:
-  - docker build -t wyattjoh/ims:latest .
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker push wyattjoh/ims:latest;
-    fi
+
+install:
+  - dep status -v
+
+before_deploy:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: curl -sL https://git.io/goreleaser | bash
+    on:
+      tags: true

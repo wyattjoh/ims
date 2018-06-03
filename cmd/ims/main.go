@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -26,21 +27,18 @@ const (
 	defaultTimeout    = 15 * time.Minute
 )
 
-// build is inserted at compile time by the linker in CI.
-var build string
-
-func init() {
-	if build == "" {
-		build = "dev"
-	}
-}
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
 
 func main() {
 
 	app := cli.NewApp()
 	app.Name = "ims"
 	app.Usage = "Image Manipulation Server"
-	app.Version = build
+	app.Version = fmt.Sprintf("%v, commit %v, built at %v", version, commit, date)
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  flagListenAddr,
