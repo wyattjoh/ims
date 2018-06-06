@@ -1,0 +1,44 @@
+package signing
+
+import (
+	"net/http"
+
+	"github.com/wyattjoh/ims/internal/sig"
+)
+
+const sigKey = "sig"
+
+func getValue(r *http.Request) string {
+	// Get the values from the query.
+	values := r.URL.Query()
+
+	// Remove the signature from the query.
+	values.Del(sigKey)
+
+	// Return the encoded string without the signature.
+	return values.Encode()
+}
+
+// Middleware wraps the request to ensure that the request itself contains only
+// those query parameters that are permitted and signed.
+func Middleware(secret string, next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Get the signature for the request.
+		signature := r.URL.Query().Get(sigKey)
+		if signature == "" {
+			http.Error(w, "Signature invalid", http.StatusUnauthorized)
+			return
+		}
+
+		// Get the string that was signed by the client.
+		value := getValue(r)
+
+		// Verify that the signature is valid.
+		if !sig.Verify(signature, value, secret) {
+			http.Error(w, "Signature invalid", http.StatusUnauthorized)
+			return
+		}
+
+		next(w, r)
+	}
+}
