@@ -8,7 +8,7 @@ import (
 
 const sigKey = "sig"
 
-func getValue(r *http.Request) string {
+func getValue(r *http.Request, includePath bool) string {
 	// Get the values from the query.
 	values := r.URL.Query()
 
@@ -16,12 +16,19 @@ func getValue(r *http.Request) string {
 	values.Del(sigKey)
 
 	// Return the encoded string without the signature.
-	return values.Encode()
+	value := values.Encode()
+
+	if includePath {
+		// Optionally include the path in the signing value if requested.
+		value = r.URL.Path + "?" + value
+	}
+
+	return value
 }
 
 // Middleware wraps the request to ensure that the request itself contains only
 // those query parameters that are permitted and signed.
-func Middleware(secret string, next http.HandlerFunc) http.HandlerFunc {
+func Middleware(secret string, includePath bool, next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Get the signature for the request.
 		signature := r.URL.Query().Get(sigKey)
@@ -31,7 +38,7 @@ func Middleware(secret string, next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// Get the string that was signed by the client.
-		value := getValue(r)
+		value := getValue(r, includePath)
 
 		// Verify that the signature is valid.
 		if !sig.Verify(signature, value, secret) {
