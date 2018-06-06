@@ -56,6 +56,10 @@ type ServerOpts struct {
 	// SigningSecret is used to mount a signing middleware on the image
 	// processing domain to only allow signed requests through.
 	SigningSecret string
+
+	// IncludePath when true will add the path component to the signing value
+	// when request signing has been enabled.
+	IncludePath bool
 }
 
 // Serve creates and starts a new server to provide image resizing services.
@@ -94,9 +98,9 @@ func Serve(opts *ServerOpts) error {
 	if opts.SigningSecret != "" {
 		// Wrap the handler with the signing middleware when we have a secret
 		// for signing provided.
-		handler = signing.Middleware(opts.SigningSecret, handler)
+		handler = signing.Middleware(opts.SigningSecret, opts.IncludePath, handler)
 
-		logrus.Debug("signing middleware enabled")
+		logrus.WithField("withPath", opts.IncludePath).Debug("signing middleware enabled")
 	} else {
 		logrus.Debug("signing middleware disabled, --signing-secret not provided")
 	}

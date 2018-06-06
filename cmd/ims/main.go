@@ -14,15 +14,16 @@ import (
 const (
 	// These flags are used as constants to refer to the different supported flags
 	// by the application.
-	flagJSON           = "json"
-	flagListenAddr     = "listen-addr"
-	flagDebug          = "debug"
-	flagBackend        = "backend"
-	flagOriginCache    = "origin-cache"
-	flagDisableMetrics = "disable-metrics"
-	flagTimeout        = "timeout"
-	flagCORSDomain     = "cors-domain"
-	flagSigningSecret  = "signing-secret"
+	flagJSON                   = "json"
+	flagListenAddr             = "listen-addr"
+	flagDebug                  = "debug"
+	flagBackend                = "backend"
+	flagOriginCache            = "origin-cache"
+	flagDisableMetrics         = "disable-metrics"
+	flagTimeout                = "timeout"
+	flagCORSDomain             = "cors-domain"
+	flagSigningSecret          = "signing-secret"
+	flagIncludePathWhenSigning = "signing-with-path"
 
 	defaultListenAddr = "127.0.0.1:8080"
 	defaultTimeout    = 15 * time.Minute
@@ -57,6 +58,10 @@ func main() {
 		cli.StringFlag{
 			Name:  flagSigningSecret,
 			Usage: "when provided, will be used to verify signed image requests made to the domain",
+		},
+		cli.BoolFlag{
+			Name:  flagIncludePathWhenSigning,
+			Usage: "when provided, the path will be included in the value to compute the signature",
 		},
 		cli.BoolFlag{
 			Name:  flagDisableMetrics,
@@ -118,6 +123,7 @@ func ServeAction(c *cli.Context) error {
 		CacheTimeout:   c.Duration(flagTimeout),
 		CORSDomains:    c.StringSlice(flagCORSDomain),
 		SigningSecret:  c.String(flagSigningSecret),
+		IncludePath:    c.Bool(flagIncludePathWhenSigning),
 	}
 
 	if err := app.Serve(opts); err != nil {

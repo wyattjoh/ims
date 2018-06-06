@@ -67,6 +67,7 @@ GLOBAL OPTIONS:
    --backend value         comma separated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address
    --origin-cache value    cache the origin resources based on their cache headers (:memory: for memory based cache, directory name for file based, not specified for disabled)
    --signing-secret value  when provided, will be used to verify signed image requests made to the domain
+   --signing-with-path     when provided, the path will be included in the value to compute the signature
    --disable-metrics       disable the prometheus metrics
    --timeout value         used to set the cache control max age headers, set to 0 to disable (default: 15m0s)
    --cors-domain value     use to enable CORS for the specified domain (note, this is not required to use as an image service)
@@ -134,12 +135,20 @@ const options = {
 };
 
 const secret = '<the-secret-we-gave-ims>';
-const query = Object.keys(options).sort().reduce((result, key) => {
+
+// Create the sorted query object.
+let value = Object.keys(options).sort().reduce((result, key) => {
     result.push(querystring.stringify({[key]: options[key]}))
     return result;
 }, []).join('&');
 
-const sig = Crypto.createHmac('sha256', secret).update(query).digest('hex');
+// If you've enabled --signing-with-path, you need to include the path component
+// in your value:
+//
+// value = "/my-image.jpg?" + value;
+//
+
+const sig = Crypto.createHmac('sha256', secret).update(value).digest('hex');
 
 console.log(query + '&sig=' + sig);
 ```
