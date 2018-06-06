@@ -172,8 +172,8 @@ such matches the [Fastly API](https://docs.fastly.com/api/imageopto) as much as 
 - `format`: enables source transcoding:
   - `jpeg`: converts all images to `image/jpeg` encoding with lossless compression, some additional parameters are supported:
     - `quality`: the quality out of 100 for the output image (Default: 75).
-      - `png`: converts image to `image/png` encoding
-      - `gif`: converts image to `image/gif` encoding
+  - `png`: converts image to `image/png` encoding
+  - `gif`: converts image to `image/gif` encoding
 - `width`: output image width (default is the original width).
 - `height`: output image height. If both `width` and `height` are provided, the
   `width` will be used instead.
