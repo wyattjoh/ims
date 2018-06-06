@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"time"
 
 	"github.com/Sirupsen/logrus"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	jaeger "github.com/uber/jaeger-client-go"
+	"github.com/uber/jaeger-client-go/transport"
 	"github.com/urfave/cli"
 	"github.com/wyattjoh/ims/cmd/ims/app"
 )
@@ -94,6 +97,24 @@ func main() {
 	app.Action = ServeAction
 
 	app.Run(os.Args)
+}
+
+// SetupTracing will setup the tracing using Jaeger.
+func SetupTracing(tracingURI string) (opentracing.Tracer, io.Closer) {
+	var sampler jaeger.Sampler
+	var reporter jaeger.Reporter
+	if tracingURI == "" {
+		sampler = jaeger.NewConstSampler(false)
+		reporter = jaeger.NewNullReporter()
+		logrus.Info("not reporting tracing information, missing --tracing-uri option")
+	} else {
+		sampler = jaeger.NewRateLimitingSampler(100)
+		sender := transport.NewHTTPTransport(tracingURI)
+		reporter = jaeger.NewRemoteReporter(sender)
+		logrus.WithField("tracingURI", tracingURI).Info("reporting tracing information")
+	}
+
+	return jaeger.NewTracer("ims", sampler, reporter)
 }
 
 // ServeAction starts the ims daemon.
