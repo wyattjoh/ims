@@ -124,7 +124,11 @@ func Serve(opts *ServerOpts) error {
 	}
 
 	// Create the negroni middleware bundle.
-	n := negroni.New(negroni.NewRecovery(), negronilogrus.NewMiddleware())
+	n := negroni.New(
+		negroni.NewRecovery(),
+		negroni.HandlerFunc(Tracer),
+		negronilogrus.NewMiddleware(),
+	)
 
 	if len(opts.CORSDomains) > 0 {
 

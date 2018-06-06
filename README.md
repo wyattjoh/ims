@@ -58,7 +58,7 @@ NAME:
 
 USAGE:
    ims [global options] command [command options] [arguments...]
-   
+
 COMMANDS:
      help, h  Shows a list of commands or help for one command
 
@@ -67,6 +67,7 @@ GLOBAL OPTIONS:
    --backend value         comma separated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address
    --origin-cache value    cache the origin resources based on their cache headers (:memory: for memory based cache, directory name for file based, not specified for disabled)
    --signing-secret value  when provided, will be used to verify signed image requests made to the domain
+   --tracing-uri value     when provided, will be used to send tracing information via opentracing
    --signing-with-path     when provided, the path will be included in the value to compute the signature
    --disable-metrics       disable the prometheus metrics
    --timeout value         used to set the cache control max age headers, set to 0 to disable (default: 15m0s)
@@ -75,6 +76,8 @@ GLOBAL OPTIONS:
    --json                  print logs out in JSON
    --help, -h              show help
    --version, -v           print the version
+   
+
 ```
 
 ## Backends

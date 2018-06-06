@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/wyattjoh/ims/internal/image"
 	"github.com/wyattjoh/ims/internal/image/provider"
 	"github.com/wyattjoh/ims/internal/platform/providers"
@@ -53,6 +54,9 @@ func Image(timeout time.Duration) http.HandlerFunc {
 		}
 
 		// Try to get the image from the provider.
+		// opentracing.Ext
+		// opentracing.Span
+		span, ctx := opentracing.StartSpanFromContext(r.Context(), "provider.Provide")
 		m, err := p.Provide(ctx, filename)
 		if err != nil {
 			switch err {
@@ -67,13 +71,17 @@ func Image(timeout time.Duration) http.HandlerFunc {
 			}
 
 			logrus.WithError(err).Error("could not load the image from the provider")
+			span.Finish()
 			return
 		}
 		defer m.Close()
+		span.Finish()
 
 		// If an error occurred during the image processing, return with an internal
 		// server error.
-		if err := image.Process(ctx, timeout, m, w, r); err != nil {
+		span, ctx = opentracing.StartSpanFromContext(r.Context(), "image.Process")
+		defer span.Finish()
+		if err := image.Process(ctx, timeout, m, w, r.WithContext(ctx)); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			logrus.WithError(err).Error("could not process the image")
 			return

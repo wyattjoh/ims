@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli"
 	"github.com/wyattjoh/ims/cmd/ims/app"
@@ -24,6 +25,7 @@ const (
 	flagCORSDomain             = "cors-domain"
 	flagSigningSecret          = "signing-secret"
 	flagIncludePathWhenSigning = "signing-with-path"
+	flagTracingURI             = "tracing-uri"
 
 	defaultListenAddr = "127.0.0.1:8080"
 	defaultTimeout    = 15 * time.Minute
@@ -58,6 +60,10 @@ func main() {
 		cli.StringFlag{
 			Name:  flagSigningSecret,
 			Usage: "when provided, will be used to verify signed image requests made to the domain",
+		},
+		cli.StringFlag{
+			Name:  flagTracingURI,
+			Usage: "when provided, will be used to send tracing information via opentracing",
 		},
 		cli.BoolFlag{
 			Name:  flagIncludePathWhenSigning,
@@ -112,6 +118,11 @@ func ServeAction(c *cli.Context) error {
 	if c.Bool(flagJSON) {
 		logrus.SetFormatter(&logrus.JSONFormatter{})
 	}
+
+	// Configure the tracer.
+	tracer, closer := SetupTracing(c.String(flagTracingURI))
+	defer closer.Close()
+	opentracing.InitGlobalTracer(tracer)
 
 	// Setup the server options.
 	opts := &app.ServerOpts{
