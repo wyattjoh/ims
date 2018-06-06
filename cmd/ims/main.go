@@ -22,6 +22,7 @@ const (
 	flagDisableMetrics = "disable-metrics"
 	flagTimeout        = "timeout"
 	flagCORSDomain     = "cors-domain"
+	flagSigningSecret  = "signing-secret"
 
 	defaultListenAddr = "127.0.0.1:8080"
 	defaultTimeout    = 15 * time.Minute
@@ -52,6 +53,10 @@ func main() {
 		cli.StringFlag{
 			Name:  flagOriginCache,
 			Usage: "cache the origin resources based on their cache headers (:memory: for memory based cache, directory name for file based, not specified for disabled)",
+		},
+		cli.StringFlag{
+			Name:  flagSigningSecret,
+			Usage: "when provided, will be used to verify signed image requests made to the domain",
 		},
 		cli.BoolFlag{
 			Name:  flagDisableMetrics,
@@ -112,6 +117,7 @@ func ServeAction(c *cli.Context) error {
 		OriginCache:    c.String(flagOriginCache),
 		CacheTimeout:   c.Duration(flagTimeout),
 		CORSDomains:    c.StringSlice(flagCORSDomain),
+		SigningSecret:  c.String(flagSigningSecret),
 	}
 
 	if err := app.Serve(opts); err != nil {

@@ -58,21 +58,22 @@ NAME:
 
 USAGE:
    ims [global options] command [command options] [arguments...]
-
+   
 COMMANDS:
      help, h  Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
-   --listen-addr value   the address to listen for new connections on (default: "0.0.0.0:8080")
-   --backend value       comma separated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address
-   --origin-cache value  cache the origin resources based on their cache headers (:memory: for memory based cache, directory name for file based, not specified for disabled)
-   --disable-metrics     disable the prometheus metrics
-   --timeout value       used to set the cache control max age headers, set to 0 to disable (default: 15m0s)
-   --cors-domain value   use to enable CORS for the specified domain (note, this is not required to use as an image service)
-   --debug               enable debug logging and pprof routes
-   --json                print logs out in JSON
-   --help, -h            show help
-   --version, -v         print the version
+   --listen-addr value     the address to listen for new connections on (default: "127.0.0.1:8080")
+   --backend value         comma separated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address
+   --origin-cache value    cache the origin resources based on their cache headers (:memory: for memory based cache, directory name for file based, not specified for disabled)
+   --signing-secret value  when provided, will be used to verify signed image requests made to the domain
+   --disable-metrics       disable the prometheus metrics
+   --timeout value         used to set the cache control max age headers, set to 0 to disable (default: 15m0s)
+   --cors-domain value     use to enable CORS for the specified domain (note, this is not required to use as an image service)
+   --debug                 enable debug logging and pprof routes
+   --json                  print logs out in JSON
+   --help, -h              show help
+   --version, -v           print the version
 ```
 
 ## Backends
@@ -114,6 +115,35 @@ inferred that the origin is a local folder instead. This folder may be relative,
 absolute, and will not be expanded. It is therefore not recommended to use a
 tilda in your paths.
 
+## Signing
+
+When `--signing-secret` is provided, all requests must include a `sig` query
+parameter that contains the HS256 signature of the sorted query parameters
+encoded as a hex string via the provided secret. This can be used to prevent
+abuse of the ims, and is strongly recommended in production.
+
+An example of signing a request in `NodeJS`:
+
+```javascript
+const Crypto = require('crypto');
+const querystring = require('querystring');
+
+const options = {
+  width: 100,
+  height: 200
+};
+
+const secret = '<the-secret-we-gave-ims>';
+const query = Object.keys(options).sort().reduce((result, key) => {
+    result.push(querystring.stringify({[key]: options[key]}))
+    return result;
+}, []).join('&');
+
+const sig = Crypto.createHmac('sha256', secret).update(query).digest('hex');
+
+console.log(query + '&sig=' + sig);
+```
+
 ## API
 
 Image manipulations can be applied by appending a query string with the following parameters and as
@@ -152,6 +182,7 @@ such matches the [Fastly API](https://docs.fastly.com/api/imageopto) as much as 
 - `blur`: produces a blurred version of the image using a Gaussian function,
   must be positive and indicates how much the image will be blurred, refers to
   the sigma value.
+- `sig`: Used to specify the signing signature, see [Signing](#signing) above.
 
 ## License
 
