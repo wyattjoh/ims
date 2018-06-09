@@ -126,7 +126,7 @@ parameter that contains the HS256 signature of the sorted query parameters
 encoded as a hex string via the provided secret. This can be used to prevent
 abuse of the ims, and is strongly recommended in production.
 
-An example of signing a request in `NodeJS`:
+An example of signing a request in Node:
 
 ```javascript
 const Crypto = require('crypto');
@@ -153,7 +153,7 @@ let value = Object.keys(options).sort().reduce((result, key) => {
 
 const sig = Crypto.createHmac('sha256', secret).update(value).digest('hex');
 
-console.log(query + '&sig=' + sig);
+console.log(value + '&sig=' + sig);
 ```
 
 ## API
