@@ -6,7 +6,7 @@ require (
 	github.com/Sirupsen/logrus v0.11.3-0.20170207183408-3f603f494d61
 	github.com/beorn7/perks v0.0.0-20160804104726-4c0e84591b9a // indirect
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
-	github.com/disintegration/imaging v1.4.2
+	github.com/disintegration/imaging v1.6.1
 	github.com/golang/protobuf v0.0.0-20170331031902-2bba0603135d // indirect
 	github.com/google/btree v0.0.0-20161217183710-316fb6d3f031 // indirect
 	github.com/gregjones/httpcache v0.0.0-20170211092055-d02018f006d9
@@ -27,7 +27,6 @@ require (
 	github.com/uber/jaeger-lib v2.2.0+incompatible // indirect
 	github.com/urfave/cli v1.18.1-0.20161006035353-55f715e28c46
 	github.com/urfave/negroni v0.2.1-0.20170226005333-c0db5feaa338
-	golang.org/x/image v0.0.0-20170207214533-05f0a469d9f7 // indirect
 	golang.org/x/net v0.0.0-20161116075034-4971afdc2f16 // indirect
 	golang.org/x/oauth2 v0.0.0-20160801214932-0aec23fa6269
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
