@@ -27,7 +27,6 @@ require (
 	github.com/uber/jaeger-lib v2.2.0+incompatible // indirect
 	github.com/urfave/cli v1.18.1-0.20161006035353-55f715e28c46
 	github.com/urfave/negroni v0.2.1-0.20170226005333-c0db5feaa338
-	golang.org/x/image v0.0.0-20170207214533-05f0a469d9f7 // indirect
 	golang.org/x/net v0.0.0-20161116075034-4971afdc2f16 // indirect
 	golang.org/x/oauth2 v0.0.0-20160801214932-0aec23fa6269
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
