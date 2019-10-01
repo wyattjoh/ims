@@ -13,7 +13,7 @@ require (
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/meatballhat/negroni-logrus v0.0.0-20160628043843-7c570a907cfc
 	github.com/minio/minio-go v2.0.5-0.20170424113832-bddd6ac5ebcd+incompatible
-	github.com/opentracing/opentracing-go v1.0.2
+	github.com/opentracing/opentracing-go v1.1.0
 	github.com/peterbourgon/diskv v2.0.1-0.20160404093648-5dfcb07a075a+incompatible // indirect
 	github.com/pkg/errors v0.8.1-0.20170316201538-ff09b135c25a
 	github.com/prometheus/client_golang v0.8.1-0.20170228162001-aace68cde27d
@@ -23,8 +23,8 @@ require (
 	github.com/rs/cors v0.0.0-20160617231935-a62a804a8a00
 	github.com/rs/xhandler v0.0.0-20160618193221-ed27b6fd6521 // indirect
 	github.com/stretchr/testify v1.4.0 // indirect
-	github.com/uber/jaeger-client-go v2.14.0+incompatible
-	github.com/uber/jaeger-lib v1.5.0 // indirect
+	github.com/uber/jaeger-client-go v2.19.0+incompatible
+	github.com/uber/jaeger-lib v2.2.0+incompatible // indirect
 	github.com/urfave/cli v1.18.1-0.20161006035353-55f715e28c46
 	github.com/urfave/negroni v0.2.1-0.20170226005333-c0db5feaa338
 	golang.org/x/image v0.0.0-20170207214533-05f0a469d9f7 // indirect
