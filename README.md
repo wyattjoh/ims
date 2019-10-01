@@ -1,6 +1,5 @@
 # ims
 
-[![Go Doc](https://godoc.org/github.com/wyattjoh/ims/lib?status.svg)](http://godoc.org/github.com/wyattjoh/ims/lib)
 [![Build Status](https://travis-ci.org/wyattjoh/ims.svg?branch=master)](https://travis-ci.org/wyattjoh/ims)
 [![Go Report](https://goreportcard.com/badge/github.com/wyattjoh/ims)](https://goreportcard.com/report/github.com/wyattjoh/ims)
 [![Docker Image Size](https://img.shields.io/microbadger/image-size/wyattjoh/ims.svg)](https://hub.docker.com/r/wyattjoh/ims/)
@@ -66,7 +65,7 @@ GLOBAL OPTIONS:
    --json                  print logs out in JSON
    --help, -h              show help
    --version, -v           print the version
-   
+
 
 ```
 
@@ -122,7 +121,7 @@ If the `--backend` is specified with an origin with a `s3://` scheme,
 configuration, you must specify the following environment variables:
 
 - `S3_ENDPOINT`: the endpoint to use as the base for the s3 client, can be a Amazon S3 endpoint or
-	a [Minio](https://www.minio.io/) one.
+  a [Minio](https://www.minio.io/) one.
 - `S3_ACCESS_KEY_ID`: access key id.
 - `S3_ACCESS_KEY_SECRET`: access key secret.
 - `S3_DONT_USE_SSL`: `TRUE` if your endpoint should be accessed by http instead of https (Default: `FALSE`).
@@ -178,8 +177,8 @@ prevent abuse via subsequent requests.
 An example of signing a request in Node:
 
 ```javascript
-const Crypto = require('crypto');
-const querystring = require('querystring');
+const Crypto = require("crypto");
+const querystring = require("querystring");
 
 const transformationOptions = {
   width: 100,
@@ -188,13 +187,16 @@ const transformationOptions = {
 
 // Change this to the secret that you gave to ims via the`--signing-secret`
 // flag.
-const secret = 'keyboard cat';
+const secret = "keyboard cat";
 
 // Create the sorted query object.
-let value = Object.keys(transformationOptions).sort().reduce((result, key) => {
-    result.push(querystring.stringify({[key]: transformationOptions[key]}))
+let value = Object.keys(transformationOptions)
+  .sort()
+  .reduce((result, key) => {
+    result.push(querystring.stringify({ [key]: transformationOptions[key] }));
     return result;
-}, []).join('&');
+  }, [])
+  .join("&");
 
 // If you've enabled --signing-with-path, you need to include the path component
 // in your value:
@@ -202,9 +204,11 @@ let value = Object.keys(transformationOptions).sort().reduce((result, key) => {
 // value = "/my-image.jpg?" + value;
 //
 
-const sig = Crypto.createHmac('sha256', secret).update(value).digest('hex');
+const sig = Crypto.createHmac("sha256", secret)
+  .update(value)
+  .digest("hex");
 
-console.log(value + '&sig=' + sig);
+console.log(value + "&sig=" + sig);
 ```
 
 Example:
