@@ -25,7 +25,6 @@ func NewGCSTransport(ctx context.Context) (http.RoundTripper, error) {
 
 // NewGCS will create the GCS Provider.
 func NewGCS(ctx context.Context, bucket string, transport http.RoundTripper) (*GCS, error) {
-
 	// Create the options for the client.
 	opts := []cloud.ClientOption{
 		cloud.WithBaseHTTP(&http.Client{
@@ -55,7 +54,6 @@ type GCS struct {
 // specified key and then returning the response body when the request was
 // complete.
 func (gcs *GCS) Provide(ctx context.Context, filename string) (io.ReadCloser, error) {
-
 	// Get the object handlea and return a reader based on the object handle.
 	r, err := gcs.bucket.Object(filename).NewReader(ctx)
 	if err != nil {

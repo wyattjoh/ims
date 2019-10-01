@@ -52,7 +52,6 @@ func WrapCacheRoundTripper(ctx context.Context, underlyingTransport http.RoundTr
 
 		logrus.WithField("transport", originCache).Debug("origin cache enabled")
 		return ct, nil
-
 	}
 }
 
@@ -138,7 +137,6 @@ func New(ctx context.Context, defaultHost string, backends []string, originCache
 		// If the origin contains the "://" then it must be a remote provider, so
 		// attempt to create a origin provider.
 		if strings.Contains(origin, "://") {
-
 			// This looks a little weird because we aren't passing a constructed
 			// origin cache down to the provider that is shared, but each provider
 			// will have a different http.RoundTripper anyways, so no need to reuse
@@ -153,15 +151,12 @@ func New(ctx context.Context, defaultHost string, backends []string, originCache
 				"origin": origin,
 			}).Debug("serving from the origin")
 			providers[host] = p
-
 		} else {
-
 			logrus.WithFields(logrus.Fields{
 				"host":      host,
 				"directory": origin,
 			}).Debug("serving from the filesystem")
 			providers[host] = &provider.Filesystem{Dir: http.Dir(origin)}
-
 		}
 	}
 

@@ -17,7 +17,6 @@ import (
 // getFilename fetches the filename from the request path and validates that the
 // path is valid.
 func getFilename(r *http.Request) (string, error) {
-
 	// We expect that the router sends us requests in the form `/:filename`
 	// so we check to see if the path contains the image url that we want to
 	// parse. In this case, we check to see that the path is at least 9 characters

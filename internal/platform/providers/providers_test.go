@@ -20,7 +20,6 @@ func TestMiddleware(t *testing.T) {
 	// given host.
 	for host, tableCaseProvider := range tableData {
 		providers.Middleware(tableData, func(w http.ResponseWriter, r *http.Request) {
-
 			p, ok := r.Context().Value(providers.ContextKey).(provider.Provider)
 			if !ok {
 				t.Fatalf("Expected case %s to find a provider, could not", host)
@@ -31,7 +30,6 @@ func TestMiddleware(t *testing.T) {
 			} else {
 				t.Logf("Expected case %s to have a provider %v, it did", host, tableCaseProvider)
 			}
-
 		})(nil, &http.Request{
 			Host: host,
 		})
