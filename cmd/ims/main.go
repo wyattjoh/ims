@@ -41,7 +41,6 @@ var (
 )
 
 func main() {
-
 	app := cli.NewApp()
 	app.Name = "ims"
 	app.Usage = "Image Manipulation Server"
@@ -96,7 +95,9 @@ func main() {
 	}
 	app.Action = ServeAction
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		logrus.WithError(err).Fatal()
+	}
 }
 
 // SetupTracing will setup the tracing using Jaeger.

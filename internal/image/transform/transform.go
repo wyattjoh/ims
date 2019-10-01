@@ -56,7 +56,6 @@ func RotateImage(m image.Image, orient string) image.Image {
 // CropImage performs cropping operations based on the api described:
 // https://docs.fastly.com/api/imageopto/crop
 func CropImage(m image.Image, crop string) image.Image {
-
 	// This assumes that the crop string contains the following form:
 	//   {width},{height}
 	// And will anchor it to the center point.
@@ -103,7 +102,6 @@ func GetResampleFilter(filter string) imaging.ResampleFilter {
 
 // ResizeImage resizes the image with the given resample filter.
 func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image {
-
 	// Resize the width if it was provided.
 	if w != "" {
 		if width, err := strconv.Atoi(w); err == nil {
@@ -127,7 +125,6 @@ func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) imag
 // available query params in the root README, this will parse the query params
 // and apply image transformations.
 func Image(m image.Image, v url.Values) (image.Image, error) {
-
 	// Extract the width + height from the image bounds.
 	width := m.Bounds().Max.X
 	height := m.Bounds().Max.Y
@@ -140,7 +137,6 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 	// Crop the image if the crop parameter was provided.
 	crop := v.Get("crop")
 	if crop != "" {
-
 		// Crop the image.
 		m = CropImage(m, crop)
 	}
@@ -149,7 +145,6 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 	w := v.Get("width")
 	h := v.Get("height")
 	if w != "" || h != "" {
-
 		// Get the resize filter to use.
 		filter := GetResampleFilter(v.Get("resize-filter"))
 
@@ -159,7 +154,6 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 	// Reorient the image if the orientation parameter was provided.
 	orient := v.Get("orient")
 	if orient != "" {
-
 		// Rotate the image.
 		m = RotateImage(m, orient)
 	}

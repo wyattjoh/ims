@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"net/http"
-	"net/http/pprof"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -37,7 +36,7 @@ type ServerOpts struct {
 	// Directories is the folder in which images are served out of.
 	Directories string
 
-	// Backends is the comma seperated <host>,<origin> where <origin> is a pathname
+	// Backends is the comma separated <host>,<origin> where <origin> is a pathname
 	// or a url (with scheme) to load images from.
 	Backends []string
 
@@ -64,7 +63,6 @@ type ServerOpts struct {
 
 // Serve creates and starts a new server to provide image resizing services.
 func Serve(opts *ServerOpts) error {
-
 	// Create the context that will manage the state for the request.
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -79,11 +77,7 @@ func Serve(opts *ServerOpts) error {
 
 	// When debug mode is enabled, mount the debug handlers on this router.
 	if opts.Debug {
-		MountEndpoint(mux, "/debug/pprof/", http.HandlerFunc(pprof.Index))
-		MountEndpoint(mux, "/debug/pprof/cmdline", http.HandlerFunc(pprof.Cmdline))
-		MountEndpoint(mux, "/debug/pprof/profile", http.HandlerFunc(pprof.Profile))
-		MountEndpoint(mux, "/debug/pprof/symbol", http.HandlerFunc(pprof.Symbol))
-		MountEndpoint(mux, "/debug/pprof/trace", http.HandlerFunc(pprof.Trace))
+		MountDebug(mux)
 	}
 
 	// Get the image provider map.
@@ -106,13 +100,11 @@ func Serve(opts *ServerOpts) error {
 	}
 
 	if opts.DisableMetrics {
-
 		// Mount the resize handler on the mux.
 		MountEndpoint(mux, "/", handler)
 
 		logrus.Debug("prometheus metrics disabled")
 	} else {
-
 		// Mount the resize handler on the mux with the instrumentation wrapped on
 		// the handler.
 		MountEndpoint(mux, "/", prometheus.InstrumentHandlerFunc("image", handler))
@@ -131,7 +123,6 @@ func Serve(opts *ServerOpts) error {
 	)
 
 	if len(opts.CORSDomains) > 0 {
-
 		// Mount the CORS middleware if it was enabled.
 		n.Use(cors.New(cors.Options{
 			AllowedOrigins: opts.CORSDomains,

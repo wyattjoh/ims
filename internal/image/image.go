@@ -22,7 +22,7 @@ func Process(ctx context.Context, timeout time.Duration, input io.Reader, w http
 	logrus.Debug("starting processing image")
 
 	// Decode the image from the reader.
-	span, ctx := opentracing.StartSpanFromContext(r.Context(), "internal.image.Process.Decode")
+	span, ctx := opentracing.StartSpanFromContext(ctx, "internal.image.Process.Decode")
 	m, format, err := image.Decode(input)
 	if err != nil {
 		span.Finish()
@@ -31,7 +31,7 @@ func Process(ctx context.Context, timeout time.Duration, input io.Reader, w http
 	span.Finish()
 
 	// Apply image transformations.
-	span, ctx = opentracing.StartSpanFromContext(r.Context(), "internal.image.Process.Transform")
+	span, ctx = opentracing.StartSpanFromContext(ctx, "internal.image.Process.Transform")
 	tm, err := transform.Image(m, r.URL.Query())
 	if err != nil {
 		span.Finish()
@@ -49,7 +49,7 @@ func Process(ctx context.Context, timeout time.Duration, input io.Reader, w http
 
 	w.Header().Set("Last-Modified", now.Format(http.TimeFormat))
 
-	span, ctx = opentracing.StartSpanFromContext(r.Context(), "internal.image.Process.Encode")
+	span, _ = opentracing.StartSpanFromContext(ctx, "internal.image.Process.Encode")
 	enc := encoder.Get(format, r)
 	if err := enc.Encode(tm, w); err != nil {
 		span.Finish()

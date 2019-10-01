@@ -28,7 +28,6 @@ type Origin struct {
 // specified filename and then returning the response body when the request was
 // complete.
 func (op *Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, error) {
-
 	// Parse the incomming url.
 	filenameURL, err := url.Parse(filename)
 	if err != nil {
@@ -37,8 +36,6 @@ func (op *Origin) Provide(ctx context.Context, filename string) (io.ReadCloser, 
 
 	// Resolve it relative to the origin url.
 	fileURL := op.baseURL.ResolveReference(filenameURL)
-
-	// TODO: improve, this is quite naive. Possibly forward some headers/params.
 
 	// Perform the GET to the origin server. This takes the url passed in as the
 	// origin and resolves a relative reference with the filename passed in. It

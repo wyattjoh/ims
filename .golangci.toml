@@ -1,0 +1,31 @@
+[linters]
+  enable-all = true
+  disable = [
+    "maligned",
+    "lll",
+    "scopelint",
+    "bodyclose", # https://github.com/timakin/bodyclose/pull/14
+  ]
+
+[issues]
+    exclude-use-default = true
+    [[issues.exclude-rules]]
+      path = "cmd/ims/main.go"
+      text = "`date` is a global variable"
+    [[issues.exclude-rules]]
+      path = "cmd/ims/main.go"
+      text = "`commit` is a global variable"
+    [[issues.exclude-rules]]
+      path = "(.+)_test.go"
+      linters = ["funlen"]
+    [[issues.exclude-rules]]
+      path = "cmd/ims/app/server.go"
+      linters = ["funlen"]
+    # TODO: revisit rule when we have time to address
+    [[issues.exclude-rules]]
+      path = "cmd/ims/app/server.go"
+      text = "prometheus.InstrumentHandlerFunc is deprecated.*"
+    # TODO: revisit rule when we have time to address
+    [[issues.exclude-rules]]
+      path = "cmd/ims/app/server.go"
+      text = "prometheus.Handler is deprecated.*"
