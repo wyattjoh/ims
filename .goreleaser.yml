@@ -24,32 +24,33 @@ builds:
         goarch: 386
 
 dockers:
-  - image: wyattjoh/ims
-    tag_templates:
-      - "{{ .Tag }}"
-      - "v{{ .Major }}.{{ .Minor }}"
-      - "v{{ .Major }}"
-      - latest
+  - image_templates:
+      - "wyattjoh/ims:{{ .Tag }}"
+      - "wyattjoh/ims:v{{ .Major }}.{{ .Minor }}"
+      - "wyattjoh/ims:v{{ .Major }}"
+      - "wyattjoh/ims:latest"
 
-brew:
-  github:
-    owner: wyattjoh
-    name: homebrew-stable
-  folder: Formula
-  homepage:  https://github.com/wyattjoh/ims
-  description: image manipulation service, written in Go
-  test: |
-    system "#{bin}/ims -v"
+brews:
+  - github:
+      owner: wyattjoh
+      name: homebrew-stable
+    folder: Formula
+    homepage: https://github.com/wyattjoh/ims
+    description: image manipulation service, written in Go
+    test: |
+      system "#{bin}/ims -v"
+    install: |
+      bin.install "ims"
 
-archive:
-  name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
-  format: tar.gz
-  format_overrides:
-    - goos: windows
-      format: zip
-  files:
-    - LICENSE.md
-    - README.md
+archives:
+  - name_template: "{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE.md
+      - README.md
 
 release:
   github:
