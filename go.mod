@@ -6,7 +6,7 @@ require (
 	github.com/Sirupsen/logrus v0.11.3-0.20170207183408-3f603f494d61
 	github.com/beorn7/perks v0.0.0-20160804104726-4c0e84591b9a // indirect
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
-	github.com/disintegration/imaging v1.4.2
+	github.com/disintegration/imaging v1.6.1
 	github.com/golang/protobuf v0.0.0-20170331031902-2bba0603135d // indirect
 	github.com/google/btree v0.0.0-20161217183710-316fb6d3f031 // indirect
 	github.com/gregjones/httpcache v0.0.0-20170211092055-d02018f006d9
