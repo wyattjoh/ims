@@ -23,7 +23,7 @@ require (
 	github.com/rs/cors v0.0.0-20160617231935-a62a804a8a00
 	github.com/rs/xhandler v0.0.0-20160618193221-ed27b6fd6521 // indirect
 	github.com/stretchr/testify v1.4.0 // indirect
-	github.com/uber/jaeger-client-go v2.19.0+incompatible
+	github.com/uber/jaeger-client-go v2.20.1+incompatible
 	github.com/uber/jaeger-lib v2.2.0+incompatible // indirect
 	github.com/urfave/cli v1.18.1-0.20161006035353-55f715e28c46
 	github.com/urfave/negroni v0.2.1-0.20170226005333-c0db5feaa338
