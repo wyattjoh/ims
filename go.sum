@@ -20,8 +20,8 @@ github.com/meatballhat/negroni-logrus v0.0.0-20160628043843-7c570a907cfc h1:YNCd
 github.com/meatballhat/negroni-logrus v0.0.0-20160628043843-7c570a907cfc/go.mod h1:Ylx55XGW4gjY7McWT0pgqU0aQquIOChDnYkOVbSuF/c=
 github.com/minio/minio-go v2.0.5-0.20170424113832-bddd6ac5ebcd+incompatible h1:JDaSMUdKBQIlyDl9MTiqg2uQy93aY9QNTda+nAhEP2I=
 github.com/minio/minio-go v2.0.5-0.20170424113832-bddd6ac5ebcd+incompatible/go.mod h1:7guKYtitv8dktvNUGrhzmNlA5wrAABTQXCoesZdFQO8=
-github.com/opentracing/opentracing-go v1.1.0 h1:pWlfV3Bxv7k65HYwkikxat0+s3pV4bsqf19k25Ur8rU=
-github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
+github.com/opentracing/opentracing-go v1.2.0 h1:uEJPy/1a5RIPAJ0Ov+OIO8OxWu77jEv+1B0VhjKrZUs=
+github.com/opentracing/opentracing-go v1.2.0/go.mod h1:GxEUsuufX4nBwe+T+Wl9TAgYrxe9dPLANfrWvHYVTgc=
 github.com/peterbourgon/diskv v2.0.1-0.20160404093648-5dfcb07a075a+incompatible h1:qhD6bS05X4eckpXB/kN+EMpIKzyXIiENfr+8c05QChc=
 github.com/peterbourgon/diskv v2.0.1-0.20160404093648-5dfcb07a075a+incompatible/go.mod h1:uqqh8zWWbv1HBMNONnaR/tNboyR3/BZd58JJSHlUSCU=
 github.com/pkg/errors v0.8.1-0.20170316201538-ff09b135c25a h1:qM2DiE1qoJGUQDGyLz0SRU+JNSsSmHfSdC3MscqKQwg=
@@ -41,6 +41,7 @@ github.com/rs/cors v0.0.0-20160617231935-a62a804a8a00/go.mod h1:gFx+x8UowdsKA9Ac
 github.com/rs/xhandler v0.0.0-20160618193221-ed27b6fd6521 h1:3hxavr+IHMsQBrYUPQM5v0CgENFktkkbg1sfpgM3h20=
 github.com/rs/xhandler v0.0.0-20160618193221-ed27b6fd6521/go.mod h1:RvLn4FgxWubrpZHtQLnOf6EwhN2hEMusxZOhcW9H3UQ=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
+github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/uber/jaeger-client-go v2.19.0+incompatible h1:pbwbYfHUoaase0oPQOdZ1GcaUjImYGimUXSQ/+8+Z8Q=
