@@ -20,8 +20,6 @@ github.com/meatballhat/negroni-logrus v0.0.0-20160628043843-7c570a907cfc h1:YNCd
 github.com/meatballhat/negroni-logrus v0.0.0-20160628043843-7c570a907cfc/go.mod h1:Ylx55XGW4gjY7McWT0pgqU0aQquIOChDnYkOVbSuF/c=
 github.com/minio/minio-go v2.0.5-0.20170424113832-bddd6ac5ebcd+incompatible h1:JDaSMUdKBQIlyDl9MTiqg2uQy93aY9QNTda+nAhEP2I=
 github.com/minio/minio-go v2.0.5-0.20170424113832-bddd6ac5ebcd+incompatible/go.mod h1:7guKYtitv8dktvNUGrhzmNlA5wrAABTQXCoesZdFQO8=
-github.com/opentracing/opentracing-go v1.1.0 h1:pWlfV3Bxv7k65HYwkikxat0+s3pV4bsqf19k25Ur8rU=
-github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/opentracing/opentracing-go v1.2.0 h1:uEJPy/1a5RIPAJ0Ov+OIO8OxWu77jEv+1B0VhjKrZUs=
 github.com/opentracing/opentracing-go v1.2.0/go.mod h1:GxEUsuufX4nBwe+T+Wl9TAgYrxe9dPLANfrWvHYVTgc=
 github.com/peterbourgon/diskv v2.0.1-0.20160404093648-5dfcb07a075a+incompatible h1:qhD6bS05X4eckpXB/kN+EMpIKzyXIiENfr+8c05QChc=
