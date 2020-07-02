@@ -13,7 +13,7 @@ require (
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/meatballhat/negroni-logrus v0.0.0-20160628043843-7c570a907cfc
 	github.com/minio/minio-go v2.0.5-0.20170424113832-bddd6ac5ebcd+incompatible
-	github.com/opentracing/opentracing-go v1.1.0
+	github.com/opentracing/opentracing-go v1.2.0
 	github.com/peterbourgon/diskv v2.0.1-0.20160404093648-5dfcb07a075a+incompatible // indirect
 	github.com/pkg/errors v0.8.1-0.20170316201538-ff09b135c25a
 	github.com/prometheus/client_golang v0.8.1-0.20170228162001-aace68cde27d
