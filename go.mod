@@ -23,14 +23,13 @@ require (
 	github.com/rs/cors v0.0.0-20160617231935-a62a804a8a00
 	github.com/rs/xhandler v0.0.0-20160618193221-ed27b6fd6521 // indirect
 	github.com/stretchr/testify v1.4.0 // indirect
-	github.com/uber/jaeger-client-go v2.19.0+incompatible
+	github.com/uber/jaeger-client-go v2.25.0+incompatible
 	github.com/uber/jaeger-lib v2.2.0+incompatible // indirect
 	github.com/urfave/cli v1.18.1-0.20161006035353-55f715e28c46
 	github.com/urfave/negroni v0.2.1-0.20170226005333-c0db5feaa338
-	golang.org/x/net v0.0.0-20161116075034-4971afdc2f16 // indirect
+	go.uber.org/atomic v1.6.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20160801214932-0aec23fa6269
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
-	golang.org/x/sys v0.0.0-20170308153327-99f16d856c98 // indirect
 	google.golang.org/api v0.0.0-20160802204451-593853e2d377 // indirect
 	google.golang.org/appengine v1.0.1-0.20161005231042-4a8ba85959ae // indirect
 	google.golang.org/cloud v0.0.0-20160803005736-3424547c8520
