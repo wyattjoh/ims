@@ -1,6 +1,6 @@
 module github.com/wyattjoh/ims
 
-go 1.13
+go 1.14
 
 require (
 	github.com/Sirupsen/logrus v0.11.3-0.20170207183408-3f603f494d61
