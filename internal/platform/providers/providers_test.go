@@ -11,14 +11,24 @@ import (
 )
 
 func TestMiddleware(t *testing.T) {
-	tableData := map[string]provider.Provider{
+	hosts := []string{
+		"1.com",
+		"2.com",
+	}
+
+	tableData := providers.NewProviders(map[string]provider.Provider{
 		"1.com": provider.NewOrigin(nil, nil),
 		"2.com": provider.NewOrigin(nil, nil),
-	}
+	})
 
 	// We need to check that the middleware is setting the right provider for the
 	// given host.
-	for host, tableCaseProvider := range tableData {
+	for _, host := range hosts {
+		tableCaseProvider := tableData.Get(host)
+		if tableCaseProvider == nil {
+			t.Fatalf("Expected to be ok, was not")
+		}
+
 		providers.Middleware(tableData, func(w http.ResponseWriter, r *http.Request) {
 			p, ok := r.Context().Value(providers.ContextKey).(provider.Provider)
 			if !ok {

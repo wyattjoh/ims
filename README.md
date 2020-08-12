@@ -162,6 +162,20 @@ Example:
 ims --backend /some/folder/location
 ```
 
+### Proxy Mode
+
+If the `--backend` is specified with a `:proxy:` option, it will enable
+[ims](https://github.com/wyattjoh/ims) to use the provided `url` query parameter
+on each request to load the image from a remote source. For security reasons
+however, this requires that the `--signing-secret` and `--signing-with-path` is
+also provided.
+
+Example:
+
+```bash
+img --backend :proxy: --signing-secret "keyboard cat" --signing-with-path
+```
+
 ## Signing
 
 When `--signing-secret` is provided, all requests must include a `sig` query
@@ -182,7 +196,7 @@ const querystring = require("querystring");
 
 const transformationOptions = {
   width: 100,
-  height: 200
+  height: 200,
 };
 
 // Change this to the secret that you gave to ims via the`--signing-secret`
@@ -204,9 +218,7 @@ let value = Object.keys(transformationOptions)
 // value = "/my-image.jpg?" + value;
 //
 
-const sig = Crypto.createHmac("sha256", secret)
-  .update(value)
-  .digest("hex");
+const sig = Crypto.createHmac("sha256", secret).update(value).digest("hex");
 
 console.log(value + "&sig=" + sig);
 ```
