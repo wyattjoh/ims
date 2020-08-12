@@ -78,6 +78,7 @@ func CropImage(m image.Image, crop string) image.Image {
 
 //==============================================================================
 
+// GetResizeDimension will get the resize dimension.
 func GetResizeDimension(resize string) int {
 	if resize == "" {
 		return 0
