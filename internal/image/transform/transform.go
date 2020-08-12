@@ -100,11 +100,30 @@ func GetResampleFilter(filter string) imaging.ResampleFilter {
 
 //==============================================================================
 
+// GetResizeMode will return true when we should apply maximum scaling.
+func GetResizeMode(resizeMode string) bool {
+	switch resizeMode {
+	case "stretch":
+		return false
+	case "preserve":
+		return true
+	default:
+		return false
+	}
+}
+
+//==============================================================================
+
 // ResizeImage resizes the image with the given resample filter.
-func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) image.Image {
+func ResizeImage(m image.Image, w, h string, originalWidth, originalHeight int, resizeMode bool, filter imaging.ResampleFilter) image.Image {
 	// Resize the width if it was provided.
 	if w != "" {
 		if width, err := strconv.Atoi(w); err == nil {
+			if resizeMode && width > originalWidth {
+				// Don't resize if it's larger than the original!
+				return m
+			}
+
 			return imaging.Resize(m, width, 0, filter)
 		}
 	}
@@ -112,6 +131,11 @@ func ResizeImage(m image.Image, w, h string, filter imaging.ResampleFilter) imag
 	// Resize the height if provided.
 	if h != "" {
 		if height, err := strconv.Atoi(h); err == nil {
+			if resizeMode && height > originalHeight {
+				// Don't resize if it's larger than the original!
+				return m
+			}
+
 			return imaging.Resize(m, 0, height, filter)
 		}
 	}
@@ -147,8 +171,9 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 	if w != "" || h != "" {
 		// Get the resize filter to use.
 		filter := GetResampleFilter(v.Get("resize-filter"))
+		resizeMode := GetResizeMode(v.Get("resize-mode"))
 
-		m = ResizeImage(m, w, h, filter)
+		m = ResizeImage(m, w, h, width, height, resizeMode, filter)
 	}
 
 	// Reorient the image if the orientation parameter was provided.
