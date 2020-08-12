@@ -78,6 +78,25 @@ func CropImage(m image.Image, crop string) image.Image {
 
 //==============================================================================
 
+func GetResizeDimension(resize string) int {
+	if resize == "" {
+		return 0
+	}
+
+	dimension, err := strconv.Atoi(resize)
+	if err != nil {
+		return 0
+	}
+
+	if dimension > 8192 {
+		return 8192
+	}
+
+	return dimension
+}
+
+//==============================================================================
+
 // GetResampleFilter gets the resample filter to use for resizing.
 func GetResampleFilter(filter string) imaging.ResampleFilter {
 	switch filter {
@@ -100,44 +119,69 @@ func GetResampleFilter(filter string) imaging.ResampleFilter {
 
 //==============================================================================
 
-// GetResizeMode will return true when we should apply maximum scaling.
-func GetResizeMode(resizeMode string) bool {
-	switch resizeMode {
-	case "stretch":
-		return false
-	case "preserve":
-		return true
+// GetFit will return the fit parameter.
+func GetFit(fit string) string {
+	switch fit {
+	case "cover":
+		return "cover"
+	case "bounds":
+		return "bounds"
 	default:
-		return false
+		return ""
 	}
 }
 
 //==============================================================================
 
 // ResizeImage resizes the image with the given resample filter.
-func ResizeImage(m image.Image, w, h string, originalWidth, originalHeight int, resizeMode bool, filter imaging.ResampleFilter) image.Image {
-	// Resize the width if it was provided.
-	if w != "" {
-		if width, err := strconv.Atoi(w); err == nil {
-			if resizeMode && width > originalWidth {
-				// Don't resize if it's larger than the original!
-				return m
+func ResizeImage(m image.Image, w, h string, originalWidth, originalHeight int, fit string, filter imaging.ResampleFilter) image.Image {
+	width := GetResizeDimension(w)
+	height := GetResizeDimension(h)
+
+	// If both width and height are provided, and we have a valid fit mode, then
+	// perform a resize.
+	if width > 0 && height > 0 {
+		switch fit {
+		case "bounds":
+			// Calculate the scales relative to the orignals.
+			widthScale := float32(width) / float32(originalWidth)
+			heightScale := float32(height) / float32(originalHeight)
+
+			// Find the smallest scale.
+			scale := widthScale
+			if widthScale > heightScale {
+				scale = heightScale
 			}
 
-			return imaging.Resize(m, width, 0, filter)
+			// Calculate the resized dimensions.
+			width = int(float32(originalWidth) * scale)
+			height = int(float32(originalHeight) * scale)
+
+			// Resize the orignal dimensions to that scale.
+			return imaging.Resize(m, width, height, filter)
+		case "cover":
+			return imaging.Resize(m, width, height, filter)
 		}
 	}
 
-	// Resize the height if provided.
-	if h != "" {
-		if height, err := strconv.Atoi(h); err == nil {
-			if resizeMode && height > originalHeight {
-				// Don't resize if it's larger than the original!
-				return m
-			}
-
-			return imaging.Resize(m, 0, height, filter)
+	// Resize the width if it was provided.
+	if width > 0 {
+		if width > originalWidth {
+			// Don't resize if it's larger than the original!
+			return m
 		}
+
+		return imaging.Resize(m, width, 0, filter)
+	}
+
+	// Resize the height if provided.
+	if height > 0 {
+		if height > originalHeight {
+			// Don't resize if it's larger than the original!
+			return m
+		}
+
+		return imaging.Resize(m, 0, height, filter)
 	}
 
 	return m
@@ -171,9 +215,9 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 	if w != "" || h != "" {
 		// Get the resize filter to use.
 		filter := GetResampleFilter(v.Get("resize-filter"))
-		resizeMode := GetResizeMode(v.Get("resize-mode"))
+		fit := GetFit(v.Get("fit"))
 
-		m = ResizeImage(m, w, h, width, height, resizeMode, filter)
+		m = ResizeImage(m, w, h, width, height, fit, filter)
 	}
 
 	// Reorient the image if the orientation parameter was provided.
