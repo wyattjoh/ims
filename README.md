@@ -258,6 +258,9 @@ are also in the same order that they are processed.
 - `width`: output image width (default is the original width).
 - `height`: output image height. If both `width` and `height` are provided, the
   `width` will be used instead.
+- `resize-mode`: select the resize mode to adjust how the resizing operations will perform:
+  - `preserve`: only convert up to the maximum of the resize dimension
+  - `stretch` (**default**): scale images up and down
 - `orient`: changes the image orientation:
   - `r`: Orientate the image right.
   - `l`: Orientate the image left.
