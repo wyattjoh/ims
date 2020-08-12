@@ -13,6 +13,26 @@ import (
 	"github.com/wyattjoh/ims/internal/image/provider"
 )
 
+// Providers provide other Provider's based on the host name of the request.
+type Providers struct {
+	providers map[string]provider.Provider
+}
+
+// Get will return a provider.
+func (p *Providers) Get(host string) provider.Provider {
+	provider := p.providers[host]
+	return provider
+}
+
+// NewProviders will return the Providers wrapped.
+func NewProviders(providers map[string]provider.Provider) *Providers {
+	return &Providers{
+		providers: providers,
+	}
+}
+
+//==============================================================================
+
 // GetUnderlyingTransport checks the url as some clients have specific
 // requirements of the underlying transport.
 func GetUnderlyingTransport(ctx context.Context, originURL *url.URL) (http.RoundTripper, error) {
@@ -92,6 +112,17 @@ func GetRemoteBackendProvider(ctx context.Context, origin, originCache string) (
 	return GetRemoteProviderClient(ctx, originURL, transport)
 }
 
+// GetProxyBackendProvider will create a new proxy provider.
+func GetProxyBackendProvider(ctx context.Context, originCache string) (provider.Provider, error) {
+	transport, err := WrapCacheRoundTripper(ctx, http.DefaultTransport, originCache)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't get the origin round tripper")
+	}
+
+	// Get the remote provider client.
+	return provider.NewProxy(transport), nil
+}
+
 // ParseBackend parses the backend using the following formats:
 //
 //   <host>,<origin> OR <origin>
@@ -116,7 +147,7 @@ func ParseBackend(defaultHost, backend string) (string, string, error) {
 // New loops over the origins provided, parsing with the specified providers,
 // and returns the providers keyed by host and optionally wrapped with an origin
 // cache. This will error if the same backend host is extracted more than once.
-func New(ctx context.Context, defaultHost string, backends []string, originCache string) (map[string]provider.Provider, error) {
+func New(ctx context.Context, defaultHost string, backends []string, originCache, signingSecret string, signingWithPath bool) (*Providers, error) {
 	if len(backends) == 0 {
 		return nil, errors.New("no provider selected")
 	}
@@ -151,6 +182,27 @@ func New(ctx context.Context, defaultHost string, backends []string, originCache
 				"origin": origin,
 			}).Debug("serving from the origin")
 			providers[host] = p
+		} else if origin == ":proxy:" {
+			// This looks like a proxy! Let's create the provider.
+			p, err := GetProxyBackendProvider(ctx, originCache)
+			if err != nil {
+				return nil, errors.Wrap(err, "cannot get the proxy provider")
+			}
+
+			// Ensure that if the proxy backend is enabled, that the signing config is
+			// also provided.
+			if signingSecret == "" {
+				return nil, errors.New("when proxy mode is enabled, a signing secret is required")
+			}
+
+			if !signingWithPath {
+				return nil, errors.New("when proxy mode is enabled, a signing with path is required")
+			}
+
+			logrus.WithFields(logrus.Fields{
+				"host": host,
+			}).Debug("serving with proxy mode")
+			providers[host] = p
 		} else {
 			logrus.WithFields(logrus.Fields{
 				"host":      host,
@@ -160,5 +212,5 @@ func New(ctx context.Context, defaultHost string, backends []string, originCache
 		}
 	}
 
-	return providers, nil
+	return NewProviders(providers), nil
 }

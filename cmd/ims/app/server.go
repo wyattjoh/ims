@@ -81,7 +81,7 @@ func Serve(opts *ServerOpts) error {
 	}
 
 	// Get the image provider map.
-	p, err := providers.New(ctx, opts.Addr, opts.Backends, opts.OriginCache)
+	p, err := providers.New(ctx, opts.Addr, opts.Backends, opts.OriginCache, opts.SigningSecret, opts.IncludePath)
 	if err != nil {
 		return err
 	}

@@ -16,7 +16,24 @@ import (
 
 // getFilename fetches the filename from the request path and validates that the
 // path is valid.
-func getFilename(r *http.Request) (string, error) {
+func getFilename(p provider.Provider, r *http.Request) (string, error) {
+	// We expect that if we're dealing with a proxy provider, that we have a
+	// `?url=` on the URL.
+	if _, ok := p.(*provider.Proxy); ok {
+		// Get the URL parameter from the filename.
+		url := r.URL.Query().Get("url")
+
+		// To include the scheme, it must be at least 7 characters:
+		//
+		// http://
+		//
+		if len(url) <= 7 {
+			return "", errors.New("filname too short")
+		}
+
+		return url, nil
+	}
+
 	// We expect that the router sends us requests in the form `/:filename`
 	// so we check to see if the path contains the image url that we want to
 	// parse. In this case, we check to see that the path is at least 9 characters
@@ -45,7 +62,7 @@ func Image(timeout time.Duration) http.HandlerFunc {
 		}
 
 		// Extract the filename from the request.
-		filename, err := getFilename(r)
+		filename, err := getFilename(p, r)
 		if err != nil {
 			logrus.WithError(err).Error("could not process the filename")
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
@@ -53,8 +70,6 @@ func Image(timeout time.Duration) http.HandlerFunc {
 		}
 
 		// Try to get the image from the provider.
-		// opentracing.Ext
-		// opentracing.Span
 		span, ctx := opentracing.StartSpanFromContext(r.Context(), "provider.Provide")
 		m, err := p.Provide(ctx, filename)
 		if err != nil {
