@@ -7,6 +7,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	negronilogrus "github.com/meatballhat/negroni-logrus"
+	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/cors"
 	"github.com/urfave/negroni"
@@ -21,7 +22,7 @@ func MountEndpoint(mux *http.ServeMux, endpoint string, handler http.Handler) {
 	logrus.WithField("endpoint", endpoint).Debug("mounting endpoint")
 }
 
-// ServerOpts is the options for starting a new Server,
+// ServerOpts is the options for starting a new Server.
 type ServerOpts struct {
 
 	// Addr is the address to listen for http requests on.
@@ -32,9 +33,6 @@ type ServerOpts struct {
 
 	// DisableMetrics disables Prometheus endpoints.
 	DisableMetrics bool
-
-	// Directories is the folder in which images are served out of.
-	Directories string
 
 	// Backends is the comma separated <host>,<origin> where <origin> is a pathname
 	// or a url (with scheme) to load images from.
@@ -83,7 +81,7 @@ func Serve(opts *ServerOpts) error {
 	// Get the image provider map.
 	p, err := providers.New(ctx, opts.Addr, opts.Backends, opts.OriginCache, opts.SigningSecret, opts.IncludePath)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "cannot create providers")
 	}
 
 	// Wrap the handler with the image handler and the providers.
@@ -134,5 +132,6 @@ func Serve(opts *ServerOpts) error {
 	n.UseHandler(mux)
 
 	logrus.WithField("address", opts.Addr).Info("now listening")
+
 	return http.ListenAndServe(opts.Addr, n)
 }

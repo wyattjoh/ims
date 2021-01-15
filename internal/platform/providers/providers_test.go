@@ -67,6 +67,7 @@ func TestWrapCacheRoundTripper(t *testing.T) {
 	}
 
 	ctx := context.Background()
+
 	for i, tableCase := range tableData {
 		rt, err := providers.WrapCacheRoundTripper(ctx, ut, tableCase.OriginCache)
 		if err != nil {

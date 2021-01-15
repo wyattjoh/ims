@@ -38,6 +38,7 @@ func Middleware(secret string, includePath bool, next http.HandlerFunc) http.Han
 		if signature == "" {
 			http.Error(w, "Signature invalid", http.StatusUnauthorized)
 			span.Finish()
+
 			return
 		}
 
@@ -48,6 +49,7 @@ func Middleware(secret string, includePath bool, next http.HandlerFunc) http.Han
 		if !sig.Verify(signature, value, secret) {
 			http.Error(w, "Signature invalid", http.StatusUnauthorized)
 			span.Finish()
+
 			return
 		}
 

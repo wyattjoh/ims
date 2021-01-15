@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
-
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/cloud"
@@ -17,7 +16,7 @@ import (
 func NewGCSTransport(ctx context.Context) (http.RoundTripper, error) {
 	ts, err := google.DefaultTokenSource(ctx, storage.ScopeReadOnly)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "cannot create token source")
 	}
 
 	return oauth2.NewClient(ctx, ts).Transport, nil
@@ -57,11 +56,11 @@ func (gcs *GCS) Provide(ctx context.Context, filename string) (io.ReadCloser, er
 	// Get the object handlea and return a reader based on the object handle.
 	r, err := gcs.bucket.Object(filename).NewReader(ctx)
 	if err != nil {
-		if err == storage.ErrObjectNotExist {
+		if errors.Is(err, storage.ErrObjectNotExist) {
 			return nil, ErrNotFound
 		}
 
-		return nil, err
+		return nil, errors.Wrap(err, "cannot get file from provider")
 	}
 
 	return r, nil

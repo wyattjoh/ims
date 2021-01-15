@@ -41,7 +41,7 @@ type Encoder interface {
 	Encode(m image.Image, w http.ResponseWriter) error
 }
 
-//==============================================================================
+// =============================================================================
 
 // WrapEncoderFunc type is an adapter to allow the use of
 // ordinary functions as image Encoders. If f is a function

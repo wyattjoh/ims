@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/pkg/errors"
 )
 
 // Filesystem provides a way to load files from the filesystem.
@@ -17,11 +19,11 @@ func (fp *Filesystem) Provide(ctx context.Context, filename string) (io.ReadClos
 	// Try to open the image from the virtual filesystem.
 	f, err := fp.Dir.Open(filename)
 	if err != nil {
-		if _, ok := err.(*os.PathError); ok {
+		if errors.As(err, &os.PathError{}) {
 			return nil, ErrNotFound
 		}
 
-		return nil, err
+		return nil, errors.Wrap(err, "cannot get file from filesystem")
 	}
 
 	return f, nil
