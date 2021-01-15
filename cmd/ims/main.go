@@ -129,7 +129,7 @@ func ServeAction(c *cli.Context) error {
 	} else {
 		pwd, err := os.Getwd()
 		if err != nil {
-			return cli.NewExitError(errors.Wrap(err, "can't get the current working directory").Error(), 1)
+			return cli.Exit(errors.Wrap(err, "can't get the current working directory").Error(), 1)
 		}
 		backends = []string{pwd}
 	}
@@ -164,7 +164,8 @@ func ServeAction(c *cli.Context) error {
 
 	if err := app.Serve(opts); err != nil {
 		logrus.WithError(err).Error("could not serve")
-		return cli.NewExitError(err.Error(), 1)
+
+		return cli.Exit(err.Error(), 1)
 	}
 
 	return nil
