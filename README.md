@@ -1,6 +1,6 @@
 # ims
 
-![Lint](https://github.com/wyattjoh/ims/workflows/Lint/badge.svg)
+![Tests](https://github.com/wyattjoh/ims/workflows/Test/badge.svg)
 [![Go Report](https://goreportcard.com/badge/github.com/wyattjoh/ims)](https://goreportcard.com/report/github.com/wyattjoh/ims)
 [![Docker Image Size](https://img.shields.io/microbadger/image-size/wyattjoh/ims.svg)](https://hub.docker.com/r/wyattjoh/ims/)
 [![GitHub release](https://img.shields.io/github/release/wyattjoh/ims.svg)](https://github.com/wyattjoh/ims/releases/latest)
