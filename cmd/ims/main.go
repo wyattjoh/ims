@@ -6,12 +6,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	jaeger "github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/transport"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 	"github.com/wyattjoh/ims/cmd/ims/app"
 )
 
@@ -46,49 +46,49 @@ func main() {
 	app.Usage = "Image Manipulation Server"
 	app.Version = fmt.Sprintf("%v, commit %v, built at %v", version, commit, date)
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  flagListenAddr,
 			Value: defaultListenAddr,
 			Usage: "the address to listen for new connections on",
 		},
-		cli.StringSliceFlag{
+		&cli.StringSliceFlag{
 			Name:  flagBackend,
 			Usage: "comma separated <host>,<origin> where <origin> is a pathname or a url (with scheme) to load images from or just <origin> and the host will be the listen address",
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  flagOriginCache,
 			Usage: "cache the origin resources based on their cache headers (:memory: for memory based cache, directory name for file based, not specified for disabled)",
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  flagSigningSecret,
 			Usage: "when provided, will be used to verify signed image requests made to the domain",
 		},
-		cli.StringFlag{
+		&cli.StringFlag{
 			Name:  flagTracingURI,
 			Usage: "when provided, will be used to send tracing information via opentracing",
 		},
-		cli.BoolFlag{
+		&cli.BoolFlag{
 			Name:  flagIncludePathWhenSigning,
 			Usage: "when provided, the path will be included in the value to compute the signature",
 		},
-		cli.BoolFlag{
+		&cli.BoolFlag{
 			Name:  flagDisableMetrics,
 			Usage: "disable the prometheus metrics",
 		},
-		cli.DurationFlag{
+		&cli.DurationFlag{
 			Name:  flagTimeout,
 			Value: defaultTimeout,
 			Usage: "used to set the cache control max age headers, set to 0 to disable",
 		},
-		cli.StringSliceFlag{
+		&cli.StringSliceFlag{
 			Name:  flagCORSDomain,
 			Usage: "use to enable CORS for the specified domain (note, this is not required to use as an image service)",
 		},
-		cli.BoolFlag{
+		&cli.BoolFlag{
 			Name:  flagDebug,
 			Usage: "enable debug logging and pprof routes",
 		},
-		cli.BoolFlag{
+		&cli.BoolFlag{
 			Name:  flagJSON,
 			Usage: "print logs out in JSON",
 		},

@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"github.com/wyattjoh/ims/internal/image/encoder"
 	"github.com/wyattjoh/ims/internal/image/transform"
 )

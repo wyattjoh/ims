@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	minio "github.com/minio/minio-go"
+	"github.com/minio/minio-go"
 	"github.com/pkg/errors"
 )
 
@@ -45,7 +45,7 @@ type S3 struct {
 // Provide loads the file from the S3 client.
 func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error) {
 	// Get the reader from the minio client.
-	r, err := s.client.GetObject(s.bucket, filename)
+	r, err := s.client.GetObject(s.bucket, filename, minio.GetObjectOptions{})
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot get object from provider")
 	}

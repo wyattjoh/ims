@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	opentracing "github.com/opentracing/opentracing-go"
+	"github.com/sirupsen/logrus"
 	"github.com/wyattjoh/ims/internal/image"
 	"github.com/wyattjoh/ims/internal/image/provider"
 	"github.com/wyattjoh/ims/internal/platform/providers"
