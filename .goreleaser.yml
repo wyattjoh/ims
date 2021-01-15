@@ -35,7 +35,7 @@ dockers:
       - "ghcr.io/wyattjoh/ims:latest"
 
 brews:
-  - github:
+  - tap:
       owner: wyattjoh
       name: homebrew-stable
     folder: Formula
