@@ -29,6 +29,10 @@ dockers:
       - "wyattjoh/ims:v{{ .Major }}.{{ .Minor }}"
       - "wyattjoh/ims:v{{ .Major }}"
       - "wyattjoh/ims:latest"
+      - "ghcr.io/wyattjoh/ims:{{ .Tag }}"
+      - "ghcr.io/wyattjoh/ims:v{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/wyattjoh/ims:v{{ .Major }}"
+      - "ghcr.io/wyattjoh/ims:latest"
 
 brews:
   - github:
