@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	cloud.google.com/go v0.75.0 // indirect
-	cloud.google.com/go/storage v1.10.0
+	cloud.google.com/go/storage v1.12.0
 	github.com/disintegration/imaging v1.6.2
 	github.com/go-ini/ini v1.62.0 // indirect
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
