@@ -32,6 +32,8 @@ Docker:
 
 ```bash
 docker pull wyattjoh/ims
+# or via the Github Container Registry
+docker pull ghcr.io/wyattjoh/ims
 ```
 
 Or by visiting the [Releases](https://github.com/wyattjoh/ims/releases/latest)
