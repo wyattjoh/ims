@@ -1,4 +1,4 @@
-name: Lint
+name: Test
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
@@ -17,3 +17,5 @@ jobs:
       - uses: golangci/golangci-lint-action@v2
         with:
           version: v1.35
+      - name: Unit testing
+        run: go test ./...
