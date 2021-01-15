@@ -1,0 +1,17 @@
+version: 2
+updates:
+  # Update Docker dependencies if they're found daily.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+  # Update Go dependencies if they're found daily.
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "daily"
+  # Update Github Actions if they're found daily.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
