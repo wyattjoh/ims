@@ -6,10 +6,10 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/gregjones/httpcache"
 	"github.com/gregjones/httpcache/diskcache"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"github.com/wyattjoh/ims/internal/image/provider"
 )
 

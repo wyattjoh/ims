@@ -5,11 +5,11 @@ import (
 	"io"
 	"net/http"
 
+	"cloud.google.com/go/storage"
 	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	"google.golang.org/cloud"
-	"google.golang.org/cloud/storage"
+	"google.golang.org/api/option"
 )
 
 // NewGCSTransport returns the transport used by GCS.
@@ -25,8 +25,8 @@ func NewGCSTransport(ctx context.Context) (http.RoundTripper, error) {
 // NewGCS will create the GCS Provider.
 func NewGCS(ctx context.Context, bucket string, transport http.RoundTripper) (*GCS, error) {
 	// Create the options for the client.
-	opts := []cloud.ClientOption{
-		cloud.WithBaseHTTP(&http.Client{
+	opts := []option.ClientOption{
+		option.WithHTTPClient(&http.Client{
 			Transport: transport,
 		}),
 	}

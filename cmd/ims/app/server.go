@@ -5,11 +5,12 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	negronilogrus "github.com/meatballhat/negroni-logrus"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/cors"
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
 	"github.com/wyattjoh/ims/cmd/ims/handlers"
 	"github.com/wyattjoh/ims/internal/platform/providers"
@@ -105,10 +106,10 @@ func Serve(opts *ServerOpts) error {
 	} else {
 		// Mount the resize handler on the mux with the instrumentation wrapped on
 		// the handler.
-		MountEndpoint(mux, "/", prometheus.InstrumentHandlerFunc("image", handler))
+		MountEndpoint(mux, "/", promhttp.InstrumentMetricHandler(prometheus.DefaultRegisterer, handler))
 
 		// Register the prometheus metrics handler.
-		MountEndpoint(mux, "/metrics", prometheus.Handler())
+		MountEndpoint(mux, "/metrics", promhttp.Handler())
 
 		logrus.Debug("prometheus metrics enabled")
 	}

@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/disintegration/imaging"
+	"github.com/sirupsen/logrus"
 )
 
 // RotateImage implements the rotating scheme described on:
