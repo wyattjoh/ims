@@ -19,7 +19,7 @@ var (
 	ErrBadGateway = errors.New("bad gateway")
 )
 
-//==============================================================================
+// =============================================================================
 
 // Provider describes a struct that provides the "Provide" method to provide an
 // image from a filename.

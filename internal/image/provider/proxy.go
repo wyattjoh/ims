@@ -2,9 +2,12 @@ package provider
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
+
+	"github.com/pkg/errors"
 )
 
 // NewProxy returns a new Proxy Provider that will return files.
@@ -34,13 +37,13 @@ func (pp *Proxy) Provide(ctx context.Context, filename string) (io.ReadCloser, e
 }
 
 // Handle implements the reusable logic behind the Proxy Provider.
-func (pp *Proxy) Handle(ctx context.Context, fileURL *url.URL) (io.ReadCloser, error) {
+func (pp *Proxy) Handle(ctx context.Context, fileURL fmt.Stringer) (io.ReadCloser, error) {
 	// Perform the GET to the origin server. This takes the url passed in as the
 	// origin and resolves a relative reference with the filename passed in. It
 	// will not attach any query params sent on the original request.
 	req, err := http.NewRequest("GET", fileURL.String(), nil)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "cannot create request for provider")
 	}
 
 	// Add the higher order context to the request. This way if the client closes
@@ -50,7 +53,7 @@ func (pp *Proxy) Handle(ctx context.Context, fileURL *url.URL) (io.ReadCloser, e
 	// Perform the request with the attached client.
 	res, err := pp.client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "cannot get file from provider")
 	}
 
 	// If the code was explicitly a 404, return in kind.

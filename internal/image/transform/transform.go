@@ -51,7 +51,7 @@ func RotateImage(m image.Image, orient string) image.Image {
 	}
 }
 
-//==============================================================================
+// =============================================================================
 
 // CropImage performs cropping operations based on the api described:
 // https://docs.fastly.com/api/imageopto/crop
@@ -76,7 +76,7 @@ func CropImage(m image.Image, crop string) image.Image {
 	return m
 }
 
-//==============================================================================
+// =============================================================================
 
 // GetResizeDimension will get the resize dimension.
 func GetResizeDimension(resize string) int {
@@ -96,7 +96,7 @@ func GetResizeDimension(resize string) int {
 	return dimension
 }
 
-//==============================================================================
+// =============================================================================
 
 // GetResampleFilter gets the resample filter to use for resizing.
 func GetResampleFilter(filter string) imaging.ResampleFilter {
@@ -118,7 +118,7 @@ func GetResampleFilter(filter string) imaging.ResampleFilter {
 	}
 }
 
-//==============================================================================
+// =============================================================================
 
 // GetFit will return the fit parameter.
 func GetFit(fit string) string {
@@ -132,7 +132,7 @@ func GetFit(fit string) string {
 	}
 }
 
-//==============================================================================
+// =============================================================================
 
 // ResizeImage resizes the image with the given resample filter.
 func ResizeImage(m image.Image, w, h string, originalWidth, originalHeight int, fit string, filter imaging.ResampleFilter) image.Image {
@@ -188,7 +188,7 @@ func ResizeImage(m image.Image, w, h string, originalWidth, originalHeight int, 
 	return m
 }
 
-//==============================================================================
+// =============================================================================
 
 // Image transforms the image based on data found in the request. Following the
 // available query params in the root README, this will parse the query params
@@ -213,6 +213,7 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 	// Resize the image if the width or height are provided.
 	w := v.Get("width")
 	h := v.Get("height")
+
 	if w != "" || h != "" {
 		// Get the resize filter to use.
 		filter := GetResampleFilter(v.Get("resize-filter"))

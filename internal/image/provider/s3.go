@@ -47,7 +47,7 @@ func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error
 	// Get the reader from the minio client.
 	r, err := s.client.GetObject(s.bucket, filename)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "cannot get object from provider")
 	}
 
 	// We wouldn't normally close this, but because we're just reading this into
@@ -68,7 +68,7 @@ func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error
 			return nil, ErrNotFound
 		}
 
-		return nil, err
+		return nil, errors.Wrap(err, "could not copy into the buffer")
 	}
 
 	// The bytes buffer isn't a closer by nature, just wrap it with a no-op closer

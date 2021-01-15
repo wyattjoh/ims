@@ -14,6 +14,10 @@ import (
 	"github.com/wyattjoh/ims/internal/platform/providers"
 )
 
+// ErrFilenameTooShort is returned when the filename referenced by the request
+// is too short to be used with a provider.
+var ErrFilenameTooShort = errors.New("filename too short")
+
 // getFilename fetches the filename from the request path and validates that the
 // path is valid.
 func getFilename(p provider.Provider, r *http.Request) (string, error) {
@@ -28,7 +32,7 @@ func getFilename(p provider.Provider, r *http.Request) (string, error) {
 		// http://
 		//
 		if len(url) <= 7 {
-			return "", errors.New("filname too short")
+			return "", ErrFilenameTooShort
 		}
 
 		return url, nil
@@ -39,7 +43,7 @@ func getFilename(p provider.Provider, r *http.Request) (string, error) {
 	// parse. In this case, we check to see that the path is at least 9 characters
 	// long, which will ensure that the filename has at least 1 character.
 	if len(r.URL.Path) < 2 {
-		return "", errors.New("filename too short")
+		return "", ErrFilenameTooShort
 	}
 
 	return r.URL.Path[1:], nil
@@ -58,6 +62,7 @@ func Image(timeout time.Duration) http.HandlerFunc {
 		if !ok {
 			logrus.Error("expected request to contain context with provider, none found")
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+
 			return
 		}
 
@@ -66,38 +71,44 @@ func Image(timeout time.Duration) http.HandlerFunc {
 		if err != nil {
 			logrus.WithError(err).Error("could not process the filename")
 			http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+
 			return
 		}
 
 		// Try to get the image from the provider.
 		span, ctx := opentracing.StartSpanFromContext(r.Context(), "provider.Provide")
+
 		m, err := p.Provide(ctx, filename)
 		if err != nil {
-			switch err {
-			case provider.ErrBadGateway:
+			// We got an error! Find out which one.
+			if errors.Is(err, provider.ErrBadGateway) {
 				http.Error(w, http.StatusText(http.StatusBadGateway), http.StatusBadGateway)
-			case provider.ErrFilename:
+			} else if errors.Is(err, provider.ErrFilename) {
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-			case provider.ErrNotFound:
+			} else if errors.Is(err, provider.ErrNotFound) {
 				http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
-			default:
+			} else {
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 			}
 
 			logrus.WithError(err).Error("could not load the image from the provider")
 			span.Finish()
+
 			return
 		}
 		defer m.Close()
+
 		span.Finish()
 
 		// If an error occurred during the image processing, return with an internal
 		// server error.
 		span, ctx = opentracing.StartSpanFromContext(r.Context(), "image.Process")
 		defer span.Finish()
+
 		if err := image.Process(ctx, timeout, m, w, r.WithContext(ctx)); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			logrus.WithError(err).Error("could not process the image")
+
 			return
 		}
 	}

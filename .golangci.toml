@@ -8,24 +8,51 @@
   disable = [
     "maligned",
     "lll",
+    "gomnd",
     "scopelint",
+    "paralleltest",
+    "nlreturn",
+    "goconst",
+    "nestif",
+    "funlen",
     "bodyclose", # https://github.com/timakin/bodyclose/pull/14
   ]
 
 [issues]
     exclude-use-default = true
     [[issues.exclude-rules]]
-      path = "cmd/ims/main.go"
-      text = "`date` is a global variable"
+      path = "internal/platform/providers/providers.go"
+      linters = ["gocritic"]
+    [[issues.exclude-rules]]
+      path = "internal/image/provider/gcs.go"
+      linters = ["exhaustivestruct"]
+    [[issues.exclude-rules]]
+      path = "internal/platform/providers/providers_test.go"
+      linters = ["exhaustivestruct"]
+    [[issues.exclude-rules]]
+      path = "cmd/ims"
+      linters = ["exhaustivestruct"]
+    [[issues.exclude-rules]]
+      path = "internal/image/encoder/png/png.go"
+      linters = ["exhaustivestruct"]
+    [[issues.exclude-rules]]
+      path = "internal/image/provider/proxy.go"
+      linters = ["exhaustivestruct"]
+    [[issues.exclude-rules]]
+      linters = ["wsl"]
+      text = "declarations should never be cuddled"
     [[issues.exclude-rules]]
       path = "cmd/ims/main.go"
-      text = "`commit` is a global variable"
+      linters = ["gochecknoglobals"]
     [[issues.exclude-rules]]
       path = "(.+)_test.go"
       linters = ["funlen"]
     [[issues.exclude-rules]]
       path = "cmd/ims/app/server.go"
       linters = ["funlen"]
+    [[issues.exclude-rules]]
+      text = "ifElseChain: rewrite if-else to switch statement"
+      linters = ["gocritic"]
     # TODO: revisit rule when we have time to address
     [[issues.exclude-rules]]
       path = "cmd/ims/app/server.go"

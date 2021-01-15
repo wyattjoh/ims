@@ -31,7 +31,7 @@ func NewProviders(providers map[string]provider.Provider) *Providers {
 	}
 }
 
-//==============================================================================
+// =============================================================================
 
 // GetUnderlyingTransport checks the url as some clients have specific
 // requirements of the underlying transport.
@@ -49,28 +49,28 @@ func GetUnderlyingTransport(ctx context.Context, originURL *url.URL) (http.Round
 func WrapCacheRoundTripper(ctx context.Context, underlyingTransport http.RoundTripper, originCache string) (http.RoundTripper, error) {
 	switch originCache {
 	case ":memory:":
-
 		// Create the memory cache transport, and add the underlying transport to
 		// it.
 		mct := httpcache.NewMemoryCacheTransport()
 		mct.Transport = underlyingTransport
 
 		logrus.WithField("transport", ":memory:").Debug("origin cache enabled")
+
 		return mct, nil
 
 	case "":
-
 		// No cache was specified, fall back to the underlying transport.
 		logrus.Debug("origin cache disabled")
+
 		return underlyingTransport, nil
 
 	default:
-
 		// Create a new disk transport cache.
 		ct := httpcache.NewTransport(diskcache.New(originCache))
 		ct.Transport = underlyingTransport
 
 		logrus.WithField("transport", originCache).Debug("origin cache enabled")
+
 		return ct, nil
 	}
 }
@@ -154,6 +154,7 @@ func New(ctx context.Context, defaultHost string, backends []string, originCache
 
 	// Collect all the providers to the map of Host -> provider.Provider.
 	providers := make(map[string]provider.Provider)
+
 	for _, backend := range backends {
 		host, origin, err := ParseBackend(defaultHost, backend)
 		if err != nil {
@@ -181,6 +182,7 @@ func New(ctx context.Context, defaultHost string, backends []string, originCache
 				"host":   host,
 				"origin": origin,
 			}).Debug("serving from the origin")
+
 			providers[host] = p
 		} else if origin == ":proxy:" {
 			// This looks like a proxy! Let's create the provider.

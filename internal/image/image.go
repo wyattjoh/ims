@@ -19,24 +19,29 @@ import (
 // image transformations.
 func Process(ctx context.Context, timeout time.Duration, input io.Reader, w http.ResponseWriter, r *http.Request) error {
 	start := time.Now()
+
 	logrus.Debug("starting processing image")
 
 	// Decode the image from the reader.
 	span, ctx := opentracing.StartSpanFromContext(ctx, "internal.image.Process.Decode")
+
 	m, format, err := image.Decode(input)
 	if err != nil {
 		span.Finish()
 		return errors.Wrap(err, "can't decode the image")
 	}
+
 	span.Finish()
 
 	// Apply image transformations.
 	span, ctx = opentracing.StartSpanFromContext(ctx, "internal.image.Process.Transform")
+
 	tm, err := transform.Image(m, r.URL.Query())
 	if err != nil {
 		span.Finish()
-		return err
+		return errors.Wrap(err, "could not transform image")
 	}
+
 	span.Finish()
 
 	now := time.Now()
@@ -50,13 +55,16 @@ func Process(ctx context.Context, timeout time.Duration, input io.Reader, w http
 	w.Header().Set("Last-Modified", now.Format(http.TimeFormat))
 
 	span, _ = opentracing.StartSpanFromContext(ctx, "internal.image.Process.Encode")
+
 	enc := encoder.Get(format, r)
 	if err := enc.Encode(tm, w); err != nil {
 		span.Finish()
 		return errors.Wrap(err, "can't encode the image")
 	}
+
 	span.Finish()
 
 	logrus.WithField("latency", time.Since(start).String()).Debug("completed processing image")
+
 	return nil
 }
