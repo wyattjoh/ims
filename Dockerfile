@@ -1,4 +1,4 @@
-FROM alpine:3.14.2
+FROM alpine:3.14.3
 LABEL maintainer="wyattjoh@gmail.com"
 
 RUN apk add --no-cache --virtual ca-certificates mailcap
