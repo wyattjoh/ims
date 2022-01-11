@@ -34,5 +34,4 @@ require (
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/api v0.64.0
-	google.golang.org/grpc v1.41.0 // indirect
 )
