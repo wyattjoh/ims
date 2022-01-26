@@ -3,8 +3,7 @@ module github.com/wyattjoh/ims
 go 1.16
 
 require (
-	cloud.google.com/go/iam v0.1.0 // indirect
-	cloud.google.com/go/storage v1.18.2
+	cloud.google.com/go/storage v1.19.0
 	github.com/HdrHistogram/hdrhistogram-go v1.1.2 // indirect
 	github.com/disintegration/imaging v1.6.2
 	github.com/go-ini/ini v1.66.2 // indirect
