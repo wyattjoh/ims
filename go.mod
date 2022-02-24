@@ -23,5 +23,5 @@ require (
 	github.com/urfave/negroni v1.0.0
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
-	google.golang.org/api v0.69.0
+	google.golang.org/api v0.70.0
 )
