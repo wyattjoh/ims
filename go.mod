@@ -10,7 +10,6 @@ require (
 	github.com/go-ini/ini v1.66.4 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/google/btree v1.0.1 // indirect
-	github.com/googleapis/gax-go/v2 v2.2.0 // indirect
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/meatballhat/negroni-logrus v1.1.1
 	github.com/minio/minio-go v6.0.14+incompatible
@@ -29,7 +28,5 @@ require (
 	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd // indirect
 	golang.org/x/image v0.0.0-20220302094943-723b81ca9867 // indirect
 	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
-	golang.org/x/sys v0.0.0-20220315194320-039c03cc5b86 // indirect
-	google.golang.org/api v0.73.0
-	google.golang.org/genproto v0.0.0-20220314164441-57ef72a4c106 // indirect
+	google.golang.org/api v0.74.0
 )
