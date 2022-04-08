@@ -25,7 +25,6 @@ func MountEndpoint(mux *http.ServeMux, endpoint string, handler http.Handler) {
 
 // ServerOpts is the options for starting a new Server.
 type ServerOpts struct {
-
 	// Addr is the address to listen for http requests on.
 	Addr string
 
@@ -134,5 +133,9 @@ func Serve(opts *ServerOpts) error {
 
 	logrus.WithField("address", opts.Addr).Info("now listening")
 
-	return http.ListenAndServe(opts.Addr, n)
+	if err := http.ListenAndServe(opts.Addr, n); err != nil {
+		return errors.Wrap(err, "could not listen on the address for http traffic")
+	}
+
+	return nil
 }

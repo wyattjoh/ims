@@ -38,7 +38,12 @@ func NewProviders(providers map[string]provider.Provider) *Providers {
 func GetUnderlyingTransport(ctx context.Context, originURL *url.URL) (http.RoundTripper, error) {
 	switch originURL.Scheme {
 	case "gs":
-		return provider.NewGCSTransport(ctx)
+		transport, err := provider.NewGCSTransport(ctx)
+		if err != nil {
+			return nil, errors.Wrap(err, "could not create transport for scheme")
+		}
+
+		return transport, nil
 	default:
 		return http.DefaultTransport, nil
 	}
@@ -79,9 +84,19 @@ func WrapCacheRoundTripper(ctx context.Context, underlyingTransport http.RoundTr
 func GetRemoteProviderClient(ctx context.Context, originURL *url.URL, transport http.RoundTripper) (provider.Provider, error) {
 	switch originURL.Scheme {
 	case "gs":
-		return provider.NewGCS(ctx, originURL.Host, transport)
+		transport, err := provider.NewGCS(ctx, originURL.Host, transport)
+		if err != nil {
+			return nil, errors.Wrap(err, "could not create provider for the gs scheme")
+		}
+
+		return transport, nil
 	case "s3":
-		return provider.NewS3(originURL.Host, transport)
+		transport, err := provider.NewS3(originURL.Host, transport)
+		if err != nil {
+			return nil, errors.Wrap(err, "could not create provider for the s3 scheme")
+		}
+
+		return transport, nil
 	case "http", "https":
 		return provider.NewOrigin(originURL, transport), nil
 	default:
