@@ -144,7 +144,7 @@ func ResizeImage(m image.Image, w, h string, originalWidth, originalHeight int, 
 	if width > 0 && height > 0 {
 		switch fit {
 		case "bounds":
-			// Calculate the scales relative to the orignals.
+			// Calculate the scales relative to the originals.
 			widthScale := float32(width) / float32(originalWidth)
 			heightScale := float32(height) / float32(originalHeight)
 
@@ -158,7 +158,7 @@ func ResizeImage(m image.Image, w, h string, originalWidth, originalHeight int, 
 			width = int(float32(originalWidth) * scale)
 			height = int(float32(originalHeight) * scale)
 
-			// Resize the orignal dimensions to that scale.
+			// Resize the original dimensions to that scale.
 			return imaging.Resize(m, width, height, filter)
 		case "cover":
 			return imaging.Resize(m, width, height, filter)
@@ -204,8 +204,7 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 	})).Debug("image dimensions")
 
 	// Crop the image if the crop parameter was provided.
-	crop := v.Get("crop")
-	if crop != "" {
+	if crop := v.Get("crop"); crop != "" {
 		// Crop the image.
 		m = CropImage(m, crop)
 	}
@@ -223,15 +222,13 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 	}
 
 	// Reorient the image if the orientation parameter was provided.
-	orient := v.Get("orient")
-	if orient != "" {
+	if orient := v.Get("orient"); orient != "" {
 		// Rotate the image.
 		m = RotateImage(m, orient)
 	}
 
 	// Blur the image if the parameter was provided.
-	blur := v.Get("blur")
-	if blur != "" {
+	if blur := v.Get("blur"); blur != "" {
 		sigma, err := strconv.ParseFloat(blur, 64)
 		if err == nil && sigma > 0 {
 			m = imaging.Blur(m, sigma)
