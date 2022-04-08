@@ -15,6 +15,10 @@
     "goconst",
     "nestif",
     "funlen",
+    "varnamelen",
+    "ireturn",
+    "exhaustivestruct",
+    "cyclop",
     "bodyclose", # https://github.com/timakin/bodyclose/pull/14
   ]
 
@@ -23,21 +27,6 @@
     [[issues.exclude-rules]]
       path = "internal/platform/providers/providers.go"
       linters = ["gocritic"]
-    [[issues.exclude-rules]]
-      path = "internal/image/provider/gcs.go"
-      linters = ["exhaustivestruct"]
-    [[issues.exclude-rules]]
-      path = "internal/platform/providers/providers_test.go"
-      linters = ["exhaustivestruct"]
-    [[issues.exclude-rules]]
-      path = "cmd/ims"
-      linters = ["exhaustivestruct"]
-    [[issues.exclude-rules]]
-      path = "internal/image/encoder/png/png.go"
-      linters = ["exhaustivestruct"]
-    [[issues.exclude-rules]]
-      path = "internal/image/provider/proxy.go"
-      linters = ["exhaustivestruct"]
     [[issues.exclude-rules]]
       linters = ["wsl"]
       text = "declarations should never be cuddled"
