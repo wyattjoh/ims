@@ -14,7 +14,7 @@ require (
 	github.com/rs/cors v1.8.2
 	github.com/sirupsen/logrus v1.8.1
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
-	github.com/urfave/cli/v2 v2.5.0
+	github.com/urfave/cli/v2 v2.5.1
 	github.com/urfave/negroni v1.0.0
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
 	google.golang.org/api v0.76.0
