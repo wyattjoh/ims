@@ -17,7 +17,7 @@ require (
 	github.com/urfave/cli/v2 v2.5.1
 	github.com/urfave/negroni v1.0.0
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
-	google.golang.org/api v0.76.0
+	google.golang.org/api v0.77.0
 )
 
 require (
