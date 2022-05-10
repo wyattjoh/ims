@@ -1,0 +1,17 @@
+run:
+  go: 1.18
+
+linter-settings:
+  misspell:
+    locale: US
+
+linters:
+  enable:
+    - gofumpt
+    - unconvert
+    - revive
+    - forbidigo
+    - tagliatelle
+    - misspell
+  disable:
+    - structcheck
