@@ -17,7 +17,7 @@ require (
 	github.com/urfave/cli/v2 v2.11.0
 	github.com/urfave/negroni v1.0.0
 	golang.org/x/oauth2 v0.0.0-20220630143837-2104d58473e0
-	google.golang.org/api v0.86.0
+	google.golang.org/api v0.87.0
 )
 
 require (
@@ -25,7 +25,6 @@ require (
 	cloud.google.com/go/compute v1.7.0 // indirect
 	cloud.google.com/go/iam v0.3.0 // indirect
 	github.com/HdrHistogram/hdrhistogram-go v1.1.2 // indirect
-	github.com/antzucaro/matchr v0.0.0-20210222213004-b04723ef80f0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
