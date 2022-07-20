@@ -3,7 +3,7 @@ module github.com/wyattjoh/ims
 go 1.18
 
 require (
-	cloud.google.com/go/storage v1.23.0
+	cloud.google.com/go/storage v1.24.0
 	github.com/disintegration/imaging v1.6.2
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/meatballhat/negroni-logrus v1.1.1
@@ -36,7 +36,6 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.1.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.4.0 // indirect
-	github.com/googleapis/go-type-adapters v1.0.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
