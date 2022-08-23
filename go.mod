@@ -16,8 +16,8 @@ require (
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/urfave/cli/v2 v2.11.0
 	github.com/urfave/negroni v1.0.0
-	golang.org/x/oauth2 v0.0.0-20220630143837-2104d58473e0
-	google.golang.org/api v0.87.0
+	golang.org/x/oauth2 v0.0.0-20220822191816-0ebed06d0094
+	google.golang.org/api v0.94.0
 )
 
 require (
