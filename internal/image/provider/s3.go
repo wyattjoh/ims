@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -74,5 +73,5 @@ func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error
 	// The bytes buffer isn't a closer by nature, just wrap it with a no-op closer
 	// to satisfy the interface, it will be managed by the GC to clean up
 	// afterwards.
-	return ioutil.NopCloser(buf), nil
+	return io.NopCloser(buf), nil
 }
