@@ -140,7 +140,7 @@ func GetProxyBackendProvider(ctx context.Context, originCache string) (provider.
 
 // ParseBackend parses the backend using the following formats:
 //
-//   <host>,<origin> OR <origin>
+//	<host>,<origin> OR <origin>
 //
 // Where if the host is not specified, it falls back to the defaultHost.
 func ParseBackend(defaultHost, backend string) (string, string, error) {
