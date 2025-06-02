@@ -19,7 +19,8 @@ func (fp *Filesystem) Provide(ctx context.Context, filename string) (io.ReadClos
 	// Try to open the image from the virtual filesystem.
 	f, err := fp.Dir.Open(filename)
 	if err != nil {
-		if errors.As(err, &os.PathError{}) {
+		var pathError *os.PathError
+		if errors.As(err, &pathError) {
 			return nil, ErrNotFound
 		}
 
