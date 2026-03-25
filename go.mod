@@ -1,8 +1,6 @@
 module github.com/wyattjoh/ims
 
-go 1.24
-
-toolchain go1.24.3
+go 1.25.0
 
 require (
 	cloud.google.com/go/storage v1.55.0
@@ -18,7 +16,7 @@ require (
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/urfave/cli/v2 v2.27.6
 	github.com/urfave/negroni v1.0.0
-	golang.org/x/oauth2 v0.30.0
+	golang.org/x/oauth2 v0.36.0
 	google.golang.org/api v0.235.0
 )
 
