@@ -54,7 +54,7 @@ func TestProxy_Provide(t *testing.T) {
 			expectError: nil,
 		},
 		{
-			name:        "valid https url", 
+			name:        "valid https url",
 			filename:    "https://example.com/image.jpg",
 			expectError: nil,
 		},
@@ -231,10 +231,10 @@ func TestProxy_HandleWithContext(t *testing.T) {
 
 	// Create a test server that hangs
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Check if the request context was cancelled
+		// Check if the request context was canceled
 		select {
 		case <-r.Context().Done():
-			// Request was cancelled, this is expected
+			// Request was canceled, this is expected
 			return
 		default:
 			// Write a response
@@ -261,9 +261,9 @@ func TestProxy_HandleWithContext(t *testing.T) {
 		return
 	}
 
-	// Error should indicate context was cancelled
-	if !strings.Contains(err.Error(), "context canceled") && 
-	   !strings.Contains(err.Error(), "operation was canceled") {
+	// Error should indicate context was canceled
+	if !strings.Contains(err.Error(), "context canceled") &&
+		!strings.Contains(err.Error(), "operation was canceled") {
 		t.Errorf("Expected context cancellation error, got: %v", err)
 	}
 }

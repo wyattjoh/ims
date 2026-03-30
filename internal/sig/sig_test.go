@@ -10,7 +10,7 @@ import (
 
 func TestVerify(t *testing.T) {
 	secret := "test-secret"
-	
+
 	// Helper function to create a valid signature
 	createValidSignature := func(value, secret string) string {
 		token := hmac.New(sha256.New, []byte(secret))
@@ -119,23 +119,23 @@ func TestVerifyConstantTime(t *testing.T) {
 	// This is important for security to prevent timing attacks
 	secret := "test-secret"
 	value := "test-value"
-	
+
 	// Create a valid signature
 	token := hmac.New(sha256.New, []byte(secret))
 	token.Write([]byte(value))
 	validSig := strings.ToLower(hex.EncodeToString(token.Sum(nil)))
-	
+
 	// Test with the exact valid signature
 	if !Verify(validSig, value, secret) {
 		t.Error("Valid signature should return true")
 	}
-	
+
 	// Test with a signature that differs only in the last character
 	invalidSig := validSig[:len(validSig)-1] + "x"
 	if Verify(invalidSig, value, secret) {
 		t.Error("Invalid signature should return false")
 	}
-	
+
 	// Test with a signature of different length
 	shortSig := validSig[:len(validSig)-5]
 	if Verify(shortSig, value, secret) {
@@ -147,11 +147,11 @@ func TestVerifyWithHMACWriteError(t *testing.T) {
 	// Test edge case where HMAC write could theoretically fail
 	// In practice, HMAC's Write method never returns an error for byte slices
 	// but our code handles this case
-	
+
 	secret := "test-secret"
 	value := "test-value"
 	signature := "any-signature"
-	
+
 	// Normal case should work
 	result := Verify(signature, value, secret)
 	// We expect false because signature is invalid, but no panic/error
@@ -164,12 +164,12 @@ func TestVerifyWithHMACWriteError(t *testing.T) {
 func BenchmarkVerify(b *testing.B) {
 	secret := "test-secret"
 	value := "height=200&width=100&format=jpeg&quality=80"
-	
+
 	// Create valid signature
 	token := hmac.New(sha256.New, []byte(secret))
 	token.Write([]byte(value))
 	signature := strings.ToLower(hex.EncodeToString(token.Sum(nil)))
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Verify(signature, value, secret)
@@ -180,7 +180,7 @@ func BenchmarkVerifyInvalid(b *testing.B) {
 	secret := "test-secret"
 	value := "height=200&width=100&format=jpeg&quality=80"
 	signature := "invalid-signature-that-will-fail"
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Verify(signature, value, secret)

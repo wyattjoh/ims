@@ -113,11 +113,11 @@ func TestGetFilename(t *testing.T) {
 			if tt.queryParams != "" {
 				url += "?" + tt.queryParams
 			}
-			
+
 			req := httptest.NewRequest("GET", url, nil)
-			
+
 			result, err := getFilename(tt.provider, req)
-			
+
 			if tt.expectError != nil {
 				if err == nil {
 					t.Errorf("Expected error %v, got nil", tt.expectError)
@@ -128,12 +128,12 @@ func TestGetFilename(t *testing.T) {
 				}
 				return
 			}
-			
+
 			if err != nil {
 				t.Errorf("Unexpected error: %v", err)
 				return
 			}
-			
+
 			if result != tt.expected {
 				t.Errorf("Expected filename %q, got %q", tt.expected, result)
 			}
@@ -145,13 +145,13 @@ func TestImage(t *testing.T) {
 	timeout := 30 * time.Second
 
 	tests := []struct {
-		name           string
-		provider       provider.Provider
-		setupContext   bool
-		path           string
-		query          string
-		expectStatus   int
-		providerError  error
+		name          string
+		provider      provider.Provider
+		setupContext  bool
+		path          string
+		query         string
+		expectStatus  int
+		providerError error
 	}{
 		{
 			name:         "missing provider in context",
@@ -221,20 +221,20 @@ func TestImage(t *testing.T) {
 				url += "?" + tt.query
 			}
 			req := httptest.NewRequest("GET", url, nil)
-			
+
 			// Setup context with provider if needed
 			if tt.setupContext && tt.provider != nil {
 				ctx := context.WithValue(req.Context(), providers.ContextKey, tt.provider)
 				req = req.WithContext(ctx)
 			}
-			
+
 			// Create response recorder
 			rr := httptest.NewRecorder()
-			
+
 			// Call the handler
 			handler := Image(timeout)
 			handler(rr, req)
-			
+
 			// Check status code
 			if rr.Code != tt.expectStatus {
 				t.Errorf("Expected status %d, got %d", tt.expectStatus, rr.Code)
@@ -245,63 +245,63 @@ func TestImage(t *testing.T) {
 
 func TestImageWithSuccessfulProvider(t *testing.T) {
 	timeout := 30 * time.Second
-	
+
 	// Create a mock response body
 	responseBody := strings.NewReader("fake image data")
 	responseCloser := io.NopCloser(responseBody)
-	
+
 	provider := &mockProvider{
 		response: responseCloser,
 		error:    nil,
 	}
-	
+
 	req := httptest.NewRequest("GET", "/test.jpg", nil)
 	ctx := context.WithValue(req.Context(), providers.ContextKey, provider)
 	req = req.WithContext(ctx)
-	
+
 	rr := httptest.NewRecorder()
-	
+
 	handler := Image(timeout)
 	handler(rr, req)
-	
+
 	// Since we don't have actual image processing implemented,
 	// this will likely return an error, but we can verify the
 	// provider was called successfully by checking it didn't
 	// return the provider-specific error codes
-	if rr.Code == http.StatusNotFound || 
-	   rr.Code == http.StatusBadRequest || 
-	   rr.Code == http.StatusBadGateway {
+	if rr.Code == http.StatusNotFound ||
+		rr.Code == http.StatusBadRequest ||
+		rr.Code == http.StatusBadGateway {
 		t.Errorf("Provider should have been called successfully, but got status %d", rr.Code)
 	}
 }
 
 func TestImageContextCancellation(t *testing.T) {
 	timeout := 30 * time.Second
-	
+
 	// Create a provider that takes some time
 	responseBody := strings.NewReader("fake image data")
 	responseCloser := io.NopCloser(responseBody)
-	
+
 	provider := &mockProvider{
 		response: responseCloser,
 		error:    nil,
 	}
-	
+
 	req := httptest.NewRequest("GET", "/test.jpg", nil)
-	
+
 	// Cancel the context immediately
 	ctx, cancel := context.WithCancel(req.Context())
 	cancel()
-	
+
 	// Add provider to context
 	ctx = context.WithValue(ctx, providers.ContextKey, provider)
 	req = req.WithContext(ctx)
-	
+
 	rr := httptest.NewRecorder()
-	
+
 	handler := Image(timeout)
 	handler(rr, req)
-	
+
 	// The handler should complete (context cancellation is handled internally)
 	// We don't expect any specific status code since image processing will likely fail
 	// but the handler shouldn't panic
@@ -314,7 +314,7 @@ func TestImageContextCancellation(t *testing.T) {
 func BenchmarkGetFilename(b *testing.B) {
 	provider := &mockProvider{}
 	req := httptest.NewRequest("GET", "/path/to/image.jpg", nil)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		getFilename(provider, req)
@@ -324,7 +324,7 @@ func BenchmarkGetFilename(b *testing.B) {
 func BenchmarkGetFilenameProxy(b *testing.B) {
 	prov := provider.NewProxy(nil)
 	req := httptest.NewRequest("GET", "/proxy?url=https://example.com/image.jpg", nil)
-	
+
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		getFilename(prov, req)

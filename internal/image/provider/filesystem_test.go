@@ -20,17 +20,17 @@ func TestFilesystem_Provide(t *testing.T) {
 	// Create test files
 	testFile := filepath.Join(tmpDir, "test.txt")
 	testContent := "test content"
-	if err := os.WriteFile(testFile, []byte(testContent), 0644); err != nil {
+	if err := os.WriteFile(testFile, []byte(testContent), 0o644); err != nil {
 		t.Fatalf("Failed to create test file: %v", err)
 	}
 
 	// Create subdirectory with file
 	subDir := filepath.Join(tmpDir, "subdir")
-	if err := os.Mkdir(subDir, 0755); err != nil {
+	if err := os.Mkdir(subDir, 0o755); err != nil {
 		t.Fatalf("Failed to create subdir: %v", err)
 	}
 	subFile := filepath.Join(subDir, "subfile.txt")
-	if err := os.WriteFile(subFile, []byte("sub content"), 0644); err != nil {
+	if err := os.WriteFile(subFile, []byte("sub content"), 0o644); err != nil {
 		t.Fatalf("Failed to create sub file: %v", err)
 	}
 
@@ -131,21 +131,21 @@ func TestFilesystem_ProvideContextCancellation(t *testing.T) {
 	defer os.RemoveAll(tmpDir)
 
 	testFile := filepath.Join(tmpDir, "test.txt")
-	if err := os.WriteFile(testFile, []byte("test"), 0644); err != nil {
+	if err := os.WriteFile(testFile, []byte("test"), 0o644); err != nil {
 		t.Fatalf("Failed to create test file: %v", err)
 	}
 
 	fs := &Filesystem{Dir: http.Dir(tmpDir)}
 
-	// Create a context that's already cancelled
+	// Create a context that's already canceled
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
 
 	// The filesystem provider doesn't actually check context cancellation
-	// but this tests that it doesn't panic with a cancelled context
+	// but this tests that it doesn't panic with a canceled context
 	reader, err := fs.Provide(ctx, "test.txt")
 	if err != nil {
-		t.Errorf("Unexpected error with cancelled context: %v", err)
+		t.Errorf("Unexpected error with canceled context: %v", err)
 		return
 	}
 	if reader != nil {

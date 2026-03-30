@@ -13,21 +13,21 @@ import (
 func TestNewOrigin(t *testing.T) {
 	baseURL, _ := url.Parse("https://example.com")
 	transport := &mockTransport{}
-	
+
 	origin := NewOrigin(baseURL, transport)
-	
+
 	if origin == nil {
 		t.Fatal("NewOrigin() returned nil")
 	}
-	
+
 	if origin.baseURL != baseURL {
 		t.Error("NewOrigin() did not set baseURL correctly")
 	}
-	
+
 	if origin.proxy == nil {
 		t.Error("NewOrigin() did not create proxy")
 	}
-	
+
 	if origin.proxy.client.Transport != transport {
 		t.Error("NewOrigin() did not set transport correctly")
 	}
@@ -142,11 +142,11 @@ func TestOrigin_Provide(t *testing.T) {
 			if tt.expectURL != "" {
 				serverURL, _ := url.Parse(server.URL)
 				expectedURL, _ := url.Parse(tt.expectURL)
-				
+
 				// Replace the base with the test server
 				expectedURL.Scheme = serverURL.Scheme
 				expectedURL.Host = serverURL.Host
-				
+
 				// Just check that the request was made - URL resolution is complex
 				// and depends on how the test server handles relative references
 				if requestedURL == "" {
@@ -314,7 +314,7 @@ func TestOrigin_ProvideURLResolution(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var requestedPath string
-			
+
 			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				requestedPath = r.URL.Path
 				w.WriteHeader(200)
@@ -325,7 +325,7 @@ func TestOrigin_ProvideURLResolution(t *testing.T) {
 			// Use the test server URL as base
 			serverURL, _ := url.Parse(server.URL)
 			originalBase, _ := url.Parse(tt.baseURL)
-			
+
 			// Preserve the path from the original base URL
 			testBaseURL := &url.URL{
 				Scheme: serverURL.Scheme,
