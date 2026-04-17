@@ -3,6 +3,7 @@ LABEL maintainer="wyattjoh@gmail.com"
 
 RUN apk add --no-cache --virtual ca-certificates mailcap
 
-COPY ims /bin/
+ARG TARGETPLATFORM
+COPY $TARGETPLATFORM/ims /bin/
 
 ENTRYPOINT ["/bin/ims"]

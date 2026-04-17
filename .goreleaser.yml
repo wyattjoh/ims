@@ -18,29 +18,32 @@ builds:
       - amd64
       - arm64
 
-dockers:
-  - image_templates:
-      - "wyattjoh/ims:{{ .Tag }}"
-      - "wyattjoh/ims:v{{ .Major }}.{{ .Minor }}"
-      - "wyattjoh/ims:v{{ .Major }}"
-      - "wyattjoh/ims:latest"
-      - "ghcr.io/wyattjoh/ims:{{ .Tag }}"
-      - "ghcr.io/wyattjoh/ims:v{{ .Major }}.{{ .Minor }}"
-      - "ghcr.io/wyattjoh/ims:v{{ .Major }}"
-      - "ghcr.io/wyattjoh/ims:latest"
+dockers_v2:
+  - id: ims
+    dockerfile: Dockerfile
+    images:
+      - "wyattjoh/ims"
+      - "ghcr.io/wyattjoh/ims"
+    tags:
+      - "{{ .Tag }}"
+      - "v{{ .Major }}.{{ .Minor }}"
+      - "v{{ .Major }}"
+      - "latest"
+    platforms:
+      - linux/amd64
+      - linux/arm64
 
-brews:
-  - repository:
+homebrew_casks:
+  - name: ims
+    binaries:
+      - ims
+    repository:
       owner: wyattjoh
       name: homebrew-stable
-    directory: Formula
+    directory: Casks
     homepage: https://github.com/wyattjoh/ims
     description: image manipulation service, written in Go
     license: MIT
-    test: |
-      system "#{bin}/ims", "-v"
-    install: |
-      bin.install "ims"
 
 archives:
   - name_template: "{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
