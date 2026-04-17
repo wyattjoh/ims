@@ -1,3 +1,5 @@
+version: 2
+
 project_name: ims
 
 builds:
@@ -15,9 +17,6 @@ builds:
     goarch:
       - amd64
       - arm64
-    ignore:
-      - goos: darwin
-        goarch: 386
 
 dockers:
   - image_templates:
@@ -31,23 +30,24 @@ dockers:
       - "ghcr.io/wyattjoh/ims:latest"
 
 brews:
-  - tap:
+  - repository:
       owner: wyattjoh
       name: homebrew-stable
-    folder: Formula
+    directory: Formula
     homepage: https://github.com/wyattjoh/ims
     description: image manipulation service, written in Go
+    license: MIT
     test: |
-      system "#{bin}/ims -v"
+      system "#{bin}/ims", "-v"
     install: |
       bin.install "ims"
 
 archives:
   - name_template: "{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
-    format: tar.gz
+    formats: [tar.gz]
     format_overrides:
       - goos: windows
-        format: zip
+        formats: [zip]
     files:
       - LICENSE.md
       - README.md
