@@ -1,5 +1,9 @@
 # ims
 
+<p align="center">
+  <img src="assets/icon.png" alt="ims icon" width="200" height="200" />
+</p>
+
 ![Tests](https://github.com/wyattjoh/ims/workflows/Test/badge.svg)
 [![Go Report](https://goreportcard.com/badge/github.com/wyattjoh/ims)](https://goreportcard.com/report/github.com/wyattjoh/ims)
 [![Docker Image Size](https://img.shields.io/microbadger/image-size/wyattjoh/ims.svg)](https://hub.docker.com/r/wyattjoh/ims/)
