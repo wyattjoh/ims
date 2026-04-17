@@ -7,6 +7,9 @@ updates:
       interval: "daily"
     labels:
       - "dependencies"
+    commit-message:
+      prefix: "fix"
+      include: "scope"
     groups:
       all:
         patterns:
@@ -19,6 +22,9 @@ updates:
       interval: "daily"
     labels:
       - "dependencies"
+    commit-message:
+      prefix: "fix"
+      include: "scope"
     groups:
       all:
         patterns:
@@ -31,6 +37,9 @@ updates:
       interval: "daily"
     labels:
       - "dependencies"
+    commit-message:
+      prefix: "fix"
+      include: "scope"
     groups:
       all:
         patterns:
