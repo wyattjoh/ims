@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/wyattjoh/ims/compare/v1.5.0...v1.5.1) (2026-04-17)
+
+
+### Documentation
+
+* add project icon to README ([048cc6c](https://github.com/wyattjoh/ims/commit/048cc6c487260adb1a743ec8974d91a40d9ca210))
+
 ## [1.5.0](https://github.com/wyattjoh/ims/compare/v1.4.23...v1.5.0) (2026-04-17)
 
 
