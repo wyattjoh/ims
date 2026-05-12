@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.3](https://github.com/wyattjoh/ims/compare/v1.5.2...v1.5.3) (2026-05-12)
+
+
+### Bug Fixes
+
+* **deps:** bump google.golang.org/api from 0.277.0 to 0.278.0 in the all group ([440cd8f](https://github.com/wyattjoh/ims/commit/440cd8f7b54c2f9db7a8601e26154989c6fc281a))
+* **deps:** bump google.golang.org/api in the all group ([c795b9e](https://github.com/wyattjoh/ims/commit/c795b9ecf597eec0b66db357659e320530a1afbc))
+
 ## [1.5.2](https://github.com/wyattjoh/ims/compare/v1.5.1...v1.5.2) (2026-05-11)
 
 
