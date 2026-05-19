@@ -3,7 +3,7 @@ module github.com/wyattjoh/ims
 go 1.25.0
 
 require (
-	cloud.google.com/go/storage v1.62.1
+	cloud.google.com/go/storage v1.62.2
 	github.com/disintegration/imaging v1.6.2
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/meatballhat/negroni-logrus v1.1.1
@@ -17,7 +17,7 @@ require (
 	github.com/urfave/cli/v2 v2.27.7
 	github.com/urfave/negroni v1.0.0
 	golang.org/x/oauth2 v0.36.0
-	google.golang.org/api v0.278.0
+	google.golang.org/api v0.279.0
 )
 
 require (
