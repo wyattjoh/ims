@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.5.3](https://github.com/wyattjoh/ims/compare/v1.5.2...v1.5.3) (2026-06-18)
+
+
+### Bug Fixes
+
+* **deps:** bump actions/checkout from 6 to 7 in the all group ([#212](https://github.com/wyattjoh/ims/issues/212)) ([6614e9b](https://github.com/wyattjoh/ims/commit/6614e9ba7e3f9b6686f75424dc814f6da2dcaf67))
+* **deps:** bump alpine from 3.23.4 to 3.24.0 in the all group ([d2d43d4](https://github.com/wyattjoh/ims/commit/d2d43d4ab3742ba5977fbf9e35339a74cf1b02fa))
+* **deps:** bump alpine from 3.23.4 to 3.24.0 in the all group ([6c96def](https://github.com/wyattjoh/ims/commit/6c96defe11bb181a8f79e8b5be425034d8f696b8))
+* **deps:** bump alpine from 3.24.0 to 3.24.1 in the all group ([#211](https://github.com/wyattjoh/ims/issues/211)) ([0770d43](https://github.com/wyattjoh/ims/commit/0770d43c0d8f952714daccb30749bd444802e042))
+* **deps:** bump google.golang.org/api from 0.277.0 to 0.278.0 in the all group ([440cd8f](https://github.com/wyattjoh/ims/commit/440cd8f7b54c2f9db7a8601e26154989c6fc281a))
+* **deps:** bump google.golang.org/api in the all group ([c795b9e](https://github.com/wyattjoh/ims/commit/c795b9ecf597eec0b66db357659e320530a1afbc))
+* **deps:** bump the all group across 1 directory with 2 updates ([288b082](https://github.com/wyattjoh/ims/commit/288b0824a98a16bd9614cc76394ad263c075376e))
+* **deps:** bump the all group across 1 directory with 2 updates ([1f5adf1](https://github.com/wyattjoh/ims/commit/1f5adf17160b3ddc1e610e5741fa101cb1fd4f15))
+* **deps:** bump the all group with 2 updates ([#210](https://github.com/wyattjoh/ims/issues/210)) ([9014bfc](https://github.com/wyattjoh/ims/commit/9014bfcef558341683e192f4870cccb8f471e39c))
+
 ## [1.5.2](https://github.com/wyattjoh/ims/compare/v1.5.1...v1.5.2) (2026-05-11)
 
 
