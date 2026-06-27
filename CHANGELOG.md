@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.4](https://github.com/wyattjoh/ims/compare/v1.5.3...v1.5.4) (2026-06-27)
+
+
+### Bug Fixes
+
+* **deps:** bump the all group across 1 directory with 2 updates ([#214](https://github.com/wyattjoh/ims/issues/214)) ([5a55f8e](https://github.com/wyattjoh/ims/commit/5a55f8e6fff335951e20bf7bd10a0b9a9c8a280d))
+
 ## [1.5.3](https://github.com/wyattjoh/ims/compare/v1.5.2...v1.5.3) (2026-06-18)
 
 
