@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.5](https://github.com/wyattjoh/ims/compare/v1.5.4...v1.5.5) (2026-07-23)
+
+
+### Bug Fixes
+
+* **deps:** bump actions/setup-go from 6 to 7 in the all group ([#221](https://github.com/wyattjoh/ims/issues/221)) ([7cd399a](https://github.com/wyattjoh/ims/commit/7cd399a64cf04d214272d054e5961fc7caed8b23))
+* **deps:** bump golang.org/x/image from 0.27.0 to 0.41.0 ([#217](https://github.com/wyattjoh/ims/issues/217)) ([83f5fac](https://github.com/wyattjoh/ims/commit/83f5fac2a470a686e58c946017dd0f4b6b2fa95e))
+* **deps:** bump google.golang.org/api ([#216](https://github.com/wyattjoh/ims/issues/216)) ([bdfa2a1](https://github.com/wyattjoh/ims/commit/bdfa2a1ab3da654eb095b916a0f390e702a2ca9a))
+* **deps:** bump google.golang.org/grpc from 1.82.0 to 1.82.1 ([#223](https://github.com/wyattjoh/ims/issues/223)) ([40d8d50](https://github.com/wyattjoh/ims/commit/40d8d50766d2047f85a9fa5f0378926b72ce753e))
+* **deps:** bump the all group across 1 directory with 3 updates ([#222](https://github.com/wyattjoh/ims/issues/222)) ([30f8b01](https://github.com/wyattjoh/ims/commit/30f8b017e3d544f9f2c9e907e007997fc917731f))
+
 ## [1.5.4](https://github.com/wyattjoh/ims/compare/v1.5.3...v1.5.4) (2026-06-27)
 
 
