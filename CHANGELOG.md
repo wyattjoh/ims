@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.6](https://github.com/wyattjoh/ims/compare/v1.5.5...v1.5.6) (2026-08-02)
+
+
+### Bug Fixes
+
+* **deps:** bump docker/login-action from 4 to 4.5.2 in the all group ([#229](https://github.com/wyattjoh/ims/issues/229)) ([3f1a1b8](https://github.com/wyattjoh/ims/commit/3f1a1b8b60916c24c0f2af92e1a41cb9f05a82e8))
+* **deps:** bump github.com/prometheus/client_golang ([#228](https://github.com/wyattjoh/ims/issues/228)) ([7cf68d1](https://github.com/wyattjoh/ims/commit/7cf68d11daafb2429cf3064d990184b9a0928324))
+* **deps:** bump the all group with 2 updates ([#224](https://github.com/wyattjoh/ims/issues/224)) ([358a414](https://github.com/wyattjoh/ims/commit/358a414bbbd44ef13e68044d27967375413b4195))
+
 ## [1.5.5](https://github.com/wyattjoh/ims/compare/v1.5.4...v1.5.5) (2026-07-23)
 
 
