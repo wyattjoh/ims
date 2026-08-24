@@ -3,7 +3,7 @@ module github.com/wyattjoh/ims
 go 1.25.8
 
 require (
-	cloud.google.com/go/storage v1.64.0
+	cloud.google.com/go/storage v1.65.0
 	github.com/disintegration/imaging v1.6.2
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/meatballhat/negroni-logrus v1.1.1
@@ -12,7 +12,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.24.1
 	github.com/rs/cors v1.11.1
-	github.com/sirupsen/logrus v1.10.0
+	github.com/sirupsen/logrus v1.10.1
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/urfave/cli/v2 v2.27.7
 	github.com/urfave/negroni v1.0.0
