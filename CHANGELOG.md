@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.10](https://github.com/wyattjoh/ims/compare/v1.5.9...v1.5.10) (2026-10-15)
+
+
+### Bug Fixes
+
+* **deps:** bump alpine ([#243](https://github.com/wyattjoh/ims/issues/243)) ([87fc7e1](https://github.com/wyattjoh/ims/commit/87fc7e1704ba17237affa9edc4d0dcf753f93f42))
+* **deps:** bump the all group across 1 directory with 4 updates ([#244](https://github.com/wyattjoh/ims/issues/244)) ([b183d0b](https://github.com/wyattjoh/ims/commit/b183d0b1ecb6262a42a7953d480397dd88463e64))
+
 ## [1.5.9](https://github.com/wyattjoh/ims/compare/v1.5.8...v1.5.9) (2026-09-08)
 
 
