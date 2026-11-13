@@ -35,6 +35,7 @@ dockers_v2:
 
 homebrew_casks:
   - name: ims
+    skip_upload: true
     binaries:
       - ims
     repository:
@@ -59,3 +60,5 @@ release:
   github:
     owner: wyattjoh
     name: ims
+  extra_files:
+    - glob: ./dist/homebrew/Casks/ims.rb
