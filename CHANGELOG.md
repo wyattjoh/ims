@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.13](https://github.com/wyattjoh/ims/compare/v1.5.12...v1.5.13) (2026-11-13)
+
+
+### Bug Fixes
+
+* **release:** publish Homebrew cask as a release asset ([#257](https://github.com/wyattjoh/ims/issues/257)) ([ff4d435](https://github.com/wyattjoh/ims/commit/ff4d4353a8b51ed23d6c5c776359686317c71850))
+
 ## [1.5.12](https://github.com/wyattjoh/ims/compare/v1.5.11...v1.5.12) (2026-11-13)
 
 
