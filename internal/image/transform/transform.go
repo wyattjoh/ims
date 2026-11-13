@@ -195,8 +195,8 @@ func ResizeImage(m image.Image, w, h string, originalWidth, originalHeight int, 
 // and apply image transformations.
 func Image(m image.Image, v url.Values) (image.Image, error) {
 	// Extract the width + height from the image bounds.
-	width := m.Bounds().Max.X
-	height := m.Bounds().Max.Y
+	width := m.Bounds().Dx()
+	height := m.Bounds().Dy()
 
 	logrus.WithFields(logrus.Fields(map[string]interface{}{
 		"width":  width,
@@ -218,7 +218,8 @@ func Image(m image.Image, v url.Values) (image.Image, error) {
 		filter := GetResampleFilter(v.Get("resize-filter"))
 		fit := GetFit(v.Get("fit"))
 
-		m = ResizeImage(m, w, h, width, height, fit, filter)
+		bounds := m.Bounds()
+		m = ResizeImage(m, w, h, bounds.Dx(), bounds.Dy(), fit, filter)
 	}
 
 	// Reorient the image if the orientation parameter was provided.

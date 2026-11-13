@@ -44,7 +44,7 @@ func Process(ctx context.Context, timeout time.Duration, input io.Reader, w http
 
 	span.Finish()
 
-	now := time.Now()
+	now := time.Now().UTC()
 
 	// Write some caching headers if needed.
 	if timeout != 0 {
