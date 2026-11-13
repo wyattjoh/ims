@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.11](https://github.com/wyattjoh/ims/compare/v1.5.10...v1.5.11) (2026-11-13)
+
+
+### Bug Fixes
+
+* expand Go coverage and fix regression cases ([#253](https://github.com/wyattjoh/ims/issues/253)) ([7dcde70](https://github.com/wyattjoh/ims/commit/7dcde70c5255ecfe97962f7e693f8e4df4fc534d))
+
 ## [1.5.10](https://github.com/wyattjoh/ims/compare/v1.5.9...v1.5.10) (2026-11-13)
 
 
