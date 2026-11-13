@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.12](https://github.com/wyattjoh/ims/compare/v1.5.11...v1.5.12) (2026-11-13)
+
+
+### Bug Fixes
+
+* **ci:** use automatic GitHub token for container releases ([#255](https://github.com/wyattjoh/ims/issues/255)) ([2cbc239](https://github.com/wyattjoh/ims/commit/2cbc239fd5e638db9fbe507b25a1e8c2887c23ac))
+
 ## [1.5.11](https://github.com/wyattjoh/ims/compare/v1.5.10...v1.5.11) (2026-11-13)
 
 
