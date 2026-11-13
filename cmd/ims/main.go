@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"time"
 
 	opentracing "github.com/opentracing/opentracing-go"
@@ -40,8 +41,10 @@ var (
 	date    = "unknown"
 )
 
-func main() {
+func newCLIApp() *cli.App {
 	app := cli.NewApp()
+	// Keep each <host>,<origin> backend intact; CORS values are split separately.
+	app.DisableSliceFlagSeparator = true
 	app.Name = "ims"
 	app.Usage = "Image Manipulation Server"
 	app.Version = fmt.Sprintf("%v, commit %v, built at %v", version, commit, date)
@@ -95,7 +98,11 @@ func main() {
 	}
 	app.Action = ServeAction
 
-	if err := app.Run(os.Args); err != nil {
+	return app
+}
+
+func main() {
+	if err := newCLIApp().Run(os.Args); err != nil {
 		logrus.WithError(err).Fatal()
 	}
 }
@@ -119,6 +126,16 @@ func SetupTracing(tracingURI string) (opentracing.Tracer, io.Closer) {
 	}
 
 	return jaeger.NewTracer("ims", sampler, reporter)
+}
+
+func splitCORSDomains(values []string) []string {
+	var domains []string
+	for _, value := range values {
+		for domain := range strings.SplitSeq(value, ",") {
+			domains = append(domains, strings.TrimSpace(domain))
+		}
+	}
+	return domains
 }
 
 // ServeAction starts the ims daemon.
@@ -157,7 +174,7 @@ func ServeAction(c *cli.Context) error {
 		Backends:       backends,
 		OriginCache:    c.String(flagOriginCache),
 		CacheTimeout:   c.Duration(flagTimeout),
-		CORSDomains:    c.StringSlice(flagCORSDomain),
+		CORSDomains:    splitCORSDomains(c.StringSlice(flagCORSDomain)),
 		SigningSecret:  c.String(flagSigningSecret),
 		IncludePath:    c.Bool(flagIncludePathWhenSigning),
 	}

@@ -44,7 +44,7 @@ type S3 struct {
 // Provide loads the file from the S3 client.
 func (s *S3) Provide(ctx context.Context, filename string) (io.ReadCloser, error) {
 	// Get the reader from the minio client.
-	r, err := s.client.GetObject(s.bucket, filename, minio.GetObjectOptions{})
+	r, err := s.client.GetObjectWithContext(ctx, s.bucket, filename, minio.GetObjectOptions{})
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot get object from provider")
 	}

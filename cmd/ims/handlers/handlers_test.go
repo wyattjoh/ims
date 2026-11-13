@@ -1,8 +1,11 @@
 package handlers
 
 import (
+	"bytes"
 	"context"
 	"errors"
+	"image"
+	"image/png"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -18,9 +21,15 @@ import (
 type mockProvider struct {
 	response io.ReadCloser
 	error    error
+	ctx      context.Context
+	filename string
+	calls    int
 }
 
 func (m *mockProvider) Provide(ctx context.Context, filename string) (io.ReadCloser, error) {
+	m.ctx = ctx
+	m.filename = filename
+	m.calls++
 	if m.error != nil {
 		return nil, m.error
 	}
@@ -243,70 +252,85 @@ func TestImage(t *testing.T) {
 	}
 }
 
+type trackedReadCloser struct {
+	io.Reader
+	closes int
+}
+
+func (r *trackedReadCloser) Close() error {
+	r.closes++
+	return nil
+}
+
 func TestImageWithSuccessfulProvider(t *testing.T) {
-	timeout := 30 * time.Second
-
-	// Create a mock response body
-	responseBody := strings.NewReader("fake image data")
-	responseCloser := io.NopCloser(responseBody)
-
-	provider := &mockProvider{
-		response: responseCloser,
-		error:    nil,
+	var input bytes.Buffer
+	if err := png.Encode(&input, image.NewNRGBA(image.Rect(0, 0, 4, 2))); err != nil {
+		t.Fatal(err)
 	}
-
-	req := httptest.NewRequest("GET", "/test.jpg", nil)
-	ctx := context.WithValue(req.Context(), providers.ContextKey, provider)
-	req = req.WithContext(ctx)
-
+	body := &trackedReadCloser{Reader: &input}
+	p := &mockProvider{response: body}
+	req := httptest.NewRequest(http.MethodGet, "/nested/test.png?width=2", nil)
+	req = req.WithContext(context.WithValue(req.Context(), providers.ContextKey, p))
 	rr := httptest.NewRecorder()
 
-	handler := Image(timeout)
-	handler(rr, req)
+	Image(30*time.Second)(rr, req)
 
-	// Since we don't have actual image processing implemented,
-	// this will likely return an error, but we can verify the
-	// provider was called successfully by checking it didn't
-	// return the provider-specific error codes
-	if rr.Code == http.StatusNotFound ||
-		rr.Code == http.StatusBadRequest ||
-		rr.Code == http.StatusBadGateway {
-		t.Errorf("Provider should have been called successfully, but got status %d", rr.Code)
+	if rr.Code != http.StatusOK {
+		t.Fatalf("status = %d, body = %q; want 200", rr.Code, rr.Body.String())
+	}
+	if p.calls != 1 || p.filename != "nested/test.png" {
+		t.Errorf("provider calls=%d filename=%q, want 1 and nested/test.png", p.calls, p.filename)
+	}
+	if body.closes != 1 {
+		t.Errorf("body closed %d times, want 1", body.closes)
+	}
+	if got := rr.Header().Get("Content-Type"); got != "image/png" {
+		t.Errorf("Content-Type = %q, want image/png", got)
+	}
+	if got := rr.Header().Get("Cache-Control"); got != "public, max-age=30" {
+		t.Errorf("Cache-Control = %q", got)
+	}
+	decoded, err := png.Decode(rr.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if decoded.Bounds().Size() != image.Pt(2, 1) {
+		t.Errorf("image size = %v, want (2,1)", decoded.Bounds().Size())
 	}
 }
 
 func TestImageContextCancellation(t *testing.T) {
-	timeout := 30 * time.Second
-
-	// Create a provider that takes some time
-	responseBody := strings.NewReader("fake image data")
-	responseCloser := io.NopCloser(responseBody)
-
-	provider := &mockProvider{
-		response: responseCloser,
-		error:    nil,
-	}
-
-	req := httptest.NewRequest("GET", "/test.jpg", nil)
-
-	// Cancel the context immediately
+	p := &mockProvider{error: context.Canceled}
+	req := httptest.NewRequest(http.MethodGet, "/test.jpg", nil)
 	ctx, cancel := context.WithCancel(req.Context())
 	cancel()
-
-	// Add provider to context
-	ctx = context.WithValue(ctx, providers.ContextKey, provider)
-	req = req.WithContext(ctx)
-
+	req = req.WithContext(context.WithValue(ctx, providers.ContextKey, p))
 	rr := httptest.NewRecorder()
 
-	handler := Image(timeout)
-	handler(rr, req)
+	Image(30*time.Second)(rr, req)
 
-	// The handler should complete (context cancellation is handled internally)
-	// We don't expect any specific status code since image processing will likely fail
-	// but the handler shouldn't panic
-	if rr.Code == 0 {
-		t.Error("Handler should have set a status code")
+	if p.calls != 1 || p.ctx == nil || !errors.Is(p.ctx.Err(), context.Canceled) {
+		t.Fatalf("provider did not receive cancellation: calls=%d context=%v", p.calls, p.ctx)
+	}
+	if rr.Code != http.StatusInternalServerError {
+		t.Errorf("status = %d, want 500", rr.Code)
+	}
+}
+
+func TestImageClosesProviderResponseOnDecodeError(t *testing.T) {
+	body := &trackedReadCloser{Reader: strings.NewReader("not an image")}
+	p := &mockProvider{response: body}
+	req := httptest.NewRequest(http.MethodGet, "/test.png", nil)
+	req = req.WithContext(context.WithValue(req.Context(), providers.ContextKey, p))
+	rr := httptest.NewRecorder()
+
+	Image(0)(rr, req)
+
+	if rr.Code != http.StatusInternalServerError || body.closes != 1 {
+		t.Fatalf("status=%d closes=%d, want 500 and 1", rr.Code, body.closes)
+	}
+	if !strings.Contains(rr.Body.String(), "can't decode the image") {
+		t.Errorf("body = %q, want decode error", rr.Body.String())
 	}
 }
 
